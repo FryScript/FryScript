@@ -1,0 +1,126 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+using System;
+
+namespace FryScript
+{
+
+	public partial class ScriptFunction
+	{
+<#
+	for(var i = 0; i <= 16; i++)
+	{
+#>
+		public TResult Invoke<TResult>(<#= GetInvokeArgs(i) #>)
+		{
+			return (this as dynamic)(<#= GetCallArgs(i) #>);
+		}
+
+		public void Invoke(<#=GetInvokeArgs(i) #>)
+		{
+			(this as dynamic)(<#=GetCallArgs(i) #>);
+		}
+
+<#
+	}
+#>
+<#
+	for(var i = 0; i <= 16; i++)
+	{
+#>
+		public static ScriptFunction WrapMethod<#= GetFuncGenericArgs(i) #>(Func<#= GetFuncGenericArgs(i) #> func)
+		{
+			return new ScriptFunction(func);
+		}
+
+<#
+	}
+#>
+<#
+	for(var i = 0; i <= 16; i++)
+	{
+#>
+		public static ScriptFunction WrapMethod<#= GetActionGenericArgs(i) #>(Action<#= GetActionGenericArgs(i) #> action)
+		{
+			return new ScriptFunction(action);
+		}
+
+<#
+	}
+#>
+	}
+}
+
+<#+
+	private string GetFuncGenericArgs(int num)
+	{
+		var args = new string[num + 1];
+
+		args[args.Length - 1] = "TResult";
+
+		for(var i = 0; i < args.Length - 1; i++)
+		{
+			args[i] = string.Format("T{0}", i + 1);
+		}
+
+		var argsString = string.Join(", ", args);
+
+		return string.Format("<{0}>", argsString);
+	}
+#>
+
+<#+
+	private string GetActionGenericArgs(int num)
+	{
+		if(num == 0)
+			return string.Empty;
+
+		var args = new string[num];
+
+		for(var i = 0; i < args.Length; i++)
+		{
+			args[i] = string.Format("T{0}", i + 1);
+		}
+
+		var argsString = string.Join(", ", args);
+
+		return string.Format("<{0}>", argsString);
+	}
+#>
+
+<#+
+	private string GetInvokeArgs(int num)
+	{
+		var args = new string[num];
+
+		for(var i = 0; i < args.Length; i++)
+		{
+			args[i] = string.Format("object arg{0}", i + 1);
+		}
+
+		var argsString = string.Join(", ", args);
+
+		return argsString;
+	}
+#>
+
+<#+
+	private string GetCallArgs(int num)
+	{
+		var args = new string[num];
+
+		for(var i = 0; i < args.Length; i++)
+		{
+			args[i] = string.Format("arg{0}", i + 1);
+		}
+
+		var argsString = string.Join(", ", args);
+
+		return argsString;
+	}
+#>
