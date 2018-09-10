@@ -18,7 +18,7 @@ namespace FryScript
         private object _result = NoResult;
         private int _yieldState = PendingState;
 
-        internal int YieldState
+        public int YieldState
         {
             get { return _stack.Peek()._yieldState; }
             set { _stack.Peek()._yieldState = value; }

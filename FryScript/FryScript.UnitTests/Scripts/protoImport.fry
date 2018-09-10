@@ -1,0 +1,4 @@
+﻿@proto {
+	this.importedMember = simpleImport.member;
+}
+@import "scripts/simpleImport" as simpleImport;

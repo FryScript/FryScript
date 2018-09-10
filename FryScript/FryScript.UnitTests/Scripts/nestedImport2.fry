@@ -1,0 +1,3 @@
+﻿@import "scripts/nestedImport1" as nestedImport1;
+
+this.nestedImport1 = nestedImport1;

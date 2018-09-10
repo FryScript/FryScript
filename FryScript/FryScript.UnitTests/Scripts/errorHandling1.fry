@@ -1,0 +1,17 @@
+﻿@import "[error]" as error;
+
+try
+{
+	throw new error("Error 0");
+}
+catch err0
+{
+	try
+	{
+		throw new error("Error 1", err0);
+	}
+	catch err1
+	{
+		throw new error("Error 2", err1);
+	}
+}
