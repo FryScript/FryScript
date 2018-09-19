@@ -1,0 +1,4 @@
+@import member2, member3 from "exportMembers";
+
+importedMember2 = member2;
+importedMember3 = member3;

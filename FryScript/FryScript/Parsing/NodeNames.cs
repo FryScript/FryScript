@@ -16,6 +16,7 @@
         public const string ScriptHeader = "ScriptHeader";
         public const string ScriptExtend = "ScriptExtend";
         public const string ScriptImport = "ScriptImport";
+        public const string ScriptImportFrom = "ScriptImportFrom";
         public const string Statements = "Statements";
         public const string Statement = "Statement";
         public const string BlockStatement = "BlockStatement";

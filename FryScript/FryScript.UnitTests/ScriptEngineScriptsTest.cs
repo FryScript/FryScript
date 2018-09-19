@@ -81,5 +81,26 @@ namespace FryScript.UnitTests
                 }
             }
         }
+
+        [TestMethod]
+        public void ImportAllMembersTest()
+        {
+            dynamic imports = _scriptEngine.Get("scripts/importAllMembers");
+            dynamic exports = _scriptEngine.Get("scripts/exportMembers");
+
+            Assert.AreEqual(exports.member1, imports.importedMember1);
+            Assert.AreEqual(exports.member2, imports.importedMember2);
+        }
+
+        [TestMethod]
+        public void ImportNamedMembersTest()
+        {
+            dynamic imports = _scriptEngine.Get("scripts/importNamedMembers");
+            dynamic exports = _scriptEngine.Get("scripts/exportMembers");
+
+            Assert.AreEqual(exports.member2, imports.importedMember2);
+            Assert.AreEqual(exports.member3, imports.importedMember3);
+
+        }
     }
 }

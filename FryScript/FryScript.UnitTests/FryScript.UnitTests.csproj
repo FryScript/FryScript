@@ -90,6 +90,15 @@
     <None Include="Scripts\errorHandling1.fry">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Scripts\exportMembers.fry">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Scripts\importAllMembers.fry">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Scripts\importNamedMembers.fry">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Scripts\nestedImport1.fry">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -14,9 +14,10 @@ namespace FryScript.Ast
             if (ChildNodes.Length == 0)
                 return null;
 
-            ChildNodes = ChildNodes.OrderBy(n => n.GetType() == typeof (ScriptExtendNode) ? 0 : 1)
-                .ThenBy(n => n.GetType() == typeof (ScriptImportNode) ? 0 : 1)
-                .ThenBy(n => n.GetType() == typeof (ScriptProtoNode) ? 0 : 1).ToArray();
+            ChildNodes = ChildNodes.OrderBy(n => n is ScriptExtendNode ? 0 : 1)
+                .ThenBy(n => n is ScriptImportNode ? 0 : 1)
+                .ThenBy(n => n is ScriptImportFromNode ? 0 : 1)
+                .ThenBy(n => n is ScriptProtoNode ? 0 : 1).ToArray();
 
             var extendNodes = ChildNodes.Where(c => c.GetType() == typeof(ScriptExtendNode)).ToList();
 
@@ -27,7 +28,6 @@ namespace FryScript.Ast
 
             if (protoNodes.Count > 1)
                 throw new CompilerException("Headers can only include one proto statement", protoNodes.Last());
-
 
             return GetChildExpression(scope);
         }

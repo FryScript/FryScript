@@ -28,6 +28,7 @@ namespace FryScript.Parsing
             var scriptHeader = new NonTerminal(NodeNames.ScriptHeader);
             var scriptExtend = new NonTerminal(NodeNames.ScriptExtend, typeof (ScriptExtendNode));
             var scriptImport = new NonTerminal(NodeNames.ScriptImport, typeof (ScriptImportNode));
+            var scriptImportFrom = new NonTerminal(NodeNames.ScriptImportFrom, typeof(ScriptImportFromNode));
             var scriptProto = new NonTerminal(NodeNames.ScriptProto, typeof(ScriptProtoNode));
             var statements = new NonTerminal(NodeNames.Statements, typeof (StatementsNode));
             var statement = new NonTerminal(NodeNames.Statement, typeof(StatementNode));
@@ -102,10 +103,13 @@ namespace FryScript.Parsing
 
             scriptHeader.Rule = scriptExtend
                                 | scriptImport
+                                | scriptImportFrom
                                 | scriptProto;
 
             scriptExtend.Rule = ToTerm(Keywords.ScriptExtend) + stringLiteral + ";";
             scriptImport.Rule = ToTerm(Keywords.ScriptImport) + stringLiteral + Keywords.As + identifier + ";";
+            scriptImportFrom.Rule = ToTerm(Keywords.ScriptImport) + Keywords.From + stringLiteral + ";"
+                | ToTerm(Keywords.ScriptImport) + parameterNames + Keywords.From + stringLiteral + ";";
             scriptProto.Rule = ToTerm(Keywords.ScriptProto) + blockStatement;
 
             statements.Rule = MakeStarRule(statements, statement);
@@ -320,7 +324,7 @@ namespace FryScript.Parsing
             NonGrammarTerminals.Add(new CommentTerminal("Comment", "//", "\r\n", "\n"));
             NonGrammarTerminals.Add(new CommentTerminal("Block comment", "/*", "*/"));
 
-            MarkReservedWords(Keywords.This, Keywords.ScriptExtend, Keywords.ScriptImport, Keywords.ScriptProto, Keywords.As, Keywords.Var, Keywords.Null, Keywords.NaN, Keywords.Params, Keywords.Return, Keywords.If, Keywords.Else, Keywords.For, Keywords.New, Keywords.While, Keywords.ForEach, Keywords.In, Keywords.FunctionExtend, Keywords.Base, Keywords.Proto, Keywords.Has, Keywords.Try, Keywords.Catch, Keywords.Finally, Keywords.Throw, Keywords.Fibre, Keywords.Yield, /*Keywords.Begin,*/ Keywords.Yield, Keywords.Await);
+            MarkReservedWords(Keywords.This, Keywords.ScriptExtend, Keywords.ScriptImport, Keywords.ScriptProto, Keywords.As, Keywords.Var, Keywords.Null, Keywords.NaN, Keywords.Params, Keywords.Return, Keywords.If, Keywords.Else, Keywords.For, Keywords.New, Keywords.While, Keywords.ForEach, Keywords.In, Keywords.FunctionExtend, Keywords.Base, Keywords.Proto, Keywords.Has, Keywords.Try, Keywords.Catch, Keywords.Finally, Keywords.Throw, Keywords.Fibre, Keywords.Yield, /*Keywords.Begin,*/ Keywords.Yield, Keywords.Await, Keywords.From);
             MarkTransient(scriptHeader, semiStatement, literal, factor, unaryExpression);
             MarkPunctuation(";", ":", ".", ",", "[", "]", "{", "}", "(", ")", "=>", "@", "?");
 

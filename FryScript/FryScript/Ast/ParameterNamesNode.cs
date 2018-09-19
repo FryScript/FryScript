@@ -1,5 +1,6 @@
 ﻿using FryScript.Compilation;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -12,25 +13,29 @@ namespace FryScript.Ast
             throw new NotImplementedException();
         }
 
-        public void DeclareParameters(Scope scope)
+        public IEnumerable<ParameterExpression> DeclareParameters(Scope scope, List<ParameterExpression> exprs = null)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
+
+            exprs = exprs ?? new List<ParameterExpression>();
 
             if (ChildNodes.Length == 1)
             {
                 var identifier = ChildNodes.First();
-                identifier.CreateIdentifier(scope);
+                exprs.Add(identifier.CreateIdentifier(scope));
             }
 
 
             if (ChildNodes.Length == 2)
             {
                 var parameterNames = (ParameterNamesNode) ChildNodes.First();
-                parameterNames.DeclareParameters(scope);
+                parameterNames.DeclareParameters(scope, exprs);
 
                 var identifier = ChildNodes.Skip(1).First();
-                identifier.CreateIdentifier(scope);
+                exprs.Add(identifier.CreateIdentifier(scope));
             }
+
+            return exprs;
         }
     }
 }

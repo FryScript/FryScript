@@ -1,0 +1,5 @@
+member1 = "Member test";
+
+member2 = () => {};
+
+member3 = fibre() => {};
