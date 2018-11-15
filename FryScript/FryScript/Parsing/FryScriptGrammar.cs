@@ -9,43 +9,44 @@ namespace FryScript.Parsing
         public FryScriptGrammar()
         {
             var literal = new NonTerminal(NodeNames.Literal);
-            var booleanLiteral = new NonTerminal(NodeNames.BooleanLiteral, typeof (BooleanLiteralNode));
+            var booleanLiteral = new NonTerminal(NodeNames.BooleanLiteral, typeof(BooleanLiteralNode));
             var numberLiteral = new NumberLiteral(NodeNames.NumberLiteral, NumberOptions.AllowSign);
             var stringLiteral = new StringLiteral(NodeNames.StringLiteral, "\"", StringOptions.AllowsLineBreak, typeof(StringLiteralNode));
             var nullLiteral = new NonTerminal(NodeNames.NullLiteral, typeof(NullNode));
-            var nanLiteral = new NonTerminal(NodeNames.NaNLiteral, typeof (NaNLiteralNode));
-            var @object = new NonTerminal(NodeNames.ObjectLiteralExpression, typeof (ObjectLiteralExpressionNode));
-            var objectMembers = new NonTerminal(NodeNames.ObjectMembers, typeof (ObjectLiteralMembersNode));
-            var objectMember = new NonTerminal(NodeNames.ObjectMember, typeof (ObjectLiteralMemberNode));
-            var arrayExpression = new NonTerminal(NodeNames.ArrayExpression, typeof (ArrayExpressionNode));
+            var nanLiteral = new NonTerminal(NodeNames.NaNLiteral, typeof(NaNLiteralNode));
+            var @object = new NonTerminal(NodeNames.ObjectLiteralExpression, typeof(ObjectLiteralExpressionNode));
+            var objectMembers = new NonTerminal(NodeNames.ObjectMembers, typeof(ObjectLiteralMembersNode));
+            var objectMember = new NonTerminal(NodeNames.ObjectMember, typeof(ObjectLiteralMemberNode));
+            var arrayExpression = new NonTerminal(NodeNames.ArrayExpression, typeof(ArrayExpressionNode));
             var arrayItems = new NonTerminal(NodeNames.ArrayItems);
             var identifier = new IdentifierTerminal(NodeNames.Identifier);
-            var @this = new NonTerminal(NodeNames.This, typeof (ThisNode));
-            var @base = new NonTerminal(NodeNames.Base, typeof (BaseNode));
+            var @this = new NonTerminal(NodeNames.This, typeof(ThisNode));
+            var @base = new NonTerminal(NodeNames.Base, typeof(BaseNode));
             var proto = new NonTerminal(NodeNames.Proto, typeof(ProtoNode));
-            var script = new NonTerminal(NodeNames.Script, typeof (ScriptNode));
-            var scriptHeaders = new NonTerminal(NodeNames.ScriptHeaders, typeof (ScriptHeadersNode));
+            var script = new NonTerminal(NodeNames.Script, typeof(ScriptNode));
+            var scriptHeaders = new NonTerminal(NodeNames.ScriptHeaders, typeof(ScriptHeadersNode));
             var scriptHeader = new NonTerminal(NodeNames.ScriptHeader);
-            var scriptExtend = new NonTerminal(NodeNames.ScriptExtend, typeof (ScriptExtendNode));
-            var scriptImport = new NonTerminal(NodeNames.ScriptImport, typeof (ScriptImportNode));
+            var scriptExtend = new NonTerminal(NodeNames.ScriptExtend, typeof(ScriptExtendNode));
+            var scriptImport = new NonTerminal(NodeNames.ScriptImport, typeof(ScriptImportNode));
             var scriptImportFrom = new NonTerminal(NodeNames.ScriptImportFrom, typeof(ScriptImportFromNode));
             var scriptProto = new NonTerminal(NodeNames.ScriptProto, typeof(ScriptProtoNode));
-            var statements = new NonTerminal(NodeNames.Statements, typeof (StatementsNode));
+            var statements = new NonTerminal(NodeNames.Statements, typeof(StatementsNode));
             var statement = new NonTerminal(NodeNames.Statement, typeof(StatementNode));
             var semiStatement = new NonTerminal(NodeNames.SemiStatement);
             var returnStatement = new NonTerminal(NodeNames.ReturnStatement, typeof(ReturnStatementNode));
-            var emptyStatement = new NonTerminal(NodeNames.EmptyStatement, typeof (EmptyStatement));
+            var emptyStatement = new NonTerminal(NodeNames.EmptyStatement, typeof(EmptyStatement));
             var functionExtendStatement = new NonTerminal(NodeNames.FunctionExtendStatement, typeof(FunctionExtendStatementNode));
-            var variableDeclaration = new NonTerminal(NodeNames.VariableDeclaration, typeof (VariableDeclarationNode));
+            var variableDeclaration = new NonTerminal(NodeNames.VariableDeclaration, typeof(VariableDeclarationNode));
             var expression = new NonTerminal(NodeNames.Expression, typeof(ExpressionNode));
-            var assignExpression = new NonTerminal(NodeNames.AssignExpression, typeof (AssignExpressionNode));
-            var assignOperator = new NonTerminal("BinaryOperator");
-            var index = new NonTerminal(NodeNames.Index, typeof (IndexNode));
+            var assignExpression = new NonTerminal(NodeNames.AssignExpression, typeof(AssignExpressionNode));
+            var assignTupleExpression = new NonTerminal(NodeNames.AssignTupleExpression, typeof(AssignTupleExpressionNode));
+            var assignOperator = new NonTerminal(Operators.Assign);
+            var index = new NonTerminal(NodeNames.Index, typeof(IndexNode));
             var factor = new NonTerminal("Factor");
-            var identifierExpression = new NonTerminal(NodeNames.IdentifierExpression, typeof (IdentifierExpressionNode));
+            var identifierExpression = new NonTerminal(NodeNames.IdentifierExpression, typeof(IdentifierExpressionNode));
             var function = new NonTerminal(NodeNames.FunctionExpression, typeof(FunctionExpressionNode));
             var functionParameters = new NonTerminal(NodeNames.FunctionParameters, typeof(FunctionParametersNode));
-            var @params = new NonTerminal(NodeNames.Params, typeof (ParamsNode));
+            var @params = new NonTerminal(NodeNames.Params, typeof(ParamsNode));
             var parameterNames = new NonTerminal(NodeNames.ParameterNames, typeof(ParameterNamesNode));
             var functionBlock = new NonTerminal(NodeNames.FunctionBlock, typeof(FunctionBlockNode));
             var fibreExpression = new NonTerminal(NodeNames.FibreExpression, typeof(FibreExpressionNode));
@@ -54,8 +55,9 @@ namespace FryScript.Parsing
             var relationalExpression = new NonTerminal(NodeNames.RelationalExpression, typeof(RelationalExpressionNode));
             var addExpression = new NonTerminal(NodeNames.AddExpression, typeof(AddExpressionNode));
             var addOperator = new NonTerminal(NodeNames.AddOperator, typeof(TokenNode));
-            var multiplyExpression = new NonTerminal(NodeNames.MultiplyExpression, typeof (MultiplyExpressionNode));
+            var multiplyExpression = new NonTerminal(NodeNames.MultiplyExpression, typeof(MultiplyExpressionNode));
             var multiplyOperator = new NonTerminal(NodeNames.MultiplyOperator, typeof(TokenNode));
+            var tupleDeclaration = new NonTerminal(NodeNames.TupleDeclaration, typeof(TupleDeclarationNode));
 
             var booleanOperator = new NonTerminal(NodeNames.BooleanOperator, typeof(TokenNode));
             var relationalOperator = new NonTerminal(NodeNames.RelationalOperator, typeof(TokenNode));
@@ -69,7 +71,7 @@ namespace FryScript.Parsing
             var ifStatement = new NonTerminal(NodeNames.IfStatement, typeof(IfStatementNode));
             var forStatement = new NonTerminal(NodeNames.ForStatement, typeof(ForStatementNode));
             var whileStatement = new NonTerminal(NodeNames.WhileStatement, typeof(WhileStatementNode));
-            var forEachStatement = new NonTerminal(NodeNames.ForEachStatement, typeof (ForEachStatementNode));
+            var forEachStatement = new NonTerminal(NodeNames.ForEachStatement, typeof(ForEachStatementNode));
             var tryCatchFinallyStatement = new NonTerminal(NodeNames.TryCatchFinallyStatement, typeof(TryCatchFinallyStatementNode));
             var tryStatement = new NonTerminal(NodeNames.TryStatement, typeof(TryStatementNode));
             var catchStatement = new NonTerminal(NodeNames.CatchStatement, typeof(CatchStatementNode));
@@ -89,8 +91,8 @@ namespace FryScript.Parsing
             var notOperator = new NonTerminal(NodeNames.NotOperator, typeof(TokenNode));
             var awaitExpression = new NonTerminal(NodeNames.AwaitExpression, typeof(AwaitExpressionNode));
 
-            var breakStatement = new NonTerminal(NodeNames.BreakStatement, typeof (BreakStatementNode));
-            var continueStatement = new NonTerminal(NodeNames.ContinueStatement, typeof (ContinueStatementNode));
+            var breakStatement = new NonTerminal(NodeNames.BreakStatement, typeof(BreakStatementNode));
+            var continueStatement = new NonTerminal(NodeNames.ContinueStatement, typeof(ContinueStatementNode));
 
             var newExpression = new NonTerminal(NodeNames.NewExpression, typeof(NewExpressionNode));
             var isExpression = new NonTerminal(NodeNames.IsExpression, typeof(IsExpressionNode));
@@ -126,9 +128,9 @@ namespace FryScript.Parsing
                                   | ToTerm("{") + statements + "}";
 
             ifStatement.Rule = ToTerm(Keywords.If) + parenExpression + statement
-                | Keywords.If + parenExpression + statement +  PreferShiftHere()  + Keywords.Else + statement;
+                | Keywords.If + parenExpression + statement + PreferShiftHere() + Keywords.Else + statement;
 
-            forStatement.Rule = ToTerm(Keywords.For) + "(" + semiStatement + ";" + semiStatement + ";" + semiStatement + ")"  + statement;
+            forStatement.Rule = ToTerm(Keywords.For) + "(" + semiStatement + ";" + semiStatement + ";" + semiStatement + ")" + statement;
 
             whileStatement.Rule = ToTerm(Keywords.While) + parenExpression + statement;
 
@@ -144,6 +146,7 @@ namespace FryScript.Parsing
 
             semiStatement.Rule = expression
                                  | variableDeclaration
+                                 | tupleDeclaration
                                  | returnStatement
                                  | breakStatement
                                  | continueStatement
@@ -174,12 +177,18 @@ namespace FryScript.Parsing
             variableDeclaration.Rule = ToTerm(Keywords.Var) + identifier + assignOperator + expression
                                        | Keywords.Var + identifier;
 
+            tupleDeclaration.Rule = ToTerm(Keywords.Var) + "(" + parameterNames + ")" + assignOperator + expression
+                | ToTerm(Keywords.Var) + "(" + parameterNames + ")";
+
             expression.Rule = assignExpression;
-  
 
             assignExpression.Rule = identifierExpression + assignOperator + expression
-                                    | ternaryExpression;
+                                    | assignTupleExpression;
+
             assignOperator.Rule = ToTerm(Operators.Assign);
+
+            assignTupleExpression.Rule = ToTerm("(") + parameterNames + ")" + assignOperator + expression
+                | ternaryExpression;
 
             ternaryExpression.Rule = ternaryExpression + PreferShiftHere() + "?" + ternaryExpression + ":" + ternaryExpression
                | ternaryExpression + PreferShiftHere() + "?" + ":" + ternaryExpression
@@ -223,13 +232,13 @@ namespace FryScript.Parsing
 
             addExpression.Rule = addExpression + addOperator + multiplyExpression
                                  | multiplyExpression;
-            addOperator.Rule = PreferShiftHere() + ToTerm(Operators.Add) 
+            addOperator.Rule = PreferShiftHere() + ToTerm(Operators.Add)
                 | PreferShiftHere() + Operators.Subtract;
 
             multiplyExpression.Rule = multiplyExpression + multiplyOperator + unaryExpression
                 | unaryExpression;
-            multiplyOperator.Rule = PreferShiftHere() + ToTerm(Operators.Multiply) 
-                | PreferShiftHere() + Operators.Divide 
+            multiplyOperator.Rule = PreferShiftHere() + ToTerm(Operators.Multiply)
+                | PreferShiftHere() + Operators.Divide
                 | PreferShiftHere() + Operators.Modulo;
 
             unaryExpression.Rule = unarySuffixExpression
@@ -281,7 +290,7 @@ namespace FryScript.Parsing
                           | @base
                           | @proto;
 
-            parenExpression.Rule =  ToTerm("(") + expression + PreferShiftHere() + ")" + PreferShiftHere();
+            parenExpression.Rule = ToTerm("(") + expression + PreferShiftHere() + ")" + PreferShiftHere();
 
             @object.Rule = ToTerm("{") + objectMembers + "}";
             objectMembers.Rule = MakeStarRule(objectMembers, ToTerm(","), objectMember);
