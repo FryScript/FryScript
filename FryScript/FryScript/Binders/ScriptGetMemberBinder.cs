@@ -15,6 +15,10 @@ namespace FryScript.Binders
         public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
         {
             var metaObject = TypeProvider.Current.GetMetaObject(target.Expression, target.Value);
+
+            if (metaObject == null)
+                ExceptionHelper.NonGetMember(target.LimitType);
+
             metaObject = metaObject.BindGetMember(this);
 
             return new DynamicMetaObject(metaObject.Expression, GetDefaultRestrictions(target));

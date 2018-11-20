@@ -88,6 +88,7 @@ namespace FryScript.Parsing
             var notExpression = new NonTerminal(NodeNames.NotExpression, typeof(NotExpressionNode));
             var notOperator = new NonTerminal(NodeNames.NotOperator, typeof(TokenNode));
             var awaitExpression = new NonTerminal(NodeNames.AwaitExpression, typeof(AwaitExpressionNode));
+            var tupleExpression = new NonTerminal(NodeNames.TupleExpression, typeof(TupleExpressionNode));
 
             var breakStatement = new NonTerminal(NodeNames.BreakStatement, typeof (BreakStatementNode));
             var continueStatement = new NonTerminal(NodeNames.ContinueStatement, typeof (ContinueStatementNode));
@@ -242,6 +243,7 @@ namespace FryScript.Parsing
                         | fibreExpression
                         | throwExpression
                         | awaitExpression
+                        | tupleExpression
                         | factor;
 
             unaryPrefixExpression.Rule = unaryOperator + identifierExpression;
@@ -270,6 +272,8 @@ namespace FryScript.Parsing
             fibreExpression.Rule = ToTerm(Keywords.Fibre) + function;
 
             awaitExpression.Rule = ToTerm(Keywords.Await) + factor + ReduceHere();
+
+            tupleExpression.Rule = ToTerm("{") + invokeArgs + "}";
 
             factor.Rule = invokeMemberExpression
                           | invokeExpression

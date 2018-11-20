@@ -80,6 +80,7 @@
         public const string ScriptProto = "ScriptProto";
         public const string Proto = "Proto";
         public const string ConditionalAssignExpression = "ConditionalAssignExpression";
+        public const string TupleExpression = "TupleExpression";
 
         public const string BooleanOperator = "BooleanOperator";
         public const string RelationalOperator = "RelationalOperator";

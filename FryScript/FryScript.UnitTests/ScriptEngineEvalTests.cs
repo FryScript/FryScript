@@ -1906,6 +1906,16 @@ this;
             Assert.AreEqual("was null", obj);
         }
 
+        [TestMethod]
+        public void TupleTest()
+        {
+            var obj = (ScriptTuple)Eval("{1,2,3};");
+
+            Assert.AreEqual(1, obj[0]);
+            Assert.AreEqual(2, obj[1]);
+            Assert.AreEqual(3, obj[2]);
+        }
+
         private dynamic Eval(string script)
         {
             var curMethod = new StackTrace().GetFrames().Skip(1).First().GetMethod().Name;

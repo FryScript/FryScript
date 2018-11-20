@@ -72,6 +72,7 @@
     <Compile Include="ScriptParamsTests.cs" />
     <Compile Include="ScriptPrimitiveTests.cs" />
     <Compile Include="ScriptProviders\DirectoryScriptProviderTests.cs" />
+    <Compile Include="ScriptTupleTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
