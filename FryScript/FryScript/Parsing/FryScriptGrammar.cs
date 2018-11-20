@@ -122,7 +122,7 @@ namespace FryScript.Parsing
                              | forEachStatement
                              | tryCatchFinallyStatement;
 
-            blockStatement.Rule = ToTerm("{") + PreferShiftHere() + "}"
+            blockStatement.Rule = ToTerm("{") + PreferShiftHere() + "}" + ReduceHere()
                                   | ToTerm("{") + statements + "}";
 
             ifStatement.Rule = ToTerm(Keywords.If) + parenExpression + statement
@@ -283,8 +283,10 @@ namespace FryScript.Parsing
 
             parenExpression.Rule =  ToTerm("(") + expression + PreferShiftHere() + ")" + PreferShiftHere();
 
-            @object.Rule = ToTerm("{") + objectMembers + "}";
-            objectMembers.Rule = MakeStarRule(objectMembers, ToTerm(","), objectMember);
+            @object.Rule = ToTerm("{") + objectMembers + "}"
+                | "{" + PreferShiftHere() + "}";
+
+            objectMembers.Rule = MakePlusRule(objectMembers, ToTerm(","), objectMember);
             objectMember.Rule = identifier + ToTerm(":") + expression;
 
             arrayExpression.Rule = ToTerm("[") + arrayItems + "]";

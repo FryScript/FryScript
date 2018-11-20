@@ -97,6 +97,9 @@ namespace FryScript.Ast
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
+            if (ChildNodes.Length == 1 && ChildNodes[0] == null)
+                return ExpressionHelper.Null();
+
             if (ChildNodes.Length == 1)
                 return ChildNodes.Single().GetExpression(scope);
 
