@@ -25,7 +25,6 @@
         public const string Expression = "Expression";
         public const string Index = "Index";
         public const string AssignExpression = "AssignExpression";
-        public const string AssignTupleExpression = "AssignTupleExpression";
         public const string IdentifierExpression = "IdentifierExpression";
         public const string ObjectLiteralExpression = "ObjectLiteralExpression";
         public const string ObjectMembers = "ObjectMembers";
@@ -81,7 +80,6 @@
         public const string ScriptProto = "ScriptProto";
         public const string Proto = "Proto";
         public const string ConditionalAssignExpression = "ConditionalAssignExpression";
-        public const string TupleDeclaration = "TupleDeclaration";
 
         public const string BooleanOperator = "BooleanOperator";
         public const string RelationalOperator = "RelationalOperator";
