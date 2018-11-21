@@ -36,5 +36,25 @@ namespace FryScript.UnitTests
             var tuple = new ScriptTuple("range test");
             Assert.IsNull(tuple[1]);
         }
+
+        [TestMethod]
+        public void WrapTupleDoesNotWrapTuple()
+        {
+            var tuple = new ScriptTuple(0, 1);
+
+            var result = ScriptTuple.WrapTuple(tuple);
+
+            Assert.AreEqual(tuple, result);
+        }
+
+        [TestMethod]
+        public void WrapTupleWrapsNonTuple()
+        {
+            var nonTuple = new object();
+
+            var result = ScriptTuple.WrapTuple(nonTuple);
+
+            Assert.AreEqual(nonTuple, result[0]);
+        }
     }
 }

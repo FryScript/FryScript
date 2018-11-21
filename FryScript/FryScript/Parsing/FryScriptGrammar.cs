@@ -89,8 +89,8 @@ namespace FryScript.Parsing
             var notOperator = new NonTerminal(NodeNames.NotOperator, typeof(TokenNode));
             var awaitExpression = new NonTerminal(NodeNames.AwaitExpression, typeof(AwaitExpressionNode));
             var tupleExpression = new NonTerminal(NodeNames.TupleExpression, typeof(TupleExpressionNode));
-            var assignTupleStatement = new NonTerminal(NodeNames.AssignTupleExpression, typeof(AssignTupleStatement));
-            var tupleNames = new NonTerminal(NodeNames.TupleNames);
+            var assignTupleStatement = new NonTerminal(NodeNames.AssignTupleExpression, typeof(AssignTupleStatementNode));
+            var tupleNames = new NonTerminal(NodeNames.TupleNames, typeof(TupleNamesNode));
 
             var breakStatement = new NonTerminal(NodeNames.BreakStatement, typeof (BreakStatementNode));
             var continueStatement = new NonTerminal(NodeNames.ContinueStatement, typeof (ContinueStatementNode));
@@ -147,6 +147,7 @@ namespace FryScript.Parsing
 
             semiStatement.Rule = expression
                                  | variableDeclaration
+                                 | assignTupleStatement
                                  | returnStatement
                                  | breakStatement
                                  | continueStatement
@@ -182,10 +183,7 @@ namespace FryScript.Parsing
             tupleNames.Rule = tupleNames + "," + identifier
                 | identifier + PreferShiftHere() + "," + identifier;
 
-            expression.Rule = assignExpression
-                 | assignTupleStatement;
-
-
+            expression.Rule = assignExpression;
 
             assignExpression.Rule = identifierExpression + assignOperator + expression
                                     | ternaryExpression;

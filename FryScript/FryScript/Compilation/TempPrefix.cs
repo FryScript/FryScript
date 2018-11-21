@@ -18,5 +18,6 @@
         public const string Debug = "Debug";
         public const string ConditionalAssign = "ConditionalAssign";
         public const string ObjectLiteral = "ObjectLiteral";
+        public const string Tuple = "Tuple";
     }
 }

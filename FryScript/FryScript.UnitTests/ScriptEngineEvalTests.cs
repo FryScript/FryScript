@@ -1916,6 +1916,89 @@ this;
             Assert.AreEqual(3, obj[2]);
         }
 
+        [TestMethod]
+        public void TupleAssignTest()
+        {
+            var obj = Eval(@"
+var x;
+var y;
+
+x,y = {10, 20};
+
+{
+    x: x,
+    y: y
+};
+");
+
+            Assert.AreEqual(10, obj.x);
+            Assert.AreEqual(20, obj.y);
+        }
+
+        [TestMethod]
+        public void TupleAssignNonTupleTest()
+        {
+            var obj = Eval(@"
+var x;
+var y;
+
+x,y = 10;
+
+{
+    x: x,
+    y: y
+};
+");
+
+            Assert.AreEqual(10, obj.x);
+            Assert.IsNull(obj.y);
+        }
+
+        [TestMethod]
+        public void MultipleTupleAssignTest()
+        {
+            var obj = Eval(@"
+var x;
+var y;
+var z;
+
+x,y,z = {10, 20, 30};
+
+{
+    x: x,
+    y: y,
+    z: z
+};
+");
+
+            Assert.AreEqual(10, obj.x);
+            Assert.AreEqual(20, obj.y);
+            Assert.AreEqual(30, obj.z);
+
+        }
+
+        [TestMethod]
+        public void MultipleTupleAssignNonTupleTest()
+        {
+            var obj = Eval(@"
+var x;
+var y;
+var z;
+
+x,y,z = 10;
+
+{
+    x: x,
+    y: y,
+    z: z
+};
+");
+
+            Assert.AreEqual(10, obj.x);
+            Assert.IsNull(obj.y);
+            Assert.IsNull(obj.z);
+        }
+
         private dynamic Eval(string script)
         {
             var curMethod = new StackTrace().GetFrames().Skip(1).First().GetMethod().Name;

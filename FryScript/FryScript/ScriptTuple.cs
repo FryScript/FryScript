@@ -21,5 +21,13 @@ namespace FryScript
         {
             _items = items ?? throw new ArgumentNullException(nameof(items));
         }
+
+        public static ScriptTuple WrapTuple(object obj)
+        {
+            if (obj is ScriptTuple tuple)
+                return tuple;
+
+            return new ScriptTuple(obj);
+        }
     }
 }
