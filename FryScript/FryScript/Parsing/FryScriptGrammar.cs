@@ -89,6 +89,8 @@ namespace FryScript.Parsing
             var notOperator = new NonTerminal(NodeNames.NotOperator, typeof(TokenNode));
             var awaitExpression = new NonTerminal(NodeNames.AwaitExpression, typeof(AwaitExpressionNode));
             var tupleExpression = new NonTerminal(NodeNames.TupleExpression, typeof(TupleExpressionNode));
+            var assignTupleStatement = new NonTerminal(NodeNames.AssignTupleExpression, typeof(AssignTupleStatement));
+            var tupleNames = new NonTerminal(NodeNames.TupleNames);
 
             var breakStatement = new NonTerminal(NodeNames.BreakStatement, typeof (BreakStatementNode));
             var continueStatement = new NonTerminal(NodeNames.ContinueStatement, typeof (ContinueStatementNode));
@@ -175,8 +177,15 @@ namespace FryScript.Parsing
             variableDeclaration.Rule = ToTerm(Keywords.Var) + identifier + assignOperator + expression
                                        | Keywords.Var + identifier;
 
-            expression.Rule = assignExpression;
-  
+            assignTupleStatement.Rule = tupleNames + assignOperator + expression;
+
+            tupleNames.Rule = tupleNames + "," + identifier
+                | identifier + PreferShiftHere() + "," + identifier;
+
+            expression.Rule = assignExpression
+                 | assignTupleStatement;
+
+
 
             assignExpression.Rule = identifierExpression + assignOperator + expression
                                     | ternaryExpression;
@@ -244,7 +253,7 @@ namespace FryScript.Parsing
                         | throwExpression
                         | awaitExpression
                         | tupleExpression
-                        | factor;
+                        | factor; 
 
             unaryPrefixExpression.Rule = unaryOperator + identifierExpression;
             unarySuffixExpression.Rule = identifierExpression + unaryOperator;

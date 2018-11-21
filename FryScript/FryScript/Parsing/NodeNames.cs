@@ -81,6 +81,8 @@
         public const string Proto = "Proto";
         public const string ConditionalAssignExpression = "ConditionalAssignExpression";
         public const string TupleExpression = "TupleExpression";
+        public const string AssignTupleExpression = "AssignTupleExpression";
+        public const string TupleNames = "TupleNames";
 
         public const string BooleanOperator = "BooleanOperator";
         public const string RelationalOperator = "RelationalOperator";
