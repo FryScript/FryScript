@@ -32,6 +32,7 @@ namespace FryScript.Ast
 
             var assignTupleExpr = Expression.Assign(tupleExpr, wrapTupleExpr);
 
+
             var assignIdentifiers = identifiers.Select((e, i) =>
             {
                 var indexExpr = Expression.MakeIndex(tupleExpr, IndexProperty, new[] { Expression.Constant(i) });
@@ -40,13 +41,16 @@ namespace FryScript.Ast
                 return assignIdentifierExpr;
             });
 
-            var exprs = new Expression[]
+            var converTupleExpr = Expression.Convert(tupleExpr, typeof(object));
+
+            var exprs = new List<Expression>
             {
                 assignTupleExpr
-            }.Concat(assignIdentifiers)
-            .ToArray();
+            };
+            exprs.AddRange(assignIdentifiers);
+            exprs.Add(converTupleExpr);
 
-            var blockExpr = scope.ScopeBlock(exprs);
+            var blockExpr = scope.ScopeBlock(exprs.ToArray());
 
             return blockExpr;
         }

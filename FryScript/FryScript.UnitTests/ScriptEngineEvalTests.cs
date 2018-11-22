@@ -1999,6 +1999,24 @@ var z;
             Assert.IsNull(obj.z);
         }
 
+        [TestMethod]
+        public void TupleAssignReturnsTupleTest()
+        {
+            var obj = Eval(@"
+var x;
+var y;
+var z;
+
+{x,y,z} = {1,2,3};
+");
+
+            Assert.IsInstanceOfType(obj, typeof(ScriptTuple));
+            Assert.AreEqual(1, obj[0]);
+            Assert.AreEqual(2, obj[1]);
+            Assert.AreEqual(3, obj[2]);
+        }
+
+
         private dynamic Eval(string script)
         {
             var curMethod = new StackTrace().GetFrames().Skip(1).First().GetMethod().Name;
