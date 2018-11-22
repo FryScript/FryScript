@@ -89,7 +89,7 @@ namespace FryScript.Parsing
             var notOperator = new NonTerminal(NodeNames.NotOperator, typeof(TokenNode));
             var awaitExpression = new NonTerminal(NodeNames.AwaitExpression, typeof(AwaitExpressionNode));
             var tupleExpression = new NonTerminal(NodeNames.TupleExpression, typeof(TupleExpressionNode));
-            var assignTupleStatement = new NonTerminal(NodeNames.AssignTupleExpression, typeof(AssignTupleStatementNode));
+            var assignTupleExpression = new NonTerminal(NodeNames.AssignTupleExpression, typeof(AssignTupleExpressionNode));
             var tupleNames = new NonTerminal(NodeNames.TupleNames, typeof(TupleNamesNode));
             var tupleDeclrationStatement = new NonTerminal(NodeNames.TupleDeclaration);
 
@@ -149,7 +149,6 @@ namespace FryScript.Parsing
             semiStatement.Rule = expression
                                  | variableDeclaration
                                  | tupleDeclrationStatement
-                                 //| assignTupleStatement
                                  | returnStatement
                                  | breakStatement
                                  | continueStatement
@@ -183,7 +182,7 @@ namespace FryScript.Parsing
             tupleDeclrationStatement.Rule = ToTerm(Keywords.Var) + "{" + tupleNames + "}" + assignOperator + expression
                 | ToTerm(Keywords.Var) + "{" + tupleNames + "}";
 
-            assignTupleStatement.Rule = "{" + tupleNames + "}" + assignOperator + expression
+            assignTupleExpression.Rule = "{" + tupleNames + "}" + assignOperator + expression
                 | ternaryExpression;
 
             tupleNames.Rule = tupleNames + "," + identifier
@@ -192,7 +191,7 @@ namespace FryScript.Parsing
             expression.Rule = assignExpression;
 
             assignExpression.Rule = identifierExpression + assignOperator + expression
-                                    | assignTupleStatement;
+                                    | assignTupleExpression;
             assignOperator.Rule = ToTerm(Operators.Assign);
 
             ternaryExpression.Rule = ternaryExpression + PreferShiftHere() + "?" + ternaryExpression + ":" + ternaryExpression
@@ -298,7 +297,7 @@ namespace FryScript.Parsing
                           | @base
                           | @proto;
 
-            parenExpression.Rule =  ToTerm("(") + expression + PreferShiftHere() + ")" + PreferShiftHere();
+            parenExpression.Rule = ToTerm("(") + expression + PreferShiftHere() + ")" + PreferShiftHere();
 
             @object.Rule = ToTerm("{") + objectMembers + "}"
                 | "{" + PreferShiftHere() + "}";
