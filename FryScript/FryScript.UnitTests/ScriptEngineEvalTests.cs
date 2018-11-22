@@ -2042,6 +2042,34 @@ var {x, y} = {""tuple"", ""value""};
 
         }
 
+        [TestMethod]
+        public void MultipleTupleDeclarationTest()
+        {
+            var obj = Eval(@"
+var {x, y, z};
+
+{ x: x, y: y, z: z};
+");
+            Assert.IsNull(obj.x);
+            Assert.IsNull(obj.y);
+            Assert.IsNull(obj.z);
+
+        }
+
+        [TestMethod]
+        public void MultipleTupleDeclarationValuesTest()
+        {
+            var obj = Eval(@"
+var {x, y, z} = {""multiple"", ""tuple"", ""values""};
+
+{ x: x, y: y, z: z};
+");
+            Assert.AreEqual("multiple", obj.x);
+            Assert.AreEqual("tuple", obj.y);
+            Assert.AreEqual("values", obj.z);
+
+        }
+
 
         private dynamic Eval(string script)
         {

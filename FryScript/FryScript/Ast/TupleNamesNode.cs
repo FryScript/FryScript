@@ -42,6 +42,9 @@ namespace FryScript.Ast
             if (firstNode is IdentifierNode identifier)
                 exprs.Add(identifier.CreateIdentifier(scope));
 
+            if (firstNode is TupleNamesNode tupleNames)
+                tupleNames.DeclareVariables(scope, exprs);
+
             var secondNode = ChildNodes.Skip(1).First() as IdentifierNode;
             exprs.Add(secondNode.CreateIdentifier(scope));
 
