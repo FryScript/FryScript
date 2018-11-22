@@ -91,6 +91,7 @@ namespace FryScript.Parsing
             var tupleExpression = new NonTerminal(NodeNames.TupleExpression, typeof(TupleExpressionNode));
             var assignTupleStatement = new NonTerminal(NodeNames.AssignTupleExpression, typeof(AssignTupleStatementNode));
             var tupleNames = new NonTerminal(NodeNames.TupleNames, typeof(TupleNamesNode));
+            var tupleDeclrationStatement = new NonTerminal(NodeNames.TupleDeclaration);
 
             var breakStatement = new NonTerminal(NodeNames.BreakStatement, typeof (BreakStatementNode));
             var continueStatement = new NonTerminal(NodeNames.ContinueStatement, typeof (ContinueStatementNode));
@@ -147,6 +148,7 @@ namespace FryScript.Parsing
 
             semiStatement.Rule = expression
                                  | variableDeclaration
+                                 | tupleDeclrationStatement
                                  | assignTupleStatement
                                  | returnStatement
                                  | breakStatement
@@ -177,6 +179,8 @@ namespace FryScript.Parsing
 
             variableDeclaration.Rule = ToTerm(Keywords.Var) + identifier + assignOperator + expression
                                        | Keywords.Var + identifier;
+
+            tupleDeclrationStatement.Rule = ToTerm(Keywords.Var) + assignTupleStatement;
 
             assignTupleStatement.Rule = tupleNames + assignOperator + expression;
 

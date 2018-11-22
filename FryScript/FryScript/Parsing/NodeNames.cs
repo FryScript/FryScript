@@ -83,6 +83,7 @@
         public const string TupleExpression = "TupleExpression";
         public const string AssignTupleExpression = "AssignTupleExpression";
         public const string TupleNames = "TupleNames";
+        public const string TupleDeclaration = "TupleDclaration";
 
         public const string BooleanOperator = "BooleanOperator";
         public const string RelationalOperator = "RelationalOperator";
