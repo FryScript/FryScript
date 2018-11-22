@@ -149,7 +149,7 @@ namespace FryScript.Parsing
             semiStatement.Rule = expression
                                  | variableDeclaration
                                  | tupleDeclrationStatement
-                                 | assignTupleStatement
+                                 //| assignTupleStatement
                                  | returnStatement
                                  | breakStatement
                                  | continueStatement
@@ -180,9 +180,11 @@ namespace FryScript.Parsing
             variableDeclaration.Rule = ToTerm(Keywords.Var) + identifier + assignOperator + expression
                                        | Keywords.Var + identifier;
 
-            tupleDeclrationStatement.Rule = ToTerm(Keywords.Var) + assignTupleStatement;
+            tupleDeclrationStatement.Rule = ToTerm(Keywords.Var) + "{" + tupleNames + "}" + assignOperator + expression
+                | ToTerm(Keywords.Var) + "{" + tupleNames + "}";
 
-            assignTupleStatement.Rule = tupleNames + assignOperator + expression;
+            assignTupleStatement.Rule = "{" + tupleNames + "}" + assignOperator + expression
+                | ternaryExpression;
 
             tupleNames.Rule = tupleNames + "," + identifier
                 | identifier + PreferShiftHere() + "," + identifier;
@@ -190,7 +192,7 @@ namespace FryScript.Parsing
             expression.Rule = assignExpression;
 
             assignExpression.Rule = identifierExpression + assignOperator + expression
-                                    | ternaryExpression;
+                                    | assignTupleStatement;
             assignOperator.Rule = ToTerm(Operators.Assign);
 
             ternaryExpression.Rule = ternaryExpression + PreferShiftHere() + "?" + ternaryExpression + ":" + ternaryExpression
