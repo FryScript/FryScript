@@ -2016,6 +2016,32 @@ var z;
             Assert.AreEqual(3, obj[2]);
         }
 
+        [TestMethod]
+        public void TupleDeclarationTest()
+        {
+            var obj = Eval(@"
+var {x, y};
+
+{ x: x, y: y};
+");
+            Assert.IsNull(obj.x);
+            Assert.IsNull(obj.y);
+
+        }
+
+        [TestMethod]
+        public void TupleDeclarationValuesTest()
+        {
+            var obj = Eval(@"
+var {x, y} = {""tuple"", ""value""};
+
+{ x: x, y: y};
+");
+            Assert.AreEqual("tuple", obj.x);
+            Assert.AreEqual("value", obj.y);
+
+        }
+
 
         private dynamic Eval(string script)
         {

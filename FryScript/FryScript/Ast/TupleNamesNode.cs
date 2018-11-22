@@ -31,5 +31,21 @@ namespace FryScript.Ast
 
             return exprs;
         }
+
+        public IEnumerable<ParameterExpression> DeclareVariables(Scope scope, List<ParameterExpression> exprs  = null)
+        {
+            scope = scope ?? throw new ArgumentNullException(nameof(scope));
+
+            exprs = exprs ?? new List<ParameterExpression>();
+
+            var firstNode = ChildNodes.First();
+            if (firstNode is IdentifierNode identifier)
+                exprs.Add(identifier.CreateIdentifier(scope));
+
+            var secondNode = ChildNodes.Skip(1).First() as IdentifierNode;
+            exprs.Add(secondNode.CreateIdentifier(scope));
+
+            return exprs;
+        }
     }
 }
