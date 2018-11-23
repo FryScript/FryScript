@@ -1,4 +1,5 @@
 ﻿using FryScript.Compilation;
+using FryScript.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,13 +31,20 @@ namespace FryScript.Ast
 
             if (ChildNodes.Length == 2)
             {
-                if (ChildNodes.First() is TupleNamesNode tuplesNames)
+                var firstNode = ChildNodes.First();
+                if (firstNode is TupleNamesNode tuplesNames)
                     tuplesNames.GetIdentifiers(scope, nodes);
-                else if(ChildNodes.First().FindChild<IdentifierExpressionNode>() is IdentifierExpressionNode identifier)
-                    nodes.Add(identifier);
+                else if(firstNode.FindChild<IdentifierExpressionNode>() is IdentifierExpressionNode firstIdentifier)
+                    nodes.Add(firstIdentifier);
+                else
+                    ExceptionHelper.InvalidContext(firstNode.ParseNode.Term.Name, firstNode);
             }
 
-            nodes.Add(ChildNodes.Skip(1).First().FindChild<IdentifierExpressionNode>());
+            var secondNode = ChildNodes.Skip(1).First();
+            if(secondNode.FindChild<IdentifierExpressionNode>() is IdentifierExpressionNode secondIdentifier)
+                nodes.Add(secondNode.FindChild<IdentifierExpressionNode>());
+            else
+                ExceptionHelper.InvalidContext(secondNode.ParseNode.Term.Name, secondNode);
 
             return nodes;
         }
@@ -49,9 +57,10 @@ namespace FryScript.Ast
 
             if (ChildNodes.Length == 2)
             {
-                if (ChildNodes.First() is TupleNamesNode tuplesNames)
+                var firstNode = ChildNodes.First();
+                if (firstNode is TupleNamesNode tuplesNames)
                     tuplesNames.DeclareVariables(scope);
-                else if(ChildNodes.First().FindChild<IdentifierNode>() is IdentifierNode firstIdentifier)
+                else if (firstNode.FindChild<IdentifierNode>() is IdentifierNode firstIdentifier)
                     exprs.Add(firstIdentifier.CreateIdentifier(scope));
             }
 

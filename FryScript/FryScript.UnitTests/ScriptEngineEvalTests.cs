@@ -1955,7 +1955,7 @@ var y;
         }
 
         [TestMethod]
-        public void TupleAssignObjectMembers()
+        public void TupleAssignObjectMembersTest()
         {
             var obj = Eval(@"
 var obj = {x: null, y: null};
@@ -1964,6 +1964,13 @@ obj;
 ");
             Assert.AreEqual(1, obj.x);
             Assert.AreEqual(2, obj.y);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void TupleAssignLeftHandNonIdentifier()
+        {
+            Eval("{1,a} = {1,2};");
         }
 
         [TestMethod]
@@ -2012,7 +2019,7 @@ var z;
         }
 
         [TestMethod]
-        public void MultipleTupleAssignObjectMembers()
+        public void MultipleTupleAssignObjectMembersTest()
         {
             var obj = Eval(@"
 var obj = {x: null, y: null, z: null};
@@ -2022,6 +2029,13 @@ obj;
             Assert.AreEqual(1, obj.x);
             Assert.AreEqual(2, obj.y);
             Assert.AreEqual(3, obj.z);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void MultipleTupleAssignLeftHandNonIdentifier()
+        {
+            Eval("{a,b,1} = {1,2,3};");
         }
 
         [TestMethod]
