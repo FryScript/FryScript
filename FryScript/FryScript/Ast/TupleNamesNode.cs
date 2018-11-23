@@ -22,23 +22,23 @@ namespace FryScript.Ast
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ParameterExpression> GetIdentifiers(Scope scope, List<ParameterExpression> exprs = null)
+        public IEnumerable<IdentifierExpressionNode> GetIdentifiers(Scope scope, List<IdentifierExpressionNode> nodes = null)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            exprs = exprs ?? new List<ParameterExpression>();
+            nodes = nodes ?? new List<IdentifierExpressionNode>();
 
             if (ChildNodes.Length == 2)
             {
                 if (ChildNodes.First() is TupleNamesNode tuplesNames)
-                    tuplesNames.GetIdentifiers(scope, exprs);
-                else
-                    exprs.Add(ChildNodes.First().GetExpression(scope) as ParameterExpression);
+                    tuplesNames.GetIdentifiers(scope, nodes);
+                else if(ChildNodes.First().FindChild<IdentifierExpressionNode>() is IdentifierExpressionNode identifier)
+                    nodes.Add(identifier);
             }
 
-            exprs.Add(ChildNodes.Skip(1).First().GetExpression(scope) as ParameterExpression);
+            nodes.Add(ChildNodes.Skip(1).First().FindChild<IdentifierExpressionNode>());
 
-            return exprs;
+            return nodes;
         }
 
         public IEnumerable<ParameterExpression> DeclareVariables(Scope scope, List<ParameterExpression> exprs = null)
@@ -58,23 +58,7 @@ namespace FryScript.Ast
             if (ChildNodes.Skip(1).First().FindChild<IdentifierNode>() is IdentifierNode secondIdentifier)
                 exprs.Add(secondIdentifier.CreateIdentifier(scope));
 
-            return exprs;
-
-            //scope = scope ?? throw new ArgumentNullException(nameof(scope));
-
-            //exprs = exprs ?? new List<ParameterExpression>();
-
-            //var firstNode = ChildNodes.First();
-            //if (firstNode is IdentifierNode identifier)
-            //    exprs.Add(identifier.CreateIdentifier(scope));
-
-            //if (firstNode is TupleNamesNode tupleNames)
-            //    tupleNames.DeclareVariables(scope, exprs);
-
-            //var secondNode = ChildNodes.Skip(1).First() as IdentifierNode;
-            //exprs.Add(secondNode.CreateIdentifier(scope));
-
-            //return exprs;
+            return exprs; 
         }
 
         public Expression CreateTuple(Scope scope)

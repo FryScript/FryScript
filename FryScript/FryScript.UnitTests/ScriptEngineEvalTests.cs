@@ -1955,6 +1955,18 @@ var y;
         }
 
         [TestMethod]
+        public void TupleAssignObjectMembers()
+        {
+            var obj = Eval(@"
+var obj = {x: null, y: null};
+{obj.x, obj.y} = {1, 2};
+obj;
+");
+            Assert.AreEqual(1, obj.x);
+            Assert.AreEqual(2, obj.y);
+        }
+
+        [TestMethod]
         public void MultipleTupleAssignTest()
         {
             var obj = Eval(@"
@@ -1997,6 +2009,19 @@ var z;
             Assert.AreEqual(10, obj.x);
             Assert.IsNull(obj.y);
             Assert.IsNull(obj.z);
+        }
+
+        [TestMethod]
+        public void MultipleTupleAssignObjectMembers()
+        {
+            var obj = Eval(@"
+var obj = {x: null, y: null, z: null};
+{obj.x, obj.y, obj.z} = {1, 2, 3};
+obj;
+");
+            Assert.AreEqual(1, obj.x);
+            Assert.AreEqual(2, obj.y);
+            Assert.AreEqual(3, obj.z);
         }
 
         [TestMethod]

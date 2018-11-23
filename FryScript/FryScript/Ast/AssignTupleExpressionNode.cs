@@ -22,9 +22,8 @@ namespace FryScript.Ast
             }
 
             scope = scope.New();
-            List<ParameterExpression> identifiers = new List<ParameterExpression>();
 
-            var identifiersExprs = (ChildNodes.First() as TupleNamesNode).GetIdentifiers(scope, identifiers);
+            var identifierNodes = (ChildNodes.First() as TupleNamesNode).GetIdentifiers(scope);
 
             var right = ChildNodes.Skip(2).First();
 
@@ -36,10 +35,10 @@ namespace FryScript.Ast
             var assignTupleExpr = Expression.Assign(tupleExpr, wrapTupleExpr);
 
 
-            var assignIdentifiers = identifiers.Select((e, i) =>
+            var assignIdentifiers = identifierNodes.Select((e, i) =>
             {
                 var indexExpr = Expression.MakeIndex(tupleExpr, IndexProperty, new[] { Expression.Constant(i) });
-                var assignIdentifierExpr = Expression.Assign(e, indexExpr);
+                Expression assignIdentifierExpr = e.SetIdentifier(scope, indexExpr);
 
                 return assignIdentifierExpr;
             });
