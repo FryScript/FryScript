@@ -93,7 +93,7 @@ namespace FryScript.Ast
             return false;
         }
 
-        public T AsType<T>()
+        public T FindChild<T>()
             where T : AstNode
         {
             AstNode curNode = this;

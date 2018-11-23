@@ -31,7 +31,7 @@ namespace FryScript.Ast
             if (ChildNodes.Length == 2)
             {
                 if (ChildNodes.First() is TupleNamesNode tuplesNames)
-                    (ChildNodes.First() as TupleNamesNode).GetIdentifiers(scope, exprs);
+                    tuplesNames.GetIdentifiers(scope, exprs);
                 else
                     exprs.Add(ChildNodes.First().GetExpression(scope) as ParameterExpression);
             }
@@ -47,17 +47,34 @@ namespace FryScript.Ast
 
             exprs = exprs ?? new List<ParameterExpression>();
 
-            var firstNode = ChildNodes.First();
-            if (firstNode is IdentifierNode identifier)
-                exprs.Add(identifier.CreateIdentifier(scope));
+            if (ChildNodes.Length == 2)
+            {
+                if (ChildNodes.First() is TupleNamesNode tuplesNames)
+                    tuplesNames.DeclareVariables(scope);
+                else if(ChildNodes.First().FindChild<IdentifierNode>() is IdentifierNode firstIdentifier)
+                    exprs.Add(firstIdentifier.CreateIdentifier(scope));
+            }
 
-            if (firstNode is TupleNamesNode tupleNames)
-                tupleNames.DeclareVariables(scope, exprs);
-
-            var secondNode = ChildNodes.Skip(1).First() as IdentifierNode;
-            exprs.Add(secondNode.CreateIdentifier(scope));
+            if (ChildNodes.Skip(1).First().FindChild<IdentifierNode>() is IdentifierNode secondIdentifier)
+                exprs.Add(secondIdentifier.CreateIdentifier(scope));
 
             return exprs;
+
+            //scope = scope ?? throw new ArgumentNullException(nameof(scope));
+
+            //exprs = exprs ?? new List<ParameterExpression>();
+
+            //var firstNode = ChildNodes.First();
+            //if (firstNode is IdentifierNode identifier)
+            //    exprs.Add(identifier.CreateIdentifier(scope));
+
+            //if (firstNode is TupleNamesNode tupleNames)
+            //    tupleNames.DeclareVariables(scope, exprs);
+
+            //var secondNode = ChildNodes.Skip(1).First() as IdentifierNode;
+            //exprs.Add(secondNode.CreateIdentifier(scope));
+
+            //return exprs;
         }
 
         public Expression CreateTuple(Scope scope)
