@@ -93,6 +93,24 @@ namespace FryScript.Ast
             return false;
         }
 
+        public T AsType<T>()
+            where T : AstNode
+        {
+            AstNode curNode = this;
+
+            while (curNode != null)
+            {
+                curNode = curNode.ChildNodes.FirstOrDefault();
+
+                if (!(curNode is T))
+                    continue;
+
+                return (T)curNode;
+            }
+
+            return default(T);
+        }
+
         protected Expression GetChildExpression(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));

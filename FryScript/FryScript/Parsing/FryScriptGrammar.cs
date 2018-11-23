@@ -91,6 +91,7 @@ namespace FryScript.Parsing
             var tupleExpression = new NonTerminal(NodeNames.TupleExpression, typeof(TupleExpressionNode));
             var assignTupleExpression = new NonTerminal(NodeNames.AssignTupleExpression, typeof(AssignTupleExpressionNode));
             var tupleNames = new NonTerminal(NodeNames.TupleNames, typeof(TupleNamesNode));
+            var tupleName = new NonTerminal(NodeNames.TupleName, typeof(DefaultNode));
             var tupleDeclration = new NonTerminal(NodeNames.TupleDeclaration, typeof(TupleDeclarationNode));
 
             var breakStatement = new NonTerminal(NodeNames.BreakStatement, typeof (BreakStatementNode));
@@ -182,21 +183,26 @@ namespace FryScript.Parsing
             tupleDeclration.Rule = ToTerm(Keywords.Var) + "{" + tupleNames + "}" + assignOperator + expression
                 | ToTerm(Keywords.Var) + "{" + tupleNames + "}";
 
-            assignTupleExpression.Rule = "{" + tupleNames + "}" + assignOperator + expression
+            assignTupleExpression.Rule = "{" + tupleNames + "}"
+                | "{" + tupleNames + "}" + assignOperator + expression;
+
+            tupleNames.Rule = tupleNames + "," + tupleName
+                | tupleName + PreferShiftHere() + "," + tupleName;
+
+            tupleName.Rule = expression
+                | ToTerm(Keywords.Out);
+
+            expression.Rule = assignExpression
+                | conditionalAssignExpression
+                | assignTupleExpression
+                | booleanExpression
                 | ternaryExpression;
 
-            tupleNames.Rule = tupleNames + "," + identifier
-                | identifier + PreferShiftHere() + "," + identifier;
-
-            expression.Rule = assignExpression;
-
-            assignExpression.Rule = identifierExpression + assignOperator + expression
-                                    | assignTupleExpression;
+            assignExpression.Rule = identifierExpression + assignOperator + expression;
             assignOperator.Rule = ToTerm(Operators.Assign);
 
-            ternaryExpression.Rule = ternaryExpression + PreferShiftHere() + "?" + ternaryExpression + ":" + ternaryExpression
-               | ternaryExpression + PreferShiftHere() + "?" + ":" + ternaryExpression
-               | booleanExpression;
+            ternaryExpression.Rule = expression + PreferShiftHere() + "?" + expression + ":" + expression
+               | expression + PreferShiftHere() + "?" + ":" + expression;
 
             booleanExpression.Rule = booleanExpression + booleanOperator + relationalExpression
                                      | relationalExpression;
@@ -222,16 +228,15 @@ namespace FryScript.Parsing
             hasExpression.Rule = factor + ToTerm(Keywords.Has) + identifier
                                  | binaryExpression;
 
-            binaryExpression.Rule = identifierExpression + binaryOperator + conditionalAssignExpression
-                | conditionalAssignExpression;
+            binaryExpression.Rule = identifierExpression + binaryOperator + addExpression
+                | addExpression;
             binaryOperator.Rule = PreferShiftHere() + ToTerm(Operators.IncrementAssign)
                                   | PreferShiftHere() + Operators.DecrementAssign
                                   | PreferShiftHere() + Operators.MultiplyAssign
                                   | PreferShiftHere() + Operators.DivideAssign
                                   | PreferShiftHere() + Operators.ModuloAssign;
 
-            conditionalAssignExpression.Rule = identifierExpression + conditionalAssignOperator + addExpression
-                | addExpression;
+            conditionalAssignExpression.Rule = identifierExpression + conditionalAssignOperator + expression;
             conditionalAssignOperator.Rule = ToTerm(Operators.ConditionalAssign);
 
             addExpression.Rule = addExpression + addOperator + multiplyExpression
@@ -255,7 +260,6 @@ namespace FryScript.Parsing
                         | fibreExpression
                         | throwExpression
                         | awaitExpression
-                        | tupleExpression
                         | factor; 
 
             unaryPrefixExpression.Rule = unaryOperator + identifierExpression;
@@ -285,7 +289,8 @@ namespace FryScript.Parsing
 
             awaitExpression.Rule = ToTerm(Keywords.Await) + factor + ReduceHere();
 
-            tupleExpression.Rule = ToTerm("{") + invokeArgs + "}";
+            tupleExpression.Rule = tupleExpression + "," + expression
+                | expression + "," + expression;
 
             factor.Rule = invokeMemberExpression
                           | invokeExpression
@@ -342,8 +347,8 @@ namespace FryScript.Parsing
             NonGrammarTerminals.Add(new CommentTerminal("Comment", "//", "\r\n", "\n"));
             NonGrammarTerminals.Add(new CommentTerminal("Block comment", "/*", "*/"));
 
-            MarkReservedWords(Keywords.This, Keywords.ScriptExtend, Keywords.ScriptImport, Keywords.ScriptProto, Keywords.As, Keywords.Var, Keywords.Null, Keywords.NaN, Keywords.Params, Keywords.Return, Keywords.If, Keywords.Else, Keywords.For, Keywords.New, Keywords.While, Keywords.ForEach, Keywords.In, Keywords.FunctionExtend, Keywords.Base, Keywords.Proto, Keywords.Has, Keywords.Try, Keywords.Catch, Keywords.Finally, Keywords.Throw, Keywords.Fibre, Keywords.Yield, /*Keywords.Begin,*/ Keywords.Yield, Keywords.Await, Keywords.From);
-            MarkTransient(scriptHeader, semiStatement, literal, factor, unaryExpression);
+            MarkReservedWords(Keywords.This, Keywords.ScriptExtend, Keywords.ScriptImport, Keywords.ScriptProto, Keywords.As, Keywords.Var, Keywords.Null, Keywords.NaN, Keywords.Params, Keywords.Return, Keywords.If, Keywords.Else, Keywords.For, Keywords.New, Keywords.While, Keywords.ForEach, Keywords.In, Keywords.FunctionExtend, Keywords.Base, Keywords.Proto, Keywords.Has, Keywords.Try, Keywords.Catch, Keywords.Finally, Keywords.Throw, Keywords.Fibre, Keywords.Yield, /*Keywords.Begin,*/ Keywords.Yield, Keywords.Await, Keywords.From, Keywords.Out);
+            MarkTransient(scriptHeader, semiStatement, literal, factor, unaryExpression, tupleName);
             MarkPunctuation(";", ":", ".", ",", "[", "]", "{", "}", "(", ")", "=>", "@", "?");
 
             SnippetRoots.Add(expression);

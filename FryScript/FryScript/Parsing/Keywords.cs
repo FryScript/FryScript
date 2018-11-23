@@ -45,5 +45,6 @@ namespace FryScript.Parsing
         //public const string Resume = "resume";
         public const string Await = "await";
         public const string From = "from";
+        public const string Out = "out";
     }
 }

@@ -16,7 +16,10 @@ namespace FryScript.Ast
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
             if (ChildNodes.Length == 1)
-                return GetChildExpression(scope);
+            {
+                var transformExpr = ChildNodes.First() as TupleNamesNode;
+                return transformExpr.CreateTuple(scope);
+            }
 
             scope = scope.New();
             List<ParameterExpression> identifiers = new List<ParameterExpression>();

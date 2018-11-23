@@ -11,6 +11,7 @@
         public const string Identifier = "Identifier";
         public const string This = "This";
         public const string Base = "Base";
+
         public const string Script = "Script";
         public const string ScriptHeaders = "ScriptHeaders";
         public const string ScriptHeader = "ScriptHeader";
@@ -84,6 +85,7 @@
         public const string AssignTupleExpression = "AssignTupleExpression";
         public const string TupleNames = "TupleNames";
         public const string TupleDeclaration = "TupleDclaration";
+        public const string TupleName = "TupleName";
 
         public const string BooleanOperator = "BooleanOperator";
         public const string RelationalOperator = "RelationalOperator";
