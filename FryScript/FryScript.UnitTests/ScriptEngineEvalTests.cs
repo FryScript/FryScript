@@ -2109,6 +2109,20 @@ var {x, y, z} = {""multiple"", ""tuple"", ""values""};
 
         }
 
+        [TestMethod]
+        public void AsExpressionIdentifierTest()
+        {
+            var obj = Eval("true as x; x;");
+            Assert.IsTrue(obj);
+        }
+
+        [TestMethod]
+        public void AsExpressionTupleTest()
+        {
+            var obj = Eval("{true, false} as {x,y}; {x: x, y: y};");
+            Assert.IsTrue(obj.x);
+            Assert.IsFalse(obj.y);
+        }
 
         private dynamic Eval(string script)
         {

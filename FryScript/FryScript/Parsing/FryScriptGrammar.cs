@@ -88,7 +88,6 @@ namespace FryScript.Parsing
             var notExpression = new NonTerminal(NodeNames.NotExpression, typeof(NotExpressionNode));
             var notOperator = new NonTerminal(NodeNames.NotOperator, typeof(TokenNode));
             var awaitExpression = new NonTerminal(NodeNames.AwaitExpression, typeof(AwaitExpressionNode));
-            var tupleExpression = new NonTerminal(NodeNames.TupleExpression, typeof(TupleExpressionNode));
             var assignTupleExpression = new NonTerminal(NodeNames.AssignTupleExpression, typeof(AssignTupleExpressionNode));
             var tupleNames = new NonTerminal(NodeNames.TupleNames, typeof(TupleNamesNode));
             var tupleName = new NonTerminal(NodeNames.TupleName, typeof(DefaultNode));
@@ -101,6 +100,7 @@ namespace FryScript.Parsing
             var isExpression = new NonTerminal(NodeNames.IsExpression, typeof(IsExpressionNode));
             var extendsExpression = new NonTerminal(NodeNames.ExtendsExpression, typeof(ExtendsExpressionNode));
             var hasExpression = new NonTerminal(NodeNames.HasExpression, typeof(HasExpressionNode));
+            var asExpression = new NonTerminal(NodeNames.AsExpressionNode, typeof(AsExpressionNode));
 
             script.Rule = scriptHeaders + statements;
 
@@ -210,7 +210,7 @@ namespace FryScript.Parsing
                                    | PreferShiftHere() + Operators.Or;
 
             relationalExpression.Rule = relationalExpression + relationalOperator + isExpression
-                                     | isExpression;
+                                     | asExpression;
 
             relationalOperator.Rule = PreferShiftHere() + ToTerm(Operators.Equal)
                                       | PreferShiftHere() + Operators.NotEqual
@@ -218,6 +218,12 @@ namespace FryScript.Parsing
                                       | PreferShiftHere() + Operators.LessThan
                                       | PreferShiftHere() + Operators.GreaterThanOrEqual
                                       | PreferShiftHere() + Operators.LessThanOrEqual;
+
+            asExpression.Rule = isExpression + PreferShiftHere() + ToTerm(Keywords.As)  + identifier
+                | isExpression + ToTerm(Keywords.As) + "{" + tupleNames + "}"
+                | "{" + tupleNames + "}" + PreferShiftHere() + ToTerm(Keywords.As) + identifier
+                | "{" + tupleNames + "}" + PreferShiftHere() + ToTerm(Keywords.As) + "{" + tupleNames + "}"
+                | isExpression;
 
             isExpression.Rule = factor + ToTerm(Keywords.Is) + factor
                                 | extendsExpression;
@@ -288,9 +294,6 @@ namespace FryScript.Parsing
             fibreExpression.Rule = ToTerm(Keywords.Fibre) + function;
 
             awaitExpression.Rule = ToTerm(Keywords.Await) + factor + ReduceHere();
-
-            tupleExpression.Rule = tupleExpression + "," + expression
-                | expression + "," + expression;
 
             factor.Rule = invokeMemberExpression
                           | invokeExpression
