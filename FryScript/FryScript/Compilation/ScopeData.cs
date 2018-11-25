@@ -11,5 +11,6 @@
         public const string FibreContext = "FibreContext";
         public const string AwaitContexts = "AwaitContexts";
         public const string ObjectLiteralContext = "ObjectLiteralContext";
+        public const string TupleOut = "TupleOut";
     }
 }

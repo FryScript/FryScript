@@ -11,6 +11,8 @@ namespace FryScript.Ast
     {
         private static PropertyInfo IndexProperty = typeof(ScriptTuple).GetTypeInfo().DeclaredProperties.Single(p => p.GetIndexParameters().Length == 1);
 
+        public bool AllowOut { get; set; }
+
         public override Expression GetExpression(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
@@ -43,14 +45,22 @@ namespace FryScript.Ast
                 return assignIdentifierExpr;
             });
 
-            var converTupleExpr = Expression.Convert(tupleExpr, typeof(object));
 
             var exprs = new List<Expression>
             {
                 assignTupleExpr
             };
             exprs.AddRange(assignIdentifiers);
-            exprs.Add(converTupleExpr);
+            if (AllowOut)
+            {
+                scope.TryGetData<ParameterExpression>(ScopeData.TupleOut, out ParameterExpression tupleOut);
+                exprs.Add(tupleOut);
+            }
+            else
+            {
+                var convertTupleExpr = Expression.Convert(tupleExpr, typeof(object));
+                exprs.Add(convertTupleExpr);
+            }
 
             var blockExpr = scope.ScopeBlock(exprs.ToArray());
 

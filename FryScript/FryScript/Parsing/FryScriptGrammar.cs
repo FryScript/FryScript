@@ -92,6 +92,7 @@ namespace FryScript.Parsing
             var tupleNames = new NonTerminal(NodeNames.TupleNames, typeof(TupleNamesNode));
             var tupleName = new NonTerminal(NodeNames.TupleName, typeof(DefaultNode));
             var tupleDeclration = new NonTerminal(NodeNames.TupleDeclaration, typeof(TupleDeclarationNode));
+            var tupleOut = new NonTerminal(NodeNames.TupleOut, typeof(TupleOut));
 
             var breakStatement = new NonTerminal(NodeNames.BreakStatement, typeof (BreakStatementNode));
             var continueStatement = new NonTerminal(NodeNames.ContinueStatement, typeof (ContinueStatementNode));
@@ -190,7 +191,9 @@ namespace FryScript.Parsing
                 | tupleName + PreferShiftHere() + "," + tupleName;
 
             tupleName.Rule = expression
-                | ToTerm(Keywords.Out);
+                | tupleOut;
+
+            tupleOut.Rule = ToTerm(Keywords.Out);
 
             expression.Rule = assignExpression
                 | conditionalAssignExpression

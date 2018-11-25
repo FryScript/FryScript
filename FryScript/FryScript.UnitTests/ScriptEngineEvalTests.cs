@@ -2110,18 +2110,57 @@ var {x, y, z} = {""multiple"", ""tuple"", ""values""};
         }
 
         [TestMethod]
-        public void AsExpressionIdentifierTest()
+        public void AsExpressionValueAsIdentifierTest()
         {
             var obj = Eval("true as x; x;");
             Assert.IsTrue(obj);
         }
 
         [TestMethod]
-        public void AsExpressionTupleTest()
+        public void AsExpressionTupleAsIdentifierTest()
+        {
+            var obj = (ScriptTuple)Eval("{10, 20} as x; x;");
+            Assert.AreEqual(10, obj[0]);
+            Assert.AreEqual(20, obj[1]);
+        }
+
+        [TestMethod]
+        public void AsExpressionTupleAsTupleTest()
         {
             var obj = Eval("{true, false} as {x,y}; {x: x, y: y};");
             Assert.IsTrue(obj.x);
             Assert.IsFalse(obj.y);
+        }
+
+        [TestMethod]
+        public void AsExpressionValueAsTupleTest()
+        {
+            var obj = Eval(@"""test"" as {x,y}; {x: x, y: y};");
+            Assert.AreEqual("test", obj.x);
+            Assert.IsNull(obj.y);
+        }
+
+        [TestMethod]
+        public void AsExpressionTupleAsOutFirstTupleTest()
+        {
+            var obj = Eval(@"var x = {""out value"", ""tuple value""} as {out,y}; {x: x, y: y};");
+            Assert.AreEqual("out value", obj.x);
+            Assert.AreEqual("tuple value", obj.y);
+        }
+
+        [TestMethod]
+        public void AsExpressionTupleAsOutSecondTupleTest()
+        {
+            var obj = Eval(@"var y = {""tuple value"", ""out value""} as {x,out}; {x: x, y: y};");
+            Assert.AreEqual("tuple value", obj.x);
+            Assert.AreEqual("out value", obj.y);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void AsExpressionTupleMultipleOutTest()
+        {
+            Eval(@"var y = {out,out};");
         }
 
         private dynamic Eval(string script)

@@ -18,24 +18,28 @@ namespace FryScript.Ast
                 new[] { typeof(object[]) },
                 null);
 
+        public bool AllowOut { get; set; }
+
         public override Expression GetExpression(Scope scope)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IdentifierExpressionNode> GetIdentifiers(Scope scope, List<IdentifierExpressionNode> nodes = null)
+        public IEnumerable<AstNode> GetIdentifiers(Scope scope, List<AstNode> nodes = null)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            nodes = nodes ?? new List<IdentifierExpressionNode>();
+            nodes = nodes ?? new List<AstNode>();
 
             if (ChildNodes.Length == 2)
             {
                 var firstNode = ChildNodes.First();
                 if (firstNode is TupleNamesNode tuplesNames)
                     tuplesNames.GetIdentifiers(scope, nodes);
-                else if(firstNode.FindChild<IdentifierExpressionNode>() is IdentifierExpressionNode firstIdentifier)
+                else if (firstNode.FindChild<IdentifierExpressionNode>() is IdentifierExpressionNode firstIdentifier)
                     nodes.Add(firstIdentifier);
+                else if (firstNode is TupleOut tupleOut)
+                    nodes.Add(tupleOut);
                 else
                     ExceptionHelper.InvalidContext(firstNode.ParseNode.Term.Name, firstNode);
             }
@@ -43,6 +47,8 @@ namespace FryScript.Ast
             var secondNode = ChildNodes.Skip(1).First();
             if(secondNode.FindChild<IdentifierExpressionNode>() is IdentifierExpressionNode secondIdentifier)
                 nodes.Add(secondNode.FindChild<IdentifierExpressionNode>());
+            else if (secondNode is TupleOut tupleOut)
+                nodes.Add(tupleOut);
             else
                 ExceptionHelper.InvalidContext(secondNode.ParseNode.Term.Name, secondNode);
 
@@ -62,10 +68,15 @@ namespace FryScript.Ast
                     tuplesNames.DeclareVariables(scope);
                 else if (firstNode.FindChild<IdentifierNode>() is IdentifierNode firstIdentifier)
                     exprs.Add(firstIdentifier.CreateIdentifier(scope));
+                else if (firstNode is TupleOut tupleOut)
+                    exprs.Add(tupleOut.CreateOut(scope));
             }
 
-            if (ChildNodes.Skip(1).First().FindChild<IdentifierNode>() is IdentifierNode secondIdentifier)
+            var secondNode = ChildNodes.Skip(1).First();
+            if (secondNode.FindChild<IdentifierNode>() is IdentifierNode secondIdentifier)
                 exprs.Add(secondIdentifier.CreateIdentifier(scope));
+            else if (secondNode is TupleOut tupleOut)
+                exprs.Add(tupleOut.CreateOut(scope));
 
             return exprs; 
         }

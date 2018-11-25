@@ -19,5 +19,6 @@
         public const string ConditionalAssign = "ConditionalAssign";
         public const string ObjectLiteral = "ObjectLiteral";
         public const string Tuple = "Tuple";
+        public const string TupleOut = "TupleOut";
     }
 }
