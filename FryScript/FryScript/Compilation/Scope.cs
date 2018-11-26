@@ -210,6 +210,11 @@ namespace FryScript.Compilation
             return _dataBag.ContainsKey(name);
         }
 
+        public void RemoveData(string name)
+        {
+            _dataBag.Remove(name);
+        }
+
         public string GetTempName(string name)
         {
             if (!_tempNames.TryGetValue(name, out int count))

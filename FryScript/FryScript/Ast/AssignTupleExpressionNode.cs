@@ -23,6 +23,7 @@ namespace FryScript.Ast
                 return transformExpr.CreateTuple(scope);
             }
 
+            var originalScope = scope;
             scope = scope.New();
 
             var identifierNodes = (ChildNodes.First() as TupleNamesNode).GetIdentifiers(scope);
@@ -51,10 +52,11 @@ namespace FryScript.Ast
                 assignTupleExpr
             };
             exprs.AddRange(assignIdentifiers);
-            if (AllowOut)
+
+            if (AllowOut && originalScope.TryGetData(ScopeData.TupleOut, out ParameterExpression tupleOut))
             {
-                scope.TryGetData<ParameterExpression>(ScopeData.TupleOut, out ParameterExpression tupleOut);
                 exprs.Add(tupleOut);
+                originalScope.RemoveData(ScopeData.TupleOut);
             }
             else
             {

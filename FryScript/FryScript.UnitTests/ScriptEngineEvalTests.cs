@@ -2141,7 +2141,7 @@ var {x, y, z} = {""multiple"", ""tuple"", ""values""};
         }
 
         [TestMethod]
-        public void AsExpressionTupleAsOutFirstTupleTest()
+        public void AsExpressionTupleOutFirstTupleTest()
         {
             var obj = Eval(@"var x = {""out value"", ""tuple value""} as {out,y}; {x: x, y: y};");
             Assert.AreEqual("out value", obj.x);
@@ -2149,7 +2149,7 @@ var {x, y, z} = {""multiple"", ""tuple"", ""values""};
         }
 
         [TestMethod]
-        public void AsExpressionTupleAsOutSecondTupleTest()
+        public void AsExpressionTupleOutSecondTupleTest()
         {
             var obj = Eval(@"var y = {""tuple value"", ""out value""} as {x,out}; {x: x, y: y};");
             Assert.AreEqual("tuple value", obj.x);
@@ -2157,10 +2157,46 @@ var {x, y, z} = {""multiple"", ""tuple"", ""values""};
         }
 
         [TestMethod]
+        public void AsExpressionTupleOutThirdTupleTest()
+        {
+            var obj = Eval(@"var z = {""tuple value"", ""out value"", ""third""} as {x,y, out}; {x: x, y: y, z: z};");
+            Assert.AreEqual("tuple value", obj.x);
+            Assert.AreEqual("out value", obj.y);
+            Assert.AreEqual("third", obj.z);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void AsExpressionTupleTwoOutTest()
+        {
+            Eval(@"x as {out, out};");
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(CompilerException))]
         public void AsExpressionTupleMultipleOutTest()
         {
-            Eval(@"var y = {out,out};");
+            Eval(@"x as {y, out, out};");
+        }
+
+        [TestMethod]
+        public void AsExpressionTupleMultipleOutInSameScopeTest()
+        {
+            Eval(@"{10, 20} as {out, x}; {30, 40} as {y, out}; {x: x, y: y};");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void TupleOutParameterInvalidContext()
+        {
+            Eval(@"{out, 10};");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void TupleOutParameterInvalidThreeValuesContext()
+        {
+            Eval(@"{10, 20, out};");
         }
 
         private dynamic Eval(string script)

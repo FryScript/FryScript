@@ -253,5 +253,15 @@ namespace FryScript.Helpers
 
             throw new CompilerException(string.Format("Circular dependency detected: {0} {1}", sb, curKey));
         }
+
+        public static CompilerException MultipleOutVars(AstNode astNode)
+        {
+            throw new CompilerException("As variable expressions can only have one out variable");
+        }
+
+        public static CompilerException UnexpectedOut(AstNode astNode)
+        {
+            throw new CompilerException("Cannot use out here");
+        }
     }
 }

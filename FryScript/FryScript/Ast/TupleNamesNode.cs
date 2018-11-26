@@ -65,7 +65,7 @@ namespace FryScript.Ast
             {
                 var firstNode = ChildNodes.First();
                 if (firstNode is TupleNamesNode tuplesNames)
-                    tuplesNames.DeclareVariables(scope);
+                    tuplesNames.DeclareVariables(scope, exprs);
                 else if (firstNode.FindChild<IdentifierNode>() is IdentifierNode firstIdentifier)
                     exprs.Add(firstIdentifier.CreateIdentifier(scope));
                 else if (firstNode is TupleOut tupleOut)
@@ -101,13 +101,19 @@ namespace FryScript.Ast
             exprs = exprs ?? new List<Expression>();
 
             var firstNode = ChildNodes.First();
+            var secondNode = ChildNodes.Skip(1).First();
+
+            if (!AllowOut && firstNode is TupleOut)
+                ExceptionHelper.UnexpectedOut(firstNode);
+
+            if (!AllowOut && secondNode is TupleOut)
+                ExceptionHelper.UnexpectedOut(secondNode);
+
             if (firstNode is TupleNamesNode tupleNames)
                 tupleNames.GetTupleArgs(scope, exprs);
             else if (firstNode is ExpressionNode expr)
                 exprs.Add(expr.GetExpression(scope));
 
-
-            var secondNode = ChildNodes.Skip(1).First();
             exprs.Add(secondNode.GetExpression(scope));
 
             return exprs;
