@@ -88,7 +88,7 @@ namespace FryScript.UnitTests.ScriptProviders
         {
             var expectedUri = new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "outside.txt"));
             var relativeTo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "errorHandling1.fry");
-            Assert.IsTrue(_provider.TryGetUri("outside.txt", out Uri uri, relativeTo));
+            Assert.IsTrue(_provider.TryGetUri("outside.txt", out Uri uri, new Uri(relativeTo).AbsoluteUri));
             Assert.AreEqual(expectedUri, uri);
         }
 
