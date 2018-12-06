@@ -221,7 +221,7 @@ namespace FryScript.Helpers
             keyword = keyword ?? throw new ArgumentNullException(nameof(keyword));
             astNode = astNode ?? throw new ArgumentNullException(nameof(astNode));
 
-            throw new CompilerException(string.Format("{0} is invalid in the current context", keyword), astNode);
+            throw CompilerException.FromAst(string.Format("{0} is invalid in the current context", keyword), astNode);
         }
 
         public static CompilerException CircularDependency(CircularDependencyException ex, AstNode astNode)
@@ -236,7 +236,7 @@ namespace FryScript.Helpers
                 sb.Append(keyName.ToDisplayString()).Append(" -> ");
             }
 
-            throw new CompilerException(string.Format("Circular dependency detected: {0} {1}", sb, ex.CurrentKey), astNode);
+            throw CompilerException.FromAst(string.Format("Circular dependency detected: {0} {1}", sb, ex.CurrentKey), astNode);
         }
 
         public static CompilerException CircularDependency(string curKey, IEnumerable<string> keyNames)
@@ -251,17 +251,17 @@ namespace FryScript.Helpers
                 sb.Append(keyName.ToDisplayString()).Append(" -> ");
             }
 
-            throw new CompilerException(string.Format("Circular dependency detected: {0} {1}", sb, curKey));
+            throw CompilerException.FromAst(string.Format("Circular dependency detected: {0} {1}", sb, curKey), null);
         }
 
         public static CompilerException MultipleOutVars(AstNode astNode)
         {
-            throw new CompilerException("As variable expressions can only have one out variable");
+            throw CompilerException.FromAst("As variable expressions can only have one out variable", astNode);
         }
 
         public static CompilerException UnexpectedOut(AstNode astNode)
         {
-            throw new CompilerException("Cannot use out here");
+            throw CompilerException.FromAst("Cannot use out here", astNode);
         }
     }
 }

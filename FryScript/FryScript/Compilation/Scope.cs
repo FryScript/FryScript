@@ -63,7 +63,7 @@ namespace FryScript.Compilation
                 throw new ArgumentNullException(nameof(name));
 
             if(_members.ContainsKey(name))
-                throw new CompilerException(string.Format("Identifier {0} has already been defined in the current scope", name), astNode);
+                throw CompilerException.FromAst(string.Format("Identifier {0} has already been defined in the current scope", name), astNode);
 
             type = type ?? typeof(object);
 

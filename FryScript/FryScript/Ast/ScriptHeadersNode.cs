@@ -22,12 +22,12 @@ namespace FryScript.Ast
             var extendNodes = ChildNodes.Where(c => c.GetType() == typeof(ScriptExtendNode)).ToList();
 
             if (extendNodes.Count > 1)
-                throw new CompilerException("Headers can only include one extend statement", extendNodes.Last());
+                throw CompilerException.FromAst("Headers can only include one extend statement", extendNodes.Last());
 
             var protoNodes = ChildNodes.Where(n => n.GetType() == typeof (ScriptProtoNode)).ToList();
 
             if (protoNodes.Count > 1)
-                throw new CompilerException("Headers can only include one proto statement", protoNodes.Last());
+                throw CompilerException.FromAst("Headers can only include one proto statement", protoNodes.Last());
 
             return GetChildExpression(scope);
         }

@@ -5,25 +5,18 @@ namespace FryScript.Compilation
 {
     public class CompilerException : FryScriptException
     {
-        private readonly AstNode _astNode;
-        public CompilerException(string message, AstNode astNode)
-            : base(GetCompilerMessage(message, astNode))
+        public CompilerException(string message, string name, int line, int column)
+            : base(message, null, name, line, column)
         {
-            _astNode = astNode ?? throw new ArgumentNullException(nameof(astNode));
+
         }
 
-        public CompilerException(string message)
-            : base(message)
+        public static CompilerException FromAst(string message, AstNode node)
         {
-        }
+            if (node == null)
+                return new CompilerException(message, string.Empty, 0, 0);
 
-        private static string GetCompilerMessage(string message, AstNode astNode)
-        {
-            var parseNode = astNode.ParseNode;
-            return string.Format("Line {0}, position {1}: {2}",
-                parseNode.Span.Location.Line,
-                parseNode.Span.Location.Column,
-                message);
+            return new CompilerException(message, node.CompilerContext.Name, node.ParseNode.Span.Location.Line, node.ParseNode.Span.Location.Column);
         }
     }
 }
