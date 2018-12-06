@@ -54,9 +54,12 @@ namespace FryScript.ScriptProviders
             if (relativeTo == null)
                 return _root;
 
-            var uri = new Uri(relativeTo);
+            var uri = new Uri(Uri.UnescapeDataString(relativeTo));
 
-            var relativeFile = new FileInfo(uri.LocalPath);
+            if (!uri.IsFile)
+                return null;
+
+            var relativeFile = new FileInfo(Path.GetFullPath(uri.LocalPath));
 
             if (!relativeFile.Exists)
                 return null;
