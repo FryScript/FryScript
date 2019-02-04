@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FryScript
 {
     public interface IScriptObject
     {
         object Target { get; set; }
+        bool HasTarget { get; }
+        Type TargetType { get; }
         object[] MemberData { get; set; }
         MemberIndex MemberIndex { get; set; }
         object SetMember(int index, object value);

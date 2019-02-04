@@ -24,9 +24,9 @@ namespace FryScript
         internal Func<ScriptObject, object> Ctor;
         public object Target { get; set; }
 
-        internal Type TargetType { get { return Target.GetType(); } }
+        public Type TargetType { get { return Target.GetType(); } }
 
-        internal bool HasTarget { get { return Target != null; } }
+        public bool HasTarget { get { return Target != null; } }
 
         public object this[string name]
         {

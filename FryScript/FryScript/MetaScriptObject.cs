@@ -16,9 +16,9 @@
 
         public IScriptObject ScriptObject { get { return Value as IScriptObject; } }
 
-        public Expression ScriptObjectExpr { get { return Expression.Convert(Expression, typeof(IScriptObject)); } }
+        public Expression ScriptObjectExpr { get { return Expression.Convert(Expression, Value.GetType()); } }
 
-        public Expression ScriptObjectTargetExpr { get { return Expression.PropertyOrField(ScriptObjectExpr, "Target"); } }
+        public Expression ScriptObjectTargetExpr { get { return Expression.PropertyOrField(Expression.Convert(Expression, typeof(IScriptObject)), nameof(IScriptObject.Target)); } }
 
         public MetaScriptObject(Expression expression, BindingRestrictions restrictions, object value)
             : base(expression, restrictions, value)
@@ -37,23 +37,26 @@
                 return new DynamicMetaObject(convertSetPropertyExpr, GetDefaultRestrictions());
             }
 
-            //if (ScriptObject.HasTarget && TypeProvider.Current.TryGetProperty(ScriptObject.TargetType, binder.Name, out propertyInfo))
-            //{
-            //    var propertyExpr = Expression.Property(
-            //        Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType),
-            //        propertyInfo);
-            //    var setPropertyExpr = Expression.Assign(propertyExpr,
-            //        ExpressionHelper.DynamicConvert(value.Expression, propertyInfo.PropertyType));
-            //    var convertSetPropertyExpr = Expression.Convert(setPropertyExpr, typeof(object));
+            if (ScriptObject.HasTarget && TypeProvider.Current.TryGetProperty(ScriptObject.TargetType, binder.Name, out propertyInfo))
+            {
+                var propertyExpr = Expression.Property(
+                    Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType),
+                    propertyInfo);
+                var setPropertyExpr = Expression.Assign(propertyExpr,
+                    ExpressionHelper.DynamicConvert(value.Expression, propertyInfo.PropertyType));
+                var convertSetPropertyExpr = Expression.Convert(setPropertyExpr, typeof(object));
 
-            //    return new DynamicMetaObject(convertSetPropertyExpr, GetDefaultRestrictions());
-            //}
+                return new DynamicMetaObject(convertSetPropertyExpr, GetDefaultRestrictions());
+            }
 
             var info = MemberIndexLookup.Current.MutateMemberIndex(ScriptObject.MemberIndex, binder.Name);
 
-            var expr = Expression.Call(ScriptObjectExpr,
-                "SetMember",
+            var convertExpr = Expression.Convert(Expression, typeof(IScriptObject));
+
+            var expr = Expression.Call(typeof(ScriptObjectExtensions),
+                nameof(ScriptObjectExtensions.SetMember),
                 null,
+                convertExpr,
                 Expression.Constant(info.Index),
                 ExpressionHelper.DynamicConvert(value.Expression, typeof(object))
                 );
@@ -61,9 +64,10 @@
             var restrictions = GetDefaultRestrictions().Merge(
                 BindingRestrictions.GetExpressionRestriction(
                     Expression.Call(
-                        ScriptObjectExpr,
-                        "IsValidSetMember",
+                        typeof(ScriptObjectExtensions),
+                        nameof(ScriptObjectExtensions.IsValidSetMember),
                         null,
+                        convertExpr,
                         Expression.Constant(info.MemberIndex)
                         )
                     )
@@ -80,23 +84,26 @@
                 return new DynamicMetaObject(propertyExpr, GetDefaultRestrictions());
             }
 
-            //if (ScriptObject.HasTarget && TypeProvider.Current.TryGetProperty(ScriptObject.TargetType, binder.Name, out propertyInfo))
-            //{
-            //    var propertyExpr = ExpressionHelper.DynamicConvert(
-            //        Expression.Property(
-            //            Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType),
-            //            propertyInfo), typeof(object)
-            //        );
+            if (ScriptObject.HasTarget && TypeProvider.Current.TryGetProperty(ScriptObject.TargetType, binder.Name, out propertyInfo))
+            {
+                var propertyExpr = ExpressionHelper.DynamicConvert(
+                    Expression.Property(
+                        Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType),
+                        propertyInfo), typeof(object)
+                    );
 
-            //    return new DynamicMetaObject(propertyExpr, GetDefaultRestrictions());
-            //}
+                return new DynamicMetaObject(propertyExpr, GetDefaultRestrictions());
+            }
 
             if (MemberIndexLookup.Current.TryGetMemberIndex(ScriptObject.MemberIndex, binder.Name, out MemberLookupInfo info))
             {
+                var convertExpr = Expression.Convert(Expression, typeof(IScriptObject));
+
                 var expr = Expression.Call(
-                ScriptObjectExpr,
-                "GetMember",
+                typeof(ScriptObjectExtensions),
+                nameof(ScriptObjectExtensions.GetMember),
                 null,
+                convertExpr,
                 Expression.Constant(info.Index)
                 );
 
@@ -104,9 +111,10 @@
                     .Merge(
                     BindingRestrictions.GetExpressionRestriction(
                         Expression.Call(
-                            ScriptObjectExpr,
-                            "IsValidGetMember",
+                            typeof(ScriptObjectExtensions),
+                            nameof(ScriptObjectExtensions.IsValidGetMember),
                             null,
+                            convertExpr,
                             Expression.Constant(info.MemberIndex)
                             )
                         )
@@ -118,17 +126,32 @@
             if (ExpressionHelper.TryGetMethodExpression(ScriptObjectExpr, binder.Name, out Expression methodExpr))
             {
                 var setMemberExpr = ExpressionHelper.DynamicSetMember(binder.Name, Expression, methodExpr);
-                var restrictions = GetDefaultRestrictions()
-                    .Merge(
-                    BindingRestrictions.GetExpressionRestriction(
-                        Expression.Call(
-                            ScriptObjectExpr,
-                            "IsValidGetMember",
-                            null,
-                            Expression.Constant(ScriptObject.MemberIndex)
-                            )
-                        )
+
+                var convertExpr = Expression.Convert(Expression, typeof(IScriptObject));
+                var callExpr = Expression.Call(
+                    typeof(ScriptObjectExtensions),
+                    nameof(ScriptObjectExtensions.IsValidGetMember),
+                    null,
+                    convertExpr,
+                    Expression.PropertyOrField(convertExpr, nameof(IScriptObject.MemberIndex))
                     );
+
+                var restrictions = GetDefaultRestrictions()
+                   .Merge(
+                   BindingRestrictions.GetExpressionRestriction(callExpr)
+                   );
+
+                //var restrictions = GetDefaultRestrictions()
+                //    .Merge(
+                //    BindingRestrictions.GetExpressionRestriction(
+                //        Expression.Call(
+                //            ScriptObjectExpr,
+                //            "IsValidGetMember",
+                //            null,
+                //            Expression.Constant(ScriptObject.MemberIndex)
+                //            )
+                //        )
+                //    );
 
                 return new DynamicMetaObject(setMemberExpr, restrictions);
             }
@@ -178,31 +201,32 @@
                     return new DynamicMetaObject(convertValueExpr, restrictions);
                 }
 
-                //if (ScriptObject.HasTarget && TypeProvider.Current.TryGetIndex(ScriptObject.TargetType, indexes[0].LimitType, out propertyInfo))
-                //{
-                //    var indexType = propertyInfo.GetIndexParameters().Single().ParameterType;
-                //    var indexValue = ExpressionHelper.DynamicConvert(indexes[0].Expression, indexType);
-                //    var indexExpr = Expression.MakeIndex(
-                //        Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType),
-                //        propertyInfo,
-                //        new[] { indexValue });
-                //    var setIndexExpr = Expression.Assign(
-                //        indexExpr,
-                //        ExpressionHelper.DynamicConvert(value.Expression, propertyInfo.PropertyType));
+                if (ScriptObject.HasTarget && TypeProvider.Current.TryGetIndex(ScriptObject.TargetType, indexes[0].LimitType, out propertyInfo))
+                {
+                    var indexType = propertyInfo.GetIndexParameters().Single().ParameterType;
+                    var indexValue = ExpressionHelper.DynamicConvert(indexes[0].Expression, indexType);
+                    var indexExpr = Expression.MakeIndex(
+                        Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType),
+                        propertyInfo,
+                        new[] { indexValue });
+                    var setIndexExpr = Expression.Assign(
+                        indexExpr,
+                        ExpressionHelper.DynamicConvert(value.Expression, propertyInfo.PropertyType));
 
-                //    var convertValueExpr = ExpressionHelper.DynamicConvert(setIndexExpr, typeof(object));
+                    var convertValueExpr = ExpressionHelper.DynamicConvert(setIndexExpr, typeof(object));
 
-                //    var restrictions = GetIndexBindingRestrictions(indexes[0]);
+                    var restrictions = GetIndexBindingRestrictions(indexes[0]);
 
-                //    return new DynamicMetaObject(convertValueExpr, restrictions);
-                //}
+                    return new DynamicMetaObject(convertValueExpr, restrictions);
+                }
 
                 if (indexes[0].Value is string)
                 {
                     var expr = Expression.Call(
-                        ScriptObjectExpr,
-                        "SetIndex",
+                        typeof(ScriptObjectExtensions),
+                        nameof(ScriptObjectExtensions.SetIndex),
                         null,
+                        Expression.Convert(Expression, typeof(IScriptObject)),
                         Expression.Convert(indexes[0].Expression, typeof(string)),
                         ExpressionHelper.DynamicConvert(value.Expression, typeof(object)));
 
@@ -247,29 +271,30 @@
                     return new DynamicMetaObject(indexExpr, restrictions);
                 }
 
-                //if (ScriptObject.HasTarget && TypeProvider.Current.TryGetIndex(ScriptObject.TargetType, indexes[0].LimitType, out propertyInfo))
-                //{
-                //    var indexType = propertyInfo.GetIndexParameters().Single().ParameterType;
-                //    var indexValue = ExpressionHelper.DynamicConvert(indexes[0].Expression, indexType);
-                //    var indexExpr = ExpressionHelper.DynamicConvert(
-                //        Expression.MakeIndex(
-                //            Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType),
-                //            propertyInfo,
-                //            new[] { indexValue }),
-                //        typeof(object)
-                //        );
+                if (ScriptObject.HasTarget && TypeProvider.Current.TryGetIndex(ScriptObject.TargetType, indexes[0].LimitType, out propertyInfo))
+                {
+                    var indexType = propertyInfo.GetIndexParameters().Single().ParameterType;
+                    var indexValue = ExpressionHelper.DynamicConvert(indexes[0].Expression, indexType);
+                    var indexExpr = ExpressionHelper.DynamicConvert(
+                        Expression.MakeIndex(
+                            Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType),
+                            propertyInfo,
+                            new[] { indexValue }),
+                        typeof(object)
+                        );
 
-                //    var restrictions = GetIndexBindingRestrictions(indexes[0]);
+                    var restrictions = GetIndexBindingRestrictions(indexes[0]);
 
-                //    return new DynamicMetaObject(indexExpr, restrictions);
-                //}
+                    return new DynamicMetaObject(indexExpr, restrictions);
+                }
 
                 if (indexes[0].Value is string)
                 {
                     var expr = Expression.Call(
-                        ScriptObjectExpr,
-                        "GetIndex",
+                        typeof(ScriptObjectExtensions),
+                        nameof(ScriptObjectExtensions.GetIndex),
                         null,
+                        Expression.Convert(Expression, typeof(IScriptObject)),
                         Expression.Convert(indexes[0].Expression, typeof(string))
                         );
 
@@ -329,22 +354,22 @@
                 return new DynamicMetaObject(expr, restrictions);
             }
 
-            //if (ScriptObject.HasTarget && binder.Type.IsAssignableFrom(ScriptObject.TargetType))
-            //{
-            //    var expr = Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType);
-            //    var restrictions = GetDefaultRestrictions();
+            if (ScriptObject.HasTarget && binder.Type.IsAssignableFrom(ScriptObject.TargetType))
+            {
+                var expr = Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType);
+                var restrictions = GetDefaultRestrictions();
 
-            //    return new DynamicMetaObject(expr, restrictions);
-            //}
+                return new DynamicMetaObject(expr, restrictions);
+            }
 
-            //if (ScriptObject.HasTarget && TypeProvider.Current.TryGetConvertOperator(ScriptObject.TargetType, binder.Type, out MethodInfo convertMethod))
-            //{
-            //    var convertExpr = Expression.Call(convertMethod,
-            //        Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType));
-            //    var restrictions = GetDefaultRestrictions();
+            if (ScriptObject.HasTarget && TypeProvider.Current.TryGetConvertOperator(ScriptObject.TargetType, binder.Type, out MethodInfo convertMethod))
+            {
+                var convertExpr = Expression.Call(convertMethod,
+                    Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType));
+                var restrictions = GetDefaultRestrictions();
 
-            //    return new DynamicMetaObject(convertExpr, restrictions);
-            //}
+                return new DynamicMetaObject(convertExpr, restrictions);
+            }
 
             if (binder.Type.IsAssignableFrom(LimitType))
             {
@@ -355,7 +380,7 @@
             }
 
             
-            if (TypeProvider.Current.TryGetConvertOperator(LimitType, binder.Type, out MethodInfo convertMethod))
+            if (TypeProvider.Current.TryGetConvertOperator(LimitType, binder.Type, out convertMethod))
             {
                 var callExpr = Expression.Call(
                     convertMethod,
@@ -397,9 +422,10 @@
                     .Merge(
                     BindingRestrictions.GetExpressionRestriction(
                         Expression.Call(
-                            ScriptObjectExpr,
-                            "IsValidGetMember",
+                            typeof(ScriptObjectExtensions),
+                            nameof(ScriptObjectExtensions.IsValidGetMember),
                             null,
+                            Expression.Convert(Expression, typeof(IScriptObject)),
                             Expression.Constant(ScriptObject.MemberIndex)
                             )
                         )
