@@ -209,6 +209,7 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
         public void SetMemberThreadingTest()
         {
             const int numLoops = 100;
@@ -239,6 +240,7 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
         public void GetMemberThreadingTest()
         {
             const int numLoops = 100;

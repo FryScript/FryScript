@@ -16,7 +16,7 @@
             get { return Expression.Convert(Expression, typeof (ScriptPrimitive<T>)); }
         }
 
-        private Expression ScriptObjectTargetExpr { get { return Expression.Convert(Expression.Field(ScriptObjectExpr, "Target"), typeof(T)); } }
+        private Expression ScriptObjectTargetExpr { get { return Expression.Convert(Expression.PropertyOrField(ScriptObjectExpr, "Target"), typeof(T)); } }
 
         public MetaScriptPrimitive(Expression expression, BindingRestrictions restrictions, object value)
             : base(expression, restrictions, value)

@@ -11,17 +11,18 @@ namespace FryScript
     using CallSites;
     using HostInterop;
 
-    public class ScriptObject : IScriptType, IDynamicMetaObjectProvider, IEnumerable<object>
+    public class ScriptObject : IScriptType, IDynamicMetaObjectProvider, IEnumerable<object>, IScriptObject
     {
         private readonly object _lock = new object();
         public const string ObjectName = "[object]";
 
         internal string ScriptType;
         internal HashSet<string> Extends;
-        internal MemberIndex MemberIndex = MemberIndex.Root;
-        internal object[] MemberData;
+        public MemberIndex MemberIndex { get; set; }
+        public object[] MemberData { get; set; }
+
         internal Func<ScriptObject, object> Ctor;
-        internal object Target;
+        public object Target { get; set; }
 
         internal Type TargetType { get { return Target.GetType(); } }
 
@@ -29,8 +30,8 @@ namespace FryScript
 
         public object this[string name]
         {
-            get { return GetIndex(name); }
-            set { SetIndex(name, value); }
+            get { return (this as IScriptObject).GetIndex(name); }
+            set { (this as IScriptObject).SetIndex(name, value); }
         }
 
         public ScriptObject()
@@ -45,6 +46,7 @@ namespace FryScript
             HashSet<string> extends = null, 
             bool autoConstruct = true)
         {
+            MemberIndex = MemberIndex.Root;
             SetTarget(target);
             ScriptType = scriptType ?? ObjectName;
             Ctor = ctor;
@@ -123,68 +125,51 @@ namespace FryScript
                 );
         }
 
-        internal object SetMember(int index,  object value)
+        object IScriptObject.SetMember(int index,  object value)
         {
             lock (_lock)
             {
-                if (MemberData == null)
-                    MemberData = new object[16];
-
-                if(MemberData.Length <= index)
-                    while (MemberData.Length <= index)
-                        Array.Resize(ref MemberData, MemberData.Length + 16);
-
-                return MemberData[index] = value;
+                return ScriptObjectExtensions.SetMember(this, index, value);
             }
         }
 
-        internal object SetIndex(string name, object value)
+        object IScriptObject.SetIndex(string name, object value)
         {
             lock (_lock)
             {
-                return CallSiteCache.Current.SetMember(name, this, value);
+                return ScriptObjectExtensions.SetIndex(this, name, value);
             }
         }
 
-        internal object GetMember(int index)
+        object IScriptObject.GetMember(int index)
         {
             lock (_lock)
             {
-                return MemberData[index];
+                return ScriptObjectExtensions.GetMember(this, index);
             }
         }
 
-        internal object GetIndex(string name)
+        object IScriptObject.GetIndex(string name)
         {
             lock (_lock)
             {
-                return CallSiteCache.Current.GetMember(name, this);
+                return ScriptObjectExtensions.GetIndex(this, name);
             }
         }
 
-        internal bool IsValidSetMember(MemberIndex memberIndex)
+        bool IScriptObject.IsValidSetMember(MemberIndex memberIndex)
         {
             lock(_lock)
             {
-                var curIndex = MemberIndex;
-                if (curIndex == memberIndex)
-                    return true;
-
-                if (curIndex.CurrentHash == memberIndex.PreviousHash)
-                {
-                    MemberIndex = memberIndex;
-                    return true;
-                }
-
-                return false;
+                return ScriptObjectExtensions.IsValidSetMember(this, memberIndex);
             }
         }
 
-        internal bool IsValidGetMember(MemberIndex memberIndex)
+        bool IScriptObject.IsValidGetMember(MemberIndex memberIndex)
         {
             lock(_lock)
             {
-                return MemberIndex == memberIndex;
+                return ScriptObjectExtensions.IsValidGetMember(this, memberIndex);
             }
         }
 
@@ -228,16 +213,7 @@ namespace FryScript
 
         public IEnumerable<string> GetMembers()
         {
-            var members = TypeProvider.Current.GetMemberNames(GetType());
-
-            if (HasTarget)
-            {
-                members = members.Union(TypeProvider.Current.GetMemberNames(TargetType));
-            }
-
-            members = members.Union(MemberIndex.Keys);
-
-            return members;
+            return ScriptObjectExtensions.GetMembers(this);
         }
 
         public bool HasMember(string name)

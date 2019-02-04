@@ -307,7 +307,7 @@ namespace FryScript.Helpers
             var paramExpr = Expression.Parameter(extensionType);
             var newExtensionExpr = Expression.New(extensionType.GetConstructor(new Type[0]));
             var assignParamExpr = Expression.Assign(paramExpr, newExtensionExpr);
-            var getTargetExpr = Expression.Field(paramExpr, "Target");
+            var getTargetExpr = Expression.PropertyOrField(paramExpr, "Target");
             var setTargetExpr = Expression.Assign(getTargetExpr, Expression.Convert(targetExpr, typeof(object)));
 
             var newFuncExpr = ScriptableMethodHelper.CreateMethod(paramExpr, methodInfo);
