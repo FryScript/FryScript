@@ -65,7 +65,8 @@ namespace FryScript.HostInterop
                 TypeInfo = typeInfo
             };
 
-            ImplementInterface<IScriptable>(context);    
+            ImplementInterface<IScriptable>(context);
+            ImplementInterface<IScriptObject>(context);
             OverrideVirtualMethods(context);
             DefineStaticCtor(context);
             DefineParameterlessConstructor(context);
@@ -81,10 +82,10 @@ namespace FryScript.HostInterop
         {
             var typeInfo = typeof(T).GetTypeInfo();
 
-            if (context.TypeInfo.ImplementedInterfaces.Any(t => t == typeof(IScriptable)))
+            if (context.TypeInfo.ImplementedInterfaces.Any(t => t == typeof(T)))
                 return;
 
-            context.NewType.AddInterfaceImplementation(typeof(IScriptable));
+            context.NewType.AddInterfaceImplementation(typeof(T));
 
             var methodAttribs = MethodAttributes.Public
             | MethodAttributes.Virtual
@@ -344,6 +345,12 @@ namespace FryScript.HostInterop
             var paramterlessCtor = context.TypeInfo.GetConstructor(Type.EmptyTypes);
 
             var il = ctor.GetILGenerator();
+            if(context.NewType.ImplementedInterfaces.Any(i => i  == typeof(IScriptObject)))
+            {
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Newobj, typeof(ObjectCore).GetTypeInfo().GetConstructor(new Type[0]));
+                il.Emit(OpCodes.Stfld, context.NewFields.First(f => f.Value.FieldType == typeof(ObjectCore)).Value);
+            }
             if (paramterlessCtor != null)
             {
                 il.Emit(OpCodes.Ldarg_0);

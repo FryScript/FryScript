@@ -13,6 +13,7 @@ namespace FryScript
 
     public class ScriptObject : IScriptType, IDynamicMetaObjectProvider, IEnumerable<object>, IScriptObject
     {
+        private readonly ObjectCore _objectCore = new ObjectCore();
         private readonly object _lock = new object();
         public const string ObjectName = "[object]";
 
@@ -27,6 +28,8 @@ namespace FryScript
         public Type TargetType { get { return Target.GetType(); } }
 
         public bool HasTarget { get { return Target != null; } }
+
+        public ObjectCore ObjectCore => _objectCore;
 
         public object this[string name]
         {
@@ -123,67 +126,6 @@ namespace FryScript
                 ctor: Ctor,
                 extends: Extends
                 );
-        }
-
-        object IScriptObject.SetMember(int index,  object value)
-        {
-            lock (_lock)
-            {
-                return ScriptObjectExtensions.SetMember(this, index, value);
-            }
-        }
-
-        object IScriptObject.SetIndex(string name, object value)
-        {
-            lock (_lock)
-            {
-                return ScriptObjectExtensions.SetIndex(this, name, value);
-            }
-        }
-
-        object IScriptObject.GetMember(int index)
-        {
-            lock (_lock)
-            {
-                return ScriptObjectExtensions.GetMember(this, index);
-            }
-        }
-
-        object IScriptObject.GetIndex(string name)
-        {
-            lock (_lock)
-            {
-                return ScriptObjectExtensions.GetIndex(this, name);
-            }
-        }
-
-        bool IScriptObject.IsValidSetMember(MemberIndex memberIndex)
-        {
-            lock(_lock)
-            {
-                return ScriptObjectExtensions.IsValidSetMember(this, memberIndex);
-            }
-        }
-
-        bool IScriptObject.IsValidGetMember(MemberIndex memberIndex)
-        {
-            lock(_lock)
-            {
-                return ScriptObjectExtensions.IsValidGetMember(this, memberIndex);
-            }
-        }
-
-        internal bool HasMemberOfType(string name, Type type)
-        {
-            lock (_lock)
-            {
-                if (!CallSiteCache.Current.HasMember(name, this))
-                    return false;
-
-                var value = CallSiteCache.Current.GetMember(name, this);
-
-                return value != null && value.GetType() == type;
-            }
         }
 
         internal bool TryGetMemberOfType<T>(string name, out T value)
