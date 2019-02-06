@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Dynamic;
 
 namespace FryScript
 {
-    public interface IScriptObject
+    public interface IScriptObject : IDynamicMetaObjectProvider
     {
         ObjectCore ObjectCore { get; }
         object Target { get; set; }

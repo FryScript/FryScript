@@ -11,10 +11,10 @@ namespace FryScript
     {
         public static object SetMember(this IScriptObject source, int index, object value)
         {
-            var memberData = source.MemberData ?? (source.MemberData = new object[16]);
+            var memberData = source.ObjectCore.MemberData ?? (source.ObjectCore.MemberData = new object[16]);
             
             if (memberData.Length <= index)
-                while (source.MemberData.Length <= index)
+                while (memberData.Length <= index)
                     Array.Resize(ref memberData, memberData.Length + 16);
 
             return memberData[index] = value;
@@ -27,7 +27,7 @@ namespace FryScript
 
         public static object GetMember(this IScriptObject source, int index)
         {
-            return source.MemberData[index];
+            return source.ObjectCore.MemberData[index];
         }
 
         public static object GetIndex(this IScriptObject source, string name)
@@ -37,13 +37,13 @@ namespace FryScript
 
         public static bool IsValidSetMember(this IScriptObject source, MemberIndex memberIndex)
         {
-            var curIndex = source.MemberIndex;
+            var curIndex = source.ObjectCore.MemberIndex;
             if (curIndex == memberIndex)
                 return true;
 
             if (curIndex.CurrentHash == memberIndex.PreviousHash)
             {
-                source.MemberIndex = memberIndex;
+                source.ObjectCore.MemberIndex = memberIndex;
                 return true;
             }
 
@@ -52,7 +52,7 @@ namespace FryScript
 
         public static bool IsValidGetMember(this IScriptObject source, MemberIndex memberIndex)
         {
-            return source.MemberIndex == memberIndex;
+            return source.ObjectCore.MemberIndex == memberIndex;
         }
 
         public static IEnumerable<string> GetMembers(this IScriptObject source)
@@ -64,7 +64,7 @@ namespace FryScript
             //    members = members.Union(TypeProvider.Current.GetMemberNames(TargetType));
             //}
 
-            members = members.Union(source.MemberIndex.Keys);
+            members = members.Union(source.ObjectCore.MemberIndex.Keys);
 
             return members;
         }

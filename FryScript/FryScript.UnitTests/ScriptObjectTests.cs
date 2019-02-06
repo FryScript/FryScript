@@ -70,7 +70,7 @@ namespace FryScript.UnitTests
 
             MemberLookupInfo info;
             MemberIndexLookup.Current.TryGetMemberIndex(ScriptObject.GetMemberIndex(_scriptObject), "test", out info);
-            var memberData = ScriptObject.GetMemberData(_scriptObject);
+            var memberData = _scriptObject.ObjectCore.MemberData;
 
             Assert.AreEqual(200, memberData[info.Index]);
         }

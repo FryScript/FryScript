@@ -49,7 +49,7 @@
                 return new DynamicMetaObject(convertSetPropertyExpr, GetDefaultRestrictions());
             }
 
-            var info = MemberIndexLookup.Current.MutateMemberIndex(ScriptObject.MemberIndex, binder.Name);
+            var info = MemberIndexLookup.Current.MutateMemberIndex(ScriptObject.ObjectCore.MemberIndex, binder.Name);
 
             var convertExpr = Expression.Convert(Expression, typeof(IScriptObject));
 
@@ -95,7 +95,7 @@
                 return new DynamicMetaObject(propertyExpr, GetDefaultRestrictions());
             }
 
-            if (MemberIndexLookup.Current.TryGetMemberIndex(ScriptObject.MemberIndex, binder.Name, out MemberLookupInfo info))
+            if (MemberIndexLookup.Current.TryGetMemberIndex(ScriptObject.ObjectCore.MemberIndex, binder.Name, out MemberLookupInfo info))
             {
                 var convertExpr = Expression.Convert(Expression, typeof(IScriptObject));
 
@@ -128,12 +128,13 @@
                 var setMemberExpr = ExpressionHelper.DynamicSetMember(binder.Name, Expression, methodExpr);
 
                 var convertExpr = Expression.Convert(Expression, typeof(IScriptObject));
+                var coreExpr = Expression.PropertyOrField(convertExpr, nameof(IScriptObject.ObjectCore));
                 var callExpr = Expression.Call(
                     typeof(ScriptObjectExtensions),
                     nameof(ScriptObjectExtensions.IsValidGetMember),
                     null,
                     convertExpr,
-                    Expression.PropertyOrField(convertExpr, nameof(IScriptObject.MemberIndex))
+                    Expression.Constant(ScriptObject.ObjectCore.MemberIndex)
                     );
 
                 var restrictions = GetDefaultRestrictions()
@@ -426,7 +427,7 @@
                             nameof(ScriptObjectExtensions.IsValidGetMember),
                             null,
                             Expression.Convert(Expression, typeof(IScriptObject)),
-                            Expression.Constant(ScriptObject.MemberIndex)
+                            Expression.Constant(ScriptObject.ObjectCore.MemberIndex)
                             )
                         )
                     );

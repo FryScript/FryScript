@@ -1,15 +1,16 @@
-﻿using System;
+﻿using FryScript.Binders;
+using System;
+using System.Runtime.CompilerServices;
 
 namespace FryScript
 {
     public class ObjectCore
     {
-        public readonly object[] MemberData;
-        public readonly MemberIndex MemberIndex;
+        public object[] MemberData;
+        public MemberIndex MemberIndex;
 
         public ObjectCore()
         {
-            MemberData = new object[16];
             MemberIndex = MemberIndex.Root;
         }
     }

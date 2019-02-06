@@ -1,6 +1,7 @@
 ﻿using FryScript.Binders;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -104,7 +105,7 @@ namespace FryScript.HostInterop
                     var fieldName = $"<FryScript>{p.Name}";
                     var field = context.NewFields[fieldName] = context.NewType.DefineField(fieldName, p.PropertyType, FieldAttributes.Private);
 
-                    if(p.CanRead)
+                    if (p.CanRead)
                     {
                         var methodName = $"get_{p.Name}";
                         var getMethod = context.NewMethods[methodName] = context.NewType.DefineMethod(methodName, methodAttribs, p.PropertyType, Type.EmptyTypes);
@@ -116,7 +117,7 @@ namespace FryScript.HostInterop
                         property.SetGetMethod(getMethod);
                     }
 
-                    if(p.CanWrite)
+                    if (p.CanWrite)
                     {
                         var methodName = $"set_{p.Name}";
                         var setMethod = context.NewMethods[methodName] = context.NewType.DefineMethod(methodName, methodAttribs, typeof(void), new[] { p.PropertyType });
@@ -129,6 +130,24 @@ namespace FryScript.HostInterop
                         property.SetSetMethod(setMethod);
                     }
                 });
+
+            if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(typeof(T)))
+            {
+                var method = context.NewType.DefineMethod(
+                    nameof(IDynamicMetaObjectProvider.GetMetaObject),
+                    methodAttribs,
+                    typeof(DynamicMetaObject),
+                    new[]{
+                        typeof(Expression)
+                    });
+                var il = method.GetILGenerator();
+                il.Emit(OpCodes.Nop);
+                il.Emit(OpCodes.Ldarg_1);
+                il.Emit(OpCodes.Ldsfld, typeof(BindingRestrictions).GetTypeInfo().DeclaredFields.First(f => f.Name == nameof(BindingRestrictions.Empty)));
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Newobj, typeof(MetaScriptObject).GetTypeInfo().GetConstructor(new[] { typeof(Expression), typeof(BindingRestrictions), typeof(object) }));
+                il.Emit(OpCodes.Ret);
+            }
         }
 
         private static void OverrideVirtualMethods(TypeContext context)
@@ -201,8 +220,9 @@ namespace FryScript.HostInterop
             il.Emit(OpCodes.Ldfld, invokeTargetField);
             il.Emit(OpCodes.Ldsfld, invokeField);
 
+            //il.Emit(OpCodes.Ldarg_0);
             il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Call, context.NewProperties["Script"].GetGetMethod());
+            //il.Emit(OpCodes.Call, context.NewProperties["Script"].GetGetMethod());
 
             baseParameters
                 .Select((p, i) => new
@@ -230,7 +250,7 @@ namespace FryScript.HostInterop
                 il.Emit(OpCodes.Callvirt, convertInvokeMethod);
             }
 
-            if(baseMethodInfo.ReturnType == typeof(void))
+            if (baseMethodInfo.ReturnType == typeof(void))
             {
                 il.Emit(OpCodes.Pop);
             }
@@ -241,10 +261,10 @@ namespace FryScript.HostInterop
         private static void ProxyBaseMethod(string scriptName, MethodInfo baseMethodInfo, TypeContext context)
         {
             var parameters = baseMethodInfo.GetParameters().Select((p, i) => new
-                {
-                    P = p,
-                    I = i + 1
-                })
+            {
+                P = p,
+                I = i + 1
+            })
                 .ToList();
 
             var proxyMethodName = $"<FryScript><{baseMethodInfo.Name}>_proxy";
@@ -289,7 +309,7 @@ namespace FryScript.HostInterop
             il.Emit(OpCodes.Call, baseMethodInfo);
             il.Emit(OpCodes.Ret);
 
-            
+
         }
 
         private static FieldInfo GetConvertCallSite(MethodInfo methodInfo, TypeContext context)
@@ -345,7 +365,7 @@ namespace FryScript.HostInterop
             var paramterlessCtor = context.TypeInfo.GetConstructor(Type.EmptyTypes);
 
             var il = ctor.GetILGenerator();
-            if(context.NewType.ImplementedInterfaces.Any(i => i  == typeof(IScriptObject)))
+            if (context.NewType.ImplementedInterfaces.Any(i => i == typeof(IScriptObject)))
             {
                 il.Emit(OpCodes.Ldarg_0);
                 il.Emit(OpCodes.Newobj, typeof(ObjectCore).GetTypeInfo().GetConstructor(new Type[0]));
@@ -361,7 +381,7 @@ namespace FryScript.HostInterop
 
         private static void DefineStaticCtor(TypeContext context)
         {
-            
+
 
             var staticCtor = context.NewType.DefineConstructor(
                 MethodAttributes.HideBySig
