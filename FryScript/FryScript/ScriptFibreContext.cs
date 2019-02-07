@@ -39,14 +39,11 @@ namespace FryScript
         [ScriptableProperty("hasResult")]
         public bool HasResult => _result != NoResult;
 
-        new public Func<ScriptFibreContext, object> Target => base.Target as Func<ScriptFibreContext, object>;
+        public Func<ScriptFibreContext, object> Target { get; set; }
 
         public ScriptFibreContext(Func<ScriptFibreContext, object> target)
-            : base(target)
         {
-            if (target == null)
-                throw new ArgumentNullException(nameof(target));
-
+            Target = target ?? throw new ArgumentNullException(nameof(target));
             _stack.Push(this);
         }
 

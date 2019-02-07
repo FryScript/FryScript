@@ -119,7 +119,7 @@ namespace FryScript
 
             var func = _compiler.Compile(script, keyName, compilerContext);
 
-            scriptObject = new ScriptObject(null, keyName, func, compilerContext.Extends);
+            scriptObject = new ScriptObject(keyName, func, compilerContext.Extends);
 
             CreateProto(scriptObject, compilerContext);
 
@@ -158,19 +158,19 @@ namespace FryScript
             return Compile(uri.AbsoluteUri, script);
         }
 
-        public T Get<T>(string name)
-            where T : class
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("name");
+        //public T Get<T>(string name)
+        //    where T : class
+        //{
+        //    if (string.IsNullOrWhiteSpace(name))
+        //        throw new ArgumentNullException("name");
 
-            var scriptObject = Get(name);
+        //    var scriptObject = Get(name);
 
-            if (!(scriptObject.Target is T))
-                throw new ArgumentException(string.Format("Script {0} cannot be converted to type {1}", name, typeof(T).FullName), "name");
+        //    //if (!(scriptObject.Target is T))
+        //    //    throw new ArgumentException(string.Format("Script {0} cannot be converted to type {1}", name, typeof(T).FullName), "name");
 
-            return scriptObject.Target as T;
-        }
+        //    return scriptObject.Target as T;
+        //}
 
         public void Import(Type type)
         {
@@ -236,13 +236,13 @@ namespace FryScript
 
             var scriptObject = Get(keyName);
 
-            if (scriptObject.HasTarget && scriptObject.TargetType != scriptable.GetType())
-                throw new ArgumentException(string.Format("Scriptable type {0} does not match the native type of script {1} expected {2}", scriptable.GetType().FullName, name, scriptObject.TargetType.FullName), "scriptable");
+            //if (scriptObject.HasTarget && scriptObject.TargetType != scriptable.GetType())
+            //    throw new ArgumentException(string.Format("Scriptable type {0} does not match the native type of script {1} expected {2}", scriptable.GetType().FullName, name, scriptObject.TargetType.FullName), "scriptable");
 
             if (scriptable.Script != null)
                 throw new ArgumentException("Scriptable type has already been bound to a script", "scriptable");
 
-            var newScriptObject = new ScriptObject(scriptable, scriptObject.GetScriptType(), scriptObject.Ctor, scriptObject.Extends);
+            var newScriptObject = new ScriptObject(scriptObject.GetScriptType(), scriptObject.Ctor, scriptObject.Extends);
 
             InvokeConstructor(newScriptObject, args);
 
@@ -277,14 +277,16 @@ namespace FryScript
 
             var scriptObject = Get(keyName);
 
-            if (scriptObject.Target == null || !typeof(T).IsAssignableFrom(scriptObject.TargetType))
-                throw new ArgumentException(string.Format("Cannot create a new instance of type {0} bound to script {1}", typeof(T).FullName, name), "name");
+            //if (scriptObject.Target == null || !typeof(T).IsAssignableFrom(scriptObject.TargetType))
+            //    throw new ArgumentException(string.Format("Cannot create a new instance of type {0} bound to script {1}", typeof(T).FullName, name), "name");
 
             var newScriptObject = scriptObject.CreateInstance();
 
             InvokeConstructor(newScriptObject, args);
 
-            return newScriptObject.Target as T;
+            //return newScriptObject.Target as T;
+
+            throw new NotImplementedException();
         }
 
         private bool TryResolveUri(string name, string relativeTo, out Uri uri, out IScriptProvider provider)

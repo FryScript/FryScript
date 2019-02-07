@@ -10,16 +10,18 @@ namespace FryScript
     {
         public const string DefaultScriptType = "[function]";
 
-        internal Delegate TargetDelegate { get { return Target as Delegate; } }
+        public Delegate TargetDelegate { get; set; }
 
         public ScriptFunction(Delegate target)
-            : base(target: target, scriptType: DefaultScriptType)
+            : base(scriptType: DefaultScriptType)
         {
+            TargetDelegate = target ?? throw new ArgumentNullException(nameof(target));
         }
 
         internal ScriptFunction(Delegate target, string scriptType)
-            : base(target: target, scriptType: scriptType)
+            : base(scriptType: scriptType)
         {
+            TargetDelegate = target ?? throw new ArgumentNullException(nameof(target));
         }
 
         public void Invoke(params object[] args)

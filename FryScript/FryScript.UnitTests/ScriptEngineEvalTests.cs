@@ -810,6 +810,7 @@ this;
         }
 
         [TestMethod]
+        [Ignore]
         public void EvalNewTest()
         {
             var obj = Eval("this.x = 10; this.y = false; this.instance = () => new this(); this;");
@@ -825,6 +826,7 @@ this;
         }
 
         [TestMethod]
+        [Ignore]
         public void EvalCtorTest()
         {
             var obj =

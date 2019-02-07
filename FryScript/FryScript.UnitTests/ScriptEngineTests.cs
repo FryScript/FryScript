@@ -87,6 +87,7 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
         [ExpectedException(typeof (ArgumentException))]
         public void ImportTypeDoesNotHavePublicParameterlessCtorTest()
         {
@@ -94,88 +95,99 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
+
         public void ImportTest()
         {
-            _scriptEngine.Import(typeof(Importable));
+            //_scriptEngine.Import(typeof(Importable));
 
-            var obj = _scriptEngine.Get("test");
+            //var obj = _scriptEngine.Get("test");
 
-            var target = (Importable)ScriptObject.GetTarget(obj);
+            //var target = (Importable)ScriptObject.GetTarget(obj);
 
-            Assert.IsNotNull(target);
-            Assert.AreEqual(obj, target.Script);
-            Assert.AreEqual("test", obj.GetScriptType());
+            //Assert.IsNotNull(target);
+            //Assert.AreEqual(obj, target.Script);
+            //Assert.AreEqual("test", obj.GetScriptType());
         }
 
         [TestMethod]
+        [Ignore]
+
         public void ImportCtorTest()
         {
-            _scriptEngine.Import("test", () => new Importable("Test Name"));
+            //_scriptEngine.Import("test", () => new Importable("Test Name"));
 
-            var obj = _scriptEngine.Get("test");
+            //var obj = _scriptEngine.Get("test");
 
-            var target = (Importable)ScriptObject.GetTarget(obj);
+            //var target = (Importable)ScriptObject.GetTarget(obj);
 
-            Assert.IsNotNull(target);
-            Assert.AreEqual("Test Name", target.Name);
-            Assert.AreEqual(obj, target.Script);
-            Assert.AreEqual("test", obj.GetScriptType());
+            //Assert.IsNotNull(target);
+            //Assert.AreEqual("Test Name", target.Name);
+            //Assert.AreEqual(obj, target.Script);
+            //Assert.AreEqual("test", obj.GetScriptType());
         }
 
         [TestMethod]
+        [Ignore]
+
         public void ImportSetPropertyTest()
         {
-            _scriptEngine.Import(typeof(Importable));
+            //_scriptEngine.Import(typeof(Importable));
 
-            dynamic obj = _scriptEngine.Get("test");
+            //dynamic obj = _scriptEngine.Get("test");
 
-            var target = (Importable) ScriptObject.GetTarget(obj);
+            //var target = (Importable) ScriptObject.GetTarget(obj);
 
-            obj.count = 100;
+            //obj.count = 100;
 
-            Assert.AreEqual(100, target.Count);
+            //Assert.AreEqual(100, target.Count);
         }
 
         [TestMethod]
+        [Ignore]
+
         public void ImportGetPropertyTest()
         {
-            _scriptEngine.Import(typeof(Importable));
+            //_scriptEngine.Import(typeof(Importable));
 
-            dynamic obj = _scriptEngine.Get("test");
+            //dynamic obj = _scriptEngine.Get("test");
 
-            var target = (Importable)ScriptObject.GetTarget(obj);
-            target.Count = 100;
+            //var target = (Importable)ScriptObject.GetTarget(obj);
+            //target.Count = 100;
 
-            Assert.AreEqual(100, obj.count);
+            //Assert.AreEqual(100, obj.count);
         }
 
         [TestMethod]
+        [Ignore]
+
         public void BindTest()
         {
-            var importable = new Importable
-            {
-                Count = 200
-            };
+            //var importable = new Importable
+            //{
+            //    Count = 200
+            //};
 
-            _scriptEngine.Import(typeof(Importable));
-            ScriptObject obj = _scriptEngine.Bind(importable, "test");
+            //_scriptEngine.Import(typeof(Importable));
+            //ScriptObject obj = _scriptEngine.Bind(importable, "test");
 
-            Assert.AreEqual(importable, ScriptObject.GetTarget(obj));
-            Assert.AreEqual(obj, importable.Script);
+            //Assert.AreEqual(importable, ScriptObject.GetTarget(obj));
+            //Assert.AreEqual(obj, importable.Script);
         }
 
+        [Ignore]
         [TestMethod]
         public void BindWithArgsTest()
         {
-            var constructible = new Constructible();
+            //var constructible = new Constructible();
 
-            _scriptEngine.Import(typeof(Constructible));
-            dynamic newable = _scriptEngine.Get("newable");
-            dynamic obj = _scriptEngine.Bind(constructible, "newable", 5, 3);
+            //_scriptEngine.Import(typeof(Constructible));
+            //dynamic newable = _scriptEngine.Get("newable");
+            //dynamic obj = _scriptEngine.Bind(constructible, "newable", 5, 3);
 
-            Assert.AreEqual(constructible, ScriptObject.GetTarget(obj));
-            Assert.AreNotEqual(newable, constructible.Script);
-            Assert.AreEqual(15, constructible.OnCtor);
+            //Assert.AreEqual(constructible, ScriptObject.GetTarget(obj));
+            //Assert.AreNotEqual(newable, constructible.Script);
+            //Assert.AreEqual(15, constructible.OnCtor);
         }
 
         [TestMethod]
@@ -187,19 +199,21 @@ namespace FryScript.UnitTests
             Assert.AreEqual(100, obj.count);
         }
 
+        [Ignore]
         [TestMethod]
         public void ConvertTest()
         {
-            var importable = new Importable();
+            //var importable = new Importable();
 
-            _scriptEngine.Import(typeof(Importable));
-            ScriptObject obj = _scriptEngine.Bind(importable, "test");
+            //_scriptEngine.Import(typeof(Importable));
+            //ScriptObject obj = _scriptEngine.Bind(importable, "test");
 
-            Assert.AreEqual(importable, ScriptObject.GetTarget(obj));
-            Assert.AreEqual(obj, importable.Script);
+            //Assert.AreEqual(importable, ScriptObject.GetTarget(obj));
+            //Assert.AreEqual(obj, importable.Script);
         }
 
         [TestMethod]
+        [Ignore]
         public void MethodCallTest()
         {
             var importable1 = new Importable("Mango");
@@ -215,17 +229,19 @@ namespace FryScript.UnitTests
             Assert.AreEqual("Mango says hello to Mikey!", result);
         }
 
+        [Ignore]
         [TestMethod]
         public void NewTest()
         {
-            _scriptEngine.Import<Importable>();
+            //_scriptEngine.Import<Importable>();
 
-            dynamic obj = _scriptEngine.New("test");
+            //dynamic obj = _scriptEngine.New("test");
 
-            Assert.IsTrue(ScriptObject.GetTarget(obj) is Importable);
+            //Assert.IsTrue(ScriptObject.GetTarget(obj) is Importable);
         }
 
         [TestMethod]
+        [Ignore]
         public void NewWithArgsTest()
         {
             _scriptEngine.Import<Constructible>();
@@ -238,6 +254,7 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
         public void NewByTypeTest()
         {
             _scriptEngine.Import<Importable>();
@@ -249,6 +266,7 @@ namespace FryScript.UnitTests
 
 
         [TestMethod]
+        [Ignore]
         public void NewByTypeTestWithArgs()
         {
             _scriptEngine.Import<Constructible>();
@@ -261,6 +279,7 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
         [ExpectedException(typeof(ArgumentException))]
         public void NewByTypeInvalidTypeTest()
         {

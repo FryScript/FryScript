@@ -2,14 +2,16 @@
 using System.Linq.Expressions;
 using FryScript.Helpers;
 using FryScript.Extensions;
+using System;
 
 namespace FryScript
 {
     public class ScriptPrimitive<T> : ScriptObject
     {
+        public T Target { get; set; }
         public ScriptPrimitive()
         {
-            Target = typeof(T).GetDefaultValue();
+            Target = (T)typeof(T).GetDefaultValue();
             ScriptType = ScriptTypeHelper.GetScriptType(Target);
         }
 
@@ -20,7 +22,7 @@ namespace FryScript
 
         public static implicit operator T(ScriptPrimitive<T> scriptPrimitive)
         {
-            return (T) scriptPrimitive.Target;
+            return (T)scriptPrimitive.Target;
         }
     }
 }

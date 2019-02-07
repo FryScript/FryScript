@@ -13,16 +13,22 @@ namespace FryScript.Helpers
 {
     public static class ExpressionHelper
     {
-        private static readonly ConstructorInfo ScriptObjectCtor =
-                (from c in typeof(ScriptObject).GetTypeInfo().DeclaredConstructors
-                 let p = c.GetParameters()
-                 where p.Length == 5
-                       && p[0].ParameterType == typeof(object)
-                       && p[1].ParameterType == typeof(string)
-                       && p[2].ParameterType == typeof(Func<ScriptObject, object>)
-                       && p[3].ParameterType == typeof(HashSet<string>)
-                       && p[4].ParameterType == typeof(bool)
-                 select c).Single();
+        private static readonly ConstructorInfo ScriptObjectCtor = typeof(ScriptObject).GetTypeInfo().GetConstructor(new[]
+        {
+            typeof(string),
+            typeof(Func<ScriptObject, object>),
+            typeof(HashSet<string>),
+            typeof(bool)
+        });
+                //(from c in typeof(ScriptObject).GetTypeInfo().DeclaredConstructors
+                // let p = c.GetParameters()
+                // where p.Length == 4
+                //       && p[0].ParameterType == typeof(object)
+                //       && p[1].ParameterType == typeof(string)
+                //       && p[2].ParameterType == typeof(Func<ScriptObject, object>)
+                //       && p[3].ParameterType == typeof(HashSet<string>)
+                //       && p[4].ParameterType == typeof(bool)
+                // select c).Single();
 
         public static Expression Null(Type type)
         {
@@ -217,7 +223,6 @@ namespace FryScript.Helpers
         }
 
         public static Expression NewScriptObject(
-            Expression target = null,
             Expression scriptType = null,
             Expression ctor = null,
             Expression extends = null,
@@ -225,7 +230,6 @@ namespace FryScript.Helpers
         {
             return Expression.New(
                 ScriptObjectCtor,
-                target ?? Null(typeof(object)),
                 scriptType ?? Null(typeof(string)),
                 ctor ?? Null(typeof(Func<ScriptObject, object>)),
                 extends ?? Null(typeof(HashSet<string>)),

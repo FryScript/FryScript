@@ -79,13 +79,16 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
+
         public void DefaultPrimitiveStringTest()
         {
-            var obj = _scriptEngine.Get("[string]");
-            Assert.AreEqual(string.Empty, ScriptObject.GetTarget(obj));
+            //var obj = _scriptEngine.Get("[string]");
+            //Assert.AreEqual(string.Empty, ScriptObject.GetTarget(obj));
         }
 
         [TestMethod]
+        [Ignore]
         public void NewPrimitiveStringTest()
         {
             var obj = Eval("@import \"[string]\" as string; new string();");

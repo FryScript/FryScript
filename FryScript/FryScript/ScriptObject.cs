@@ -13,28 +13,20 @@ namespace FryScript
 
     public class ScriptObject : IScriptType, IDynamicMetaObjectProvider, IEnumerable<object>, IScriptObject
     {
-        private readonly ObjectCore _objectCore = new ObjectCore();
         private readonly object _lock = new object();
         public const string ObjectName = "[object]";
 
         internal string ScriptType;
         internal HashSet<string> Extends;
-        public MemberIndex MemberIndex { get; set; }
-        public object[] MemberData { get; set; }
 
         internal Func<ScriptObject, object> Ctor;
-        public object Target { get; set; }
 
-        public Type TargetType { get { return Target.GetType(); } }
-
-        public bool HasTarget { get { return Target != null; } }
-
-        public ObjectCore ObjectCore => _objectCore;
+        public ObjectCore ObjectCore { get; } = new ObjectCore();
 
         public object this[string name]
         {
-            get { return (this as IScriptObject).GetIndex(name); }
-            set { (this as IScriptObject).SetIndex(name, value); }
+            get { return ScriptObjectExtensions.GetIndex(this, name); }
+            set { ScriptObjectExtensions.SetIndex(this, name, value); }
         }
 
         public ScriptObject()
@@ -42,15 +34,12 @@ namespace FryScript
         {
         }
 
-        internal ScriptObject(
-            object target = null, 
+        public ScriptObject(
             string scriptType = null,
             Func<ScriptObject, object> ctor = null,
             HashSet<string> extends = null, 
             bool autoConstruct = true)
         {
-            MemberIndex = MemberIndex.Root;
-            SetTarget(target);
             ScriptType = scriptType ?? ObjectName;
             Ctor = ctor;
             Extends = extends;
@@ -95,20 +84,6 @@ namespace FryScript
                 return false;
 
             return Extends.Contains(scriptType);
-        }
-
-        internal object SetTarget(object target)
-        {
-            if (Target == null && target != null)
-            {
-                Target = target;
-
-                var scriptable = target as IScriptable;
-                if (scriptable != null)
-                    scriptable.Script = this;
-            }
-
-            return this;
         }
 
         internal object Extend(ScriptObject scriptObject)
@@ -184,41 +159,6 @@ namespace FryScript
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public static object[] GetMemberData(ScriptObject scriptObject)
-        {
-            if (scriptObject == null)
-                throw new ArgumentNullException("scriptObject");
-
-            return scriptObject.MemberData;
-        }
-
-        public static object GetTarget(ScriptObject scriptObject)
-        {
-            if (scriptObject == null) 
-                throw new ArgumentNullException("scriptObject");
-
-            return scriptObject.Target;
-        }
-
-        public static void SetTarget(ScriptObject scriptObject, object target)
-        {
-            if (scriptObject == null) 
-                throw new ArgumentNullException("scriptObject");
-
-            if (target == null) 
-                throw new ArgumentNullException("target");
-
-            scriptObject.Target = target;
-        }
-
-        public static MemberIndex GetMemberIndex(ScriptObject scriptObject)
-        {
-            if (scriptObject == null) 
-                throw new ArgumentNullException("scriptObject");
-
-            return scriptObject.MemberIndex;
         }
     }
 }

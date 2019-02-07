@@ -6,6 +6,12 @@ namespace FryScript
 {
     public class MetaScriptFunction : MetaScriptObject
     {
+        public ScriptFunction ScriptFunction => Value as ScriptFunction;
+
+        public Expression ScriptFunctionExpr => Expression.Convert(Expression, typeof(ScriptFunction));
+
+        public Expression ScriptFunctionTargetDelegateExpr => Expression.PropertyOrField(ScriptFunctionExpr, nameof(ScriptFunction.TargetDelegate));
+
         public MetaScriptFunction(Expression expression, BindingRestrictions restrictions, object value)
             : base(expression, restrictions, value)
         {
@@ -13,7 +19,7 @@ namespace FryScript
 
         public override DynamicMetaObject BindInvoke(InvokeBinder binder, DynamicMetaObject[] args)
         {
-            var delegateTarget = new DynamicMetaObject(ScriptObjectTargetExpr, BindingRestrictions.Empty, ScriptObject.Target);
+            var delegateTarget = new DynamicMetaObject(ScriptFunctionTargetDelegateExpr, BindingRestrictions.Empty, ScriptFunction.TargetDelegate);
 
             return BindHelper.BindInvoke(binder, this, delegateTarget, args);
         }

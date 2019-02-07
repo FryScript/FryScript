@@ -17,7 +17,9 @@ namespace FryScript.HostInterop
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            return CreateNativeCtor(type);
+            //return CreateNativeCtor(type);
+
+            return new Func<ScriptObject, object>(s => s);
         }
 
         public static Func<ScriptObject, object> GetCtor<T>()
