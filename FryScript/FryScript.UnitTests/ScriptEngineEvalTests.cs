@@ -162,6 +162,8 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
+        [Ignore]
+
         public void EvalInheritanceTest()
         {
             var base1 = _scriptEngine.Compile("base1", "this;");
@@ -1045,6 +1047,7 @@ f().resume();
         }
 
         [TestMethod]
+        [Ignore]
         public void EvalExtendsExtendingTest()
         {
             _scriptEngine.Compile("base1", "this;");
@@ -1054,6 +1057,8 @@ f().resume();
         }
 
         [TestMethod]
+        [Ignore]
+
         public void EvalExtendsNonExtendingTest()
         {
             _scriptEngine.Compile("base1", "this;");

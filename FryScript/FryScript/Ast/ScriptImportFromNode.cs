@@ -25,13 +25,13 @@ namespace FryScript.Ast
             return GetImportExpression(scope, importObj, importParamsExpr);
         }
 
-        private Expression GetImportExpression(Scope scope, ScriptObject importObj, List<ParameterExpression> importParamExprs)
+        private Expression GetImportExpression(Scope scope, IScriptObject importObj, List<ParameterExpression> importParamExprs)
         {
             var importedMemberExprs = new List<Expression>();
 
             importParamExprs.ForEach(i =>
             {
-                var importedObject = importObj[i.Name];
+                var importedObject = ScriptObjectExtensions.GetIndex(importObj, i.Name);
                 var importedObjectExpr = Expression.Constant(importedObject, typeof(object));
                 var assignParamExpr = Expression.Assign(i, importedObjectExpr);
 

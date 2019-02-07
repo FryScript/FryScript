@@ -216,17 +216,17 @@ namespace FryScript.UnitTests
         [Ignore]
         public void MethodCallTest()
         {
-            var importable1 = new Importable("Mango");
-            var importable2 = new Importable("Mikey");
+            //var importable1 = new Importable("Mango");
+            //var importable2 = new Importable("Mikey");
 
-            _scriptEngine.Import(typeof(Importable));
+            //_scriptEngine.Import(typeof(Importable));
 
-            dynamic obj1 = _scriptEngine.Bind(importable1, "test");
-            dynamic obj2 = _scriptEngine.Bind(importable2, "test");
+            //dynamic obj1 = _scriptEngine.Bind(importable1, "test");
+            //dynamic obj2 = _scriptEngine.Bind(importable2, "test");
 
-            var result = obj1.sayHelloTo(obj2);
+            //var result = obj1.sayHelloTo(obj2);
 
-            Assert.AreEqual("Mango says hello to Mikey!", result);
+            //Assert.AreEqual("Mango says hello to Mikey!", result);
         }
 
         [Ignore]
@@ -244,13 +244,13 @@ namespace FryScript.UnitTests
         [Ignore]
         public void NewWithArgsTest()
         {
-            _scriptEngine.Import<Constructible>();
+            //_scriptEngine.Import<Constructible>();
 
-            dynamic newable = _scriptEngine.Get("newable");
-            dynamic obj = _scriptEngine.New("newable", 10, 10);
+            //dynamic newable = _scriptEngine.Get("newable");
+            //dynamic obj = _scriptEngine.New("newable", 10, 10);
 
-            Assert.AreNotEqual(newable, obj);
-            Assert.AreEqual(100, obj.onCtor);
+            //Assert.AreNotEqual(newable, obj);
+            //Assert.AreEqual(100, obj.onCtor);
         }
 
         [TestMethod]

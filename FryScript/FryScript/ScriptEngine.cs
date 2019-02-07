@@ -127,12 +127,12 @@ namespace FryScript
             return _scripts[keyName] = scriptObject;
         }
 
-        public ScriptObject Get(string name)
+        public IScriptObject Get(string name)
         {
             return Get(name, null);
         }
 
-        internal ScriptObject Get(string name, string relativeTo)
+        internal IScriptObject Get(string name, string relativeTo)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentNullException("name");
@@ -224,48 +224,48 @@ namespace FryScript
                 );
         }
 
-        public ScriptObject Bind(IScriptable scriptable, string name, params object[] args)
-        {
-            if (scriptable == null)
-                throw new ArgumentNullException("scriptable");
+        //public ScriptObject Bind(IScriptable scriptable, string name, params object[] args)
+        //{
+        //    if (scriptable == null)
+        //        throw new ArgumentNullException("scriptable");
 
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("name");
+        //    if (string.IsNullOrWhiteSpace(name))
+        //        throw new ArgumentNullException("name");
 
-            var keyName = ScriptTypeHelper.NormalizeTypeName(name);
+        //    var keyName = ScriptTypeHelper.NormalizeTypeName(name);
 
-            var scriptObject = Get(keyName);
+        //    var scriptObject = Get(keyName);
 
-            //if (scriptObject.HasTarget && scriptObject.TargetType != scriptable.GetType())
-            //    throw new ArgumentException(string.Format("Scriptable type {0} does not match the native type of script {1} expected {2}", scriptable.GetType().FullName, name, scriptObject.TargetType.FullName), "scriptable");
+        //    //if (scriptObject.HasTarget && scriptObject.TargetType != scriptable.GetType())
+        //    //    throw new ArgumentException(string.Format("Scriptable type {0} does not match the native type of script {1} expected {2}", scriptable.GetType().FullName, name, scriptObject.TargetType.FullName), "scriptable");
 
-            if (scriptable.Script != null)
-                throw new ArgumentException("Scriptable type has already been bound to a script", "scriptable");
+        //    if (scriptable.Script != null)
+        //        throw new ArgumentException("Scriptable type has already been bound to a script", "scriptable");
 
-            var newScriptObject = new ScriptObject(scriptObject.GetScriptType(), scriptObject.Ctor, scriptObject.Extends);
+        //    var newScriptObject = new ScriptObject(scriptObject.GetScriptType(), scriptObject.Ctor, scriptObject.Extends);
 
-            InvokeConstructor(newScriptObject, args);
+        //    InvokeConstructor(newScriptObject, args);
 
-            return newScriptObject;
-        }
+        //    return newScriptObject;
+        //}
 
-        public ScriptObject New(string name, params object[] args)
-        {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException("name");
+        //public ScriptObject New(string name, params object[] args)
+        //{
+        //    if (string.IsNullOrEmpty(name))
+        //        throw new ArgumentNullException("name");
 
-            var keyName = ScriptTypeHelper.NormalizeTypeName(name);
+        //    var keyName = ScriptTypeHelper.NormalizeTypeName(name);
 
-            var scriptObject = Get(keyName);
+        //    var scriptObject = Get(keyName);
 
-            var newScriptObject = scriptObject.CreateInstance();
+        //    var newScriptObject = scriptObject.CreateInstance();
 
-            DebugHook?.Invoke(new DebugContext(DebugEvent.PushStackFrame, "[HOST]", 0, 0, 0, null));
-            InvokeConstructor(newScriptObject, args);
-            DebugHook?.Invoke(new DebugContext(DebugEvent.PopStackFrame, "[HOST]", 0, 0, 0, null));
+        //    DebugHook?.Invoke(new DebugContext(DebugEvent.PushStackFrame, "[HOST]", 0, 0, 0, null));
+        //    InvokeConstructor(newScriptObject, args);
+        //    DebugHook?.Invoke(new DebugContext(DebugEvent.PopStackFrame, "[HOST]", 0, 0, 0, null));
 
-            return newScriptObject;
-        }
+        //    return newScriptObject;
+        //}
 
         public T New<T>(string name, params object[] args)
             where T : class, new()
@@ -280,13 +280,13 @@ namespace FryScript
             //if (scriptObject.Target == null || !typeof(T).IsAssignableFrom(scriptObject.TargetType))
             //    throw new ArgumentException(string.Format("Cannot create a new instance of type {0} bound to script {1}", typeof(T).FullName, name), "name");
 
-            var newScriptObject = scriptObject.CreateInstance();
+            //var newScriptObject = scriptObject.CreateInstance();
 
-            InvokeConstructor(newScriptObject, args);
+            //InvokeConstructor(newScriptObject, args);
 
             //return newScriptObject.Target as T;
 
-            throw new NotImplementedException();
+            return Activator.CreateInstance(scriptObject.GetType()) as T;
         }
 
         private bool TryResolveUri(string name, string relativeTo, out Uri uri, out IScriptProvider provider)

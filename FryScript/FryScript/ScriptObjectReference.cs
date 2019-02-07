@@ -8,9 +8,9 @@ namespace FryScript
 
     public sealed class ScriptObjectReference : IDynamicMetaObjectProvider, IScriptType
     {
-        private Lazy<ScriptObject> _resolver;
+        private Lazy<IScriptObject> _resolver;
 
-        public ScriptObject Target
+        public IScriptObject Target
         {
             get { return _resolver.Value; }
         }
@@ -20,32 +20,38 @@ namespace FryScript
             return new MetaScriptObjectReference(parameter, BindingRestrictions.Empty, this);
         }
 
-        public void SetResolver(Func<ScriptObject> func)
+        public void SetResolver(Func<IScriptObject> func)
         {
             if (func == null) 
                 throw new ArgumentNullException("func");
 
-            _resolver = new Lazy<ScriptObject>(func);
+            _resolver = new Lazy<IScriptObject>(func);
         }
 
         public string GetScriptType()
         {
-            return Target.GetScriptType();
+            //return Target.GetScriptType();
+            throw new NotImplementedException();
         }
 
         public bool IsScriptType(string scriptType)
         {
-            return Target.IsScriptType(scriptType);
+            //return Target.IsScriptType(scriptType);
+            throw new NotImplementedException();
         }
 
         public bool ExtendsScriptType(string scriptType)
         {
-            return Target.ExtendsScriptType(scriptType);
+            //return Target.ExtendsScriptType(scriptType);
+            throw new NotImplementedException();
+
         }
 
         public bool HasMember(string name)
         {
-            return Target.HasMember(name);
+            //return Target.HasMember(name);
+            throw new NotImplementedException();
+
         }
 
         public IEnumerable<string> GetMembers()

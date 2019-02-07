@@ -23,7 +23,7 @@ namespace FryScript.Ast
             {
                 var extendScript = CompilerContext.ScriptEngine.Get(nameStr, CompilerContext.Name);
 
-                CompilerContext.Extend(extendScript);
+                //CompilerContext.Extend(extendScript);
 
                 var extendScriptExpr = Expression.Constant(extendScript);
                 var thisExpr = scope.GetMemberExpression(Keywords.This);
