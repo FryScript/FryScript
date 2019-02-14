@@ -84,6 +84,7 @@
     <Compile Include="ScriptProviders\DirectoryScriptProviderTests.cs" />
     <Compile Include="ScriptProviders\ScriptLoaderTests.cs" />
     <Compile Include="ScriptTupleTests.cs" />
+    <Compile Include="ObjectRegistryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
