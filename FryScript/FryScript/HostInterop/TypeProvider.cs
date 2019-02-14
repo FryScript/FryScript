@@ -19,7 +19,6 @@ namespace FryScript.HostInterop
         private readonly ConcurrentDictionary<Type, TypeDescriptor> _typeDescriptors = new ConcurrentDictionary<Type, TypeDescriptor>();
         private readonly ConcurrentDictionary<Type, TypeExtender> _typeExtenders = new ConcurrentDictionary<Type, TypeExtender>();
         private readonly ConcurrentDictionary<Type, Func<ScriptObject, object>> _ctors = new ConcurrentDictionary<Type, Func<ScriptObject, object>>();
-        private readonly ConcurrentDictionary<Type, string> _typeNames = new ConcurrentDictionary<Type, string>();
         private readonly ConcurrentDictionary<Type, Type> _proxyTypes = new ConcurrentDictionary<Type, Type>();
 
         private readonly Type[] _numericOrder = new[]
@@ -156,17 +155,7 @@ namespace FryScript.HostInterop
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            if (!_typeNames.TryGetValue(type, out string name))
-            {
-                var attribute = type.GetCustomAttribute<ScriptableTypeAttribute>();
-
-                if (attribute == null)
-                    throw new ArgumentException(string.Format("Type must be decorated with a {0} attribute", typeof(ScriptableTypeAttribute).FullName), "type");
-
-                _typeNames[type] = name = attribute.Name;
-            }
-
-            return name;
+            return FindTypeDescriptor(type).Name;
         }
 
         public void RegisterPrimitive(Type type)

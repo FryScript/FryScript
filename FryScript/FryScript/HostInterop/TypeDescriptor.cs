@@ -10,17 +10,20 @@ namespace FryScript.HostInterop
 
     public class TypeDescriptor
     {
+        private readonly string _name;
         private readonly Type _describedType;
         private readonly ConcurrentDictionary<string, ScriptableMethodInfo> _methods = new ConcurrentDictionary<string, ScriptableMethodInfo>();
         private readonly ConcurrentDictionary<string, PropertyInfo> _properties = new ConcurrentDictionary<string, PropertyInfo>();
         private readonly ConcurrentDictionary<Type, PropertyInfo> _indexes = new ConcurrentDictionary<Type, PropertyInfo>();
         private readonly ConcurrentDictionary<Type, MethodInfo> _converts = new ConcurrentDictionary<Type, MethodInfo>();
 
+        public string Name => _name;
+
         public TypeDescriptor(Type type)
         {
             _describedType = type ?? throw new ArgumentNullException("type");
 
-            AnalyseType(_describedType);
+            AnalyseType(_describedType, ref _name);
         }
 
         public ScriptableMethodInfo GetMethod(string name)
@@ -79,8 +82,10 @@ namespace FryScript.HostInterop
             return method;
         }
 
-        private void AnalyseType(Type type)
+        private void AnalyseType(Type type, ref string name)
         {
+            name = type.GetTypeInfo().GetCustomAttribute<ScriptableTypeAttribute>()?.Name;
+
             var scriptableMembers = from m in type.GetTypeInfo().GetRuntimeMethods().Cast<MemberInfo>()
                                     .Union(type.GetTypeInfo().GetRuntimeProperties().Cast<MemberInfo>())
                 let a = m.GetCustomAttributes(typeof (ScriptableBaseAttribute), true).Cast<ScriptableBaseAttribute>().SingleOrDefault()

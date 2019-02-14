@@ -5,24 +5,28 @@ namespace FryScript
 {
     public class ObjectRegistry : IObjectRegistry
     {
-        public ObjectRegistry()
-        {
+        private readonly Dictionary<string, IScriptObject> _scriptObjects = new Dictionary<string, IScriptObject>(StringComparer.OrdinalIgnoreCase);
 
+        public void Import(string name, IScriptObject obj)
+        {
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+            obj = obj ?? throw new ArgumentNullException(nameof(obj));
+
+            if (_scriptObjects.ContainsKey(name)) throw new ArgumentException($"A script object named {name} has already been registered", nameof(name));
+
+            _scriptObjects[name] = obj;
         }
 
-        public IScriptObject Import(string name, IScriptObject obj)
+        public void Import(Type type, string name = null, bool autoConstruct = true)
         {
-            throw new NotImplementedException();
-        }
+            type = type ?? throw new ArgumentNullException(nameof(type));
 
-        public IScriptObject Import(Type type, string name = null, bool autoConstruct = true)
-        {
             throw new NotImplementedException();
         }
 
         public bool TryGetObject(string name, out IScriptObject obj)
         {
-            throw new NotImplementedException();
+            return _scriptObjects.TryGetValue(name, out obj);
         }
     }
 }
