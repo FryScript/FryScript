@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FryScript.HostInterop;
+using System;
 using System.Collections.Generic;
 
 namespace FryScript
@@ -17,11 +18,23 @@ namespace FryScript
             _scriptObjects[name] = obj;
         }
 
-        public void Import(Type type, string name = null, bool autoConstruct = true)
+        public void Import(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            throw new NotImplementedException();
+            var name = TypeProvider.Current.GetTypeName(type);
+
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException($"Type {type.FullName} does not define a scriptable name", nameof(type));
+
+            if (_scriptObjects.ContainsKey(name))
+                throw new ArgumentException($"An object with the name \"{name}\" has already been registered");
+
+            var proxyType = TypeProvider.Current.GetProxy(type);
+
+            var obj = Activator.CreateInstance(proxyType) as IScriptObject;
+
+            _scriptObjects[name] = obj;
         }
 
         public bool TryGetObject(string name, out IScriptObject obj)

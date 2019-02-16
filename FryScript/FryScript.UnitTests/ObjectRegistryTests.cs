@@ -1,12 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using FryScript.HostInterop;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
+using System.Reflection;
 
 namespace FryScript.UnitTests
 {
     [TestClass]
     public class ObjectRegistryTests
     {
+        [ScriptableType("importable")]
+        public class Importable
+        {
+
+        }
+
         private ObjectRegistry _objectRegistry;
         private IScriptObject _scriptObject;
 
@@ -55,6 +63,34 @@ namespace FryScript.UnitTests
         public void Import_By_Type_InvalidType()
         {
             _objectRegistry.Import(null as Type);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_By_Type_With_No_Script_Name()
+        {
+            _objectRegistry.Import(typeof(object));
+        }
+
+        [TestMethod]
+        public void Import_By_Type_Adds_Obj()
+        {
+            _objectRegistry.Import(typeof(Importable));
+
+            Assert.IsTrue(_objectRegistry.TryGetObject("importable", out IScriptObject obj));
+            Assert.IsTrue(typeof(Importable).GetTypeInfo().IsAssignableFrom(obj.GetType()));
+
+            dynamic o = obj;
+            o.name = "Clango";
+            o.rim = "Rime";
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_By_Type_Name_Already_Exists()
+        {
+            _objectRegistry.Import(typeof(Importable));
+            _objectRegistry.Import(typeof(Importable));
         }
     }
 }
