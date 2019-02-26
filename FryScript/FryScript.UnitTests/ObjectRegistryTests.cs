@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace FryScript.UnitTests
@@ -79,10 +80,6 @@ namespace FryScript.UnitTests
 
             Assert.IsTrue(_objectRegistry.TryGetObject("importable", out IScriptObject obj));
             Assert.IsTrue(typeof(Importable).GetTypeInfo().IsAssignableFrom(obj.GetType()));
-
-            dynamic o = obj;
-            o.name = "Clango";
-            o.rim = "Rime";
         }
 
         [TestMethod]

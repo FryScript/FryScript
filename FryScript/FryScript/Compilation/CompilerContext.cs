@@ -1,6 +1,7 @@
 ﻿using FryScript.Ast;
 using FryScript.Debugging;
 using FryScript.Parsing;
+using FryScript.ScriptProviders;
 using Irony.Ast;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace FryScript.Compilation
         public bool HasDebugHook => _scriptEngine?.DebugHook != null;
 
         public DebugHook DebugHook => _scriptEngine?.DebugHook;
+
+        public IScriptProvider[] ScriptProviders { get; set; }
 
         public CompilerContext(ScriptEngine scriptEngine, string name)
             : base(FryScriptLanguageData.LanguageData)

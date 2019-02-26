@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace FryScript.UnitTests
 {
     using Compilation;
+    using FryScript.Compilation;
 
     [TestClass]
     public class ScriptEngineScriptsTest
