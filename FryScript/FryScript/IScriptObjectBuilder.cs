@@ -2,6 +2,6 @@
 {
     public interface IScriptObjectBuilder
     {
-        object Build(IScriptObject obj);
+        IScriptObject Build();
     }
 }

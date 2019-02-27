@@ -87,10 +87,13 @@ namespace FryScript.UnitTests
                 Arg.Is<CompilerContext>(c => c.ScriptProviders == _scriptProviders))
                 .Returns(_objBuilder);
 
-            // Need to determine what happens here.
-            // Does the context keep track of the base type
-            // Which than gets activated here?
-            Assert.Fail();
+            _objBuilder.Build().Returns(_obj);
+
+            _registry.Import("name", _obj);
+
+            var result = _runtime.Get("name");
+
+            Assert.AreEqual(_obj, result);
         }
     }
 }
