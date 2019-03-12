@@ -120,5 +120,52 @@ namespace FryScript.UnitTests.ScriptProviders
             var expectedScript = File.ReadAllText(uri.LocalPath);
             Assert.AreEqual(expectedScript, _provider.GetScript(uri));
         }
+
+        [DataTestMethod]
+        [DataRow(null)]
+        [DataRow("")]
+        [DataRow("  ")]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void TryGetScriptInfo_Invalid_Path(string path)
+        {
+            _provider.TryGetScriptInfo(path, out ScriptInfo scriptInfo);
+        }
+
+        [TestMethod]
+        public void TryGetScriptInfo_Path_Does_Not_Exist()
+        {
+            Assert.IsFalse(_provider.TryGetScriptInfo("nofile.fry", out ScriptInfo sciprtInfo));
+            Assert.IsNull(sciprtInfo);
+        }
+
+        [TestMethod]
+        public void TryGetScriptInfo_Path_Does_Exist()
+        {
+            var expectedUri = new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "errorHandling1.fry"));
+            var expectedSource = File.ReadAllText(expectedUri.LocalPath);
+
+            Assert.IsTrue(_provider.TryGetScriptInfo("./scripts/errorHandling1.fry", out ScriptInfo scriptInfo));
+            Assert.AreEqual(expectedUri, scriptInfo.Uri);
+            Assert.AreEqual(expectedSource, scriptInfo.Source);
+        }
+
+        [TestMethod]
+        public void TryGetScriptInfo_Cannot_Search_Outside_Root()
+        {
+            _provider = new DirectoryScriptProvider(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts"));
+
+            Assert.IsFalse(_provider.TryGetScriptInfo("../outside.txt", out ScriptInfo scriptInfo));
+            Assert.IsNull(scriptInfo);
+        }
+
+        [TestMethod]
+        public void TryGetScriptInfo_Relative_To_Does_Not_Exist()
+        {
+            _provider = new DirectoryScriptProvider(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts"));
+            var relativeTo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "noFile.fry");
+
+            Assert.IsFalse(_provider.TryGetScriptInfo("simpleImport.fry", out ScriptInfo scriptInfo, relativeTo));
+            Assert.IsNull(scriptInfo);
+        }
     }
 }

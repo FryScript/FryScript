@@ -30,6 +30,33 @@ namespace FryScript.ScriptProviders
             return File.ReadAllText(uri.LocalPath);
         }
 
+        public bool TryGetScriptInfo(string path, out ScriptInfo scriptInfo, string relativeTo = null)
+        {
+            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
+
+            scriptInfo = null;
+
+            var searchDir = GetSearchDirctory(relativeTo);
+
+            while (searchDir != null)
+            {
+                if (TryGetSourceUri(searchDir, path, out Uri uri))
+                {
+                    scriptInfo = new ScriptInfo
+                    {
+                        Uri = uri,
+                        Source = File.ReadAllText(uri.LocalPath)
+                    };
+
+                    return true;
+                }
+
+                searchDir = searchDir.Parent;
+            }
+
+            return false;
+        }
+
         public bool TryGetUri(string path, out Uri uri, string relativeTo = null)
         {
             path = path ?? throw new ArgumentNullException(nameof(path));
@@ -40,7 +67,7 @@ namespace FryScript.ScriptProviders
 
             while (searchDir != null)
             {
-                if (TryGetFile(searchDir, path, out uri))
+                if (TryGetSourceUri(searchDir, path, out uri))
                     return true;
 
                 searchDir = searchDir.Parent;
@@ -67,7 +94,7 @@ namespace FryScript.ScriptProviders
             return relativeFile.Directory;
         }
 
-        private bool TryGetFile(DirectoryInfo searchDir, string path, out Uri uri)
+        private bool TryGetSourceUri(DirectoryInfo searchDir, string path, out Uri uri)
         {
             uri = null;
 

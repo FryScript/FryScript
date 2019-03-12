@@ -26,6 +26,8 @@ namespace FryScript
             if (_registry.TryGetObject(name, out IScriptObject obj))
                 return obj;
 
+
+
             throw new NotImplementedException();
         }
     }
