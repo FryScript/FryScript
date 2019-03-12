@@ -134,28 +134,29 @@ namespace FryScript
 
         internal IScriptObject Get(string name, string relativeTo)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("name");
+            throw new NotImplementedException();
+            //if (string.IsNullOrWhiteSpace(name))
+            //    throw new ArgumentNullException("name");
 
-            ScriptObject scriptObject;
-            if (_scripts.TryGetValue(name, out scriptObject))
-                return scriptObject;
+            //ScriptObject scriptObject;
+            //if (_scripts.TryGetValue(name, out scriptObject))
+            //    return scriptObject;
 
-            name = Path.ChangeExtension(name, _extension);
+            //name = Path.ChangeExtension(name, _extension);
 
-            TryResolveUri(name, relativeTo, out Uri uri, out IScriptProvider provider);
+            //TryResolveUri(name, relativeTo, out Uri uri, out IScriptProvider provider);
 
-            if (_scripts.TryGetValue(uri.AbsoluteUri, out scriptObject))
-                return scriptObject;
+            //if (_scripts.TryGetValue(uri.AbsoluteUri, out scriptObject))
+            //    return scriptObject;
 
-            var script = provider.GetScript(uri);
+            //var script = provider.GetScript(uri);
 
-            DebugHook?.Invoke(new DebugContext(DebugEvent.RegisterScript, uri.LocalPath, 0, 0, 0, new[]
-            {
-               new DebugVariable(uri.LocalPath, script)
-            }));
+            //DebugHook?.Invoke(new DebugContext(DebugEvent.RegisterScript, uri.LocalPath, 0, 0, 0, new[]
+            //{
+            //   new DebugVariable(uri.LocalPath, script)
+            //}));
 
-            return Compile(uri.AbsoluteUri, script);
+            //return Compile(uri.AbsoluteUri, script);
         }
 
         //public T Get<T>(string name)
@@ -291,16 +292,16 @@ namespace FryScript
 
         private bool TryResolveUri(string name, string relativeTo, out Uri uri, out IScriptProvider provider)
         {
-            provider = null;
+            //provider = null;
 
-            foreach (var currentProvider in _scriptProviders)
-            {
-                if (!currentProvider.TryGetUri(name, out uri, relativeTo))
-                    continue;
+            //foreach (var currentProvider in _scriptProviders)
+            //{
+            //    if (!currentProvider.TryGetUri(name, out uri, relativeTo))
+            //        continue;
 
-                provider = currentProvider;
-                return true;
-            }
+            //    provider = currentProvider;
+            //    return true;
+            //}
 
             throw new ArgumentException($"Unable to locate a script at path {name}");
         }

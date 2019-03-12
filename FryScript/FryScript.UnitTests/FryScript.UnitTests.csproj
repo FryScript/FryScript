@@ -83,7 +83,6 @@
     <Compile Include="ScriptParamsTests.cs" />
     <Compile Include="ScriptPrimitiveTests.cs" />
     <Compile Include="ScriptProviders\DirectoryScriptProviderTests.cs" />
-    <Compile Include="ScriptProviders\ScriptLoaderTests.cs" />
     <Compile Include="ScriptRuntimeTests.cs" />
     <Compile Include="ScriptTupleTests.cs" />
     <Compile Include="ObjectRegistryTests.cs" />

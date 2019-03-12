@@ -15,21 +15,6 @@ namespace FryScript.ScriptProviders
                 throw new ArgumentException($"Directory path {path} does not exist", nameof(path));
         }
 
-        public string GetScript(Uri uri)
-        {
-            uri = uri ?? throw new ArgumentNullException(nameof(uri));
-
-            if (!uri.IsAbsoluteUri)
-                throw new ArgumentException("Uri is not absolute", nameof(uri));
-
-            var file = new FileInfo(uri.LocalPath);
-
-            if (!file.Exists)
-                throw new ArgumentException($"File at {uri.LocalPath} does not exist");
-
-            return File.ReadAllText(uri.LocalPath);
-        }
-
         public bool TryGetScriptInfo(string path, out ScriptInfo scriptInfo, string relativeTo = null)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
@@ -40,34 +25,7 @@ namespace FryScript.ScriptProviders
 
             while (searchDir != null)
             {
-                if (TryGetSourceUri(searchDir, path, out Uri uri))
-                {
-                    scriptInfo = new ScriptInfo
-                    {
-                        Uri = uri,
-                        Source = File.ReadAllText(uri.LocalPath)
-                    };
-
-                    return true;
-                }
-
-                searchDir = searchDir.Parent;
-            }
-
-            return false;
-        }
-
-        public bool TryGetUri(string path, out Uri uri, string relativeTo = null)
-        {
-            path = path ?? throw new ArgumentNullException(nameof(path));
-
-            uri = null;
-
-            var searchDir = GetSearchDirctory(relativeTo);
-
-            while (searchDir != null)
-            {
-                if (TryGetSourceUri(searchDir, path, out uri))
+                if (TryGetScriptInfo(searchDir, path, out scriptInfo))
                     return true;
 
                 searchDir = searchDir.Parent;
@@ -94,9 +52,9 @@ namespace FryScript.ScriptProviders
             return relativeFile.Directory;
         }
 
-        private bool TryGetSourceUri(DirectoryInfo searchDir, string path, out Uri uri)
+        private bool TryGetScriptInfo(DirectoryInfo searchDir, string path, out ScriptInfo scriptInfo)
         {
-            uri = null;
+            scriptInfo = null;
 
             var filePath = Path.Combine(searchDir.FullName, path);
             var file = new FileInfo(filePath);
@@ -107,7 +65,13 @@ namespace FryScript.ScriptProviders
             if(!file.FullName.StartsWith(_root.FullName, StringComparison.OrdinalIgnoreCase))
                 return false;
 
-            uri = new Uri(file.FullName);
+            var uri = new Uri(file.FullName);
+
+            scriptInfo = new ScriptInfo
+            {
+                Uri = uri,
+                Source = File.ReadAllText(uri.LocalPath)
+            };
 
             return true;
         }
