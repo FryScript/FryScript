@@ -34,7 +34,7 @@ namespace FryScript.Compilation
             return func;
         }
 
-        public IScriptObjectBuilder Compile(string name, CompilerContext context)
+        public Func<IScriptObject, object> Compile2(string source, string name, CompilerContext compilerContext)
         {
             throw new NotImplementedException();
         }

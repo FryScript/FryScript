@@ -6,27 +6,33 @@ namespace FryScript
 {
     public class ScriptRuntime : IScriptRuntime
     {
-        private readonly IScriptProvider[] _scriptProviders;
+        private readonly IScriptProvider _scriptProvider;
         private readonly IScriptCompiler _compiler;
         private readonly IObjectRegistry _registry;
 
-        public ScriptRuntime(IScriptProvider[] scriptProviders, IScriptCompiler compiler, IObjectRegistry registry)
+        public ScriptRuntime(IScriptProvider scriptProvider, IScriptCompiler compiler, IObjectRegistry registry)
         {
-            _scriptProviders = scriptProviders ?? throw new ArgumentNullException(nameof(scriptProviders));
+            _scriptProvider = scriptProvider ?? throw new ArgumentNullException(nameof(scriptProvider));
             _compiler = compiler ?? throw new ArgumentNullException(nameof(compiler));
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
         }
 
-        public IScriptObject Get(string name)
+        public IScriptObject Get(string name, string relativeTo = null)
         {
-            name = string.IsNullOrWhiteSpace(name) 
-                ? throw new ArgumentNullException(nameof(name))
-                : name;
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
 
-            if (_registry.TryGetObject(name, out IScriptObject obj))
+            var key = relativeTo == null
+                ? name
+                : $"{name} : {relativeTo}";
+
+            if (_registry.TryGetObject(key, out IScriptObject obj))
                 return obj;
 
+            if (!_scriptProvider.TryGetScriptInfo(key, out ScriptInfo scriptInfo))
+                throw new ScriptLoadException(name, relativeTo);
 
+            if (_registry.TryGetObject(scriptInfo.Uri.AbsoluteUri, out obj))
+                return obj;
 
             throw new NotImplementedException();
         }

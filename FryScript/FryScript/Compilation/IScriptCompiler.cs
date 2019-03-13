@@ -7,7 +7,7 @@ namespace FryScript.Compilation
     {
         Func<ScriptObject, object> Compile(string script, string fileName, CompilerContext complilerContext);
 
-        IScriptObjectBuilder Compile(string name, CompilerContext context);
+        Func<IScriptObject, object> Compile2(string source, string name, CompilerContext compilerContext);
 
         IScriptParser Parser { get; }
 

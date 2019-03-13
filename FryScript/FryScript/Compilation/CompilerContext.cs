@@ -22,11 +22,11 @@ namespace FryScript.Compilation
 
         public ScriptEngine ScriptEngine { get { return _scriptEngine; } }
 
+        public ScriptRuntime ScriptRuntime { get; }
+
         public bool HasDebugHook => _scriptEngine?.DebugHook != null;
 
         public DebugHook DebugHook => _scriptEngine?.DebugHook;
-
-        public IScriptProvider[] ScriptProviders { get; set; }
 
         public CompilerContext(ScriptEngine scriptEngine, string name)
             : base(FryScriptLanguageData.LanguageData)
@@ -35,6 +35,17 @@ namespace FryScript.Compilation
                 throw new ArgumentNullException(nameof(name));
 
             _scriptEngine = scriptEngine ?? throw new ArgumentNullException(nameof(scriptEngine));
+            _name = name;
+
+            DefaultNodeType = typeof(DefaultNode);
+            DefaultLiteralNodeType = typeof(LiteralNode);
+            DefaultIdentifierNodeType = typeof(IdentifierNode);
+        }
+
+        public CompilerContext(ScriptRuntime scriptRuntime, string name)
+            : base(FryScriptLanguageData.LanguageData)
+        {
+            ScriptRuntime = scriptRuntime ?? throw new ArgumentNullException(nameof(scriptRuntime));
             _name = name;
 
             DefaultNodeType = typeof(DefaultNode);
