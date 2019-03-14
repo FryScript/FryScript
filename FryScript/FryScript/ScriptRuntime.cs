@@ -28,13 +28,30 @@ namespace FryScript
             if (_registry.TryGetObject(key, out IScriptObject obj))
                 return obj;
 
-            if (!_scriptProvider.TryGetScriptInfo(key, out ScriptInfo scriptInfo))
+            if (!_scriptProvider.TryGetScriptInfo(name, out ScriptInfo scriptInfo))
                 throw new ScriptLoadException(name, relativeTo);
 
-            if (_registry.TryGetObject(scriptInfo.Uri.AbsoluteUri, out obj))
-                return obj;
+            var resolvedName = scriptInfo.Uri.AbsoluteUri;
 
-            throw new NotImplementedException();
+            if (_registry.TryGetObject(resolvedName, out obj))
+            {
+                _registry.Import(key, obj);
+                return obj;
+            }
+
+            var context = new CompilerContext(this, resolvedName);
+            var ctor = _compiler.Compile2(scriptInfo.Source, resolvedName, context);
+
+            var instance = Activator.CreateInstance(context.ScriptType) as IScriptObject;
+
+            ctor(instance);
+
+            instance.ObjectCore.Uri = scriptInfo.Uri;
+            instance.ObjectCore.Ctor = ctor;
+
+            _registry.Import(resolvedName, instance);
+
+            return instance;
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using FryScript.Binders;
-using System;
-using System.Runtime.CompilerServices;
+﻿using System;
 
 namespace FryScript
 {
@@ -8,6 +6,8 @@ namespace FryScript
     {
         public object[] MemberData;
         public MemberIndex MemberIndex;
+        public Uri Uri;
+        public Func<IScriptObject, object> Ctor;
 
         public ObjectCore()
         {

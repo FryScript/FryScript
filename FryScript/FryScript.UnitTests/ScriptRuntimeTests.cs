@@ -130,6 +130,7 @@ namespace FryScript.UnitTests
             var result = _runtime.Get("name");
 
             Assert.AreEqual(_obj, result);
+            _registry.Received().Import("name", _obj);
         }
 
         [TestMethod]
@@ -151,10 +152,17 @@ namespace FryScript.UnitTests
                 return true;
             });
 
+            Func<IScriptObject, object> expectedCtor = o => o;
             _compiler.Compile2("source", "test://name", Arg.Is<CompilerContext>(c =>
                 c.Name == expectedScriptInfo.Uri.AbsoluteUri
                 && c.ScriptRuntime == _runtime
-            ));
+            )).Returns(c => expectedCtor);
+
+            var result = _runtime.Get("name");
+
+            Assert.AreEqual(new Uri("test://name"), result.ObjectCore.Uri);
+            Assert.AreEqual(expectedCtor, result.ObjectCore.Ctor);
+            _registry.Received().Import("test://name", Arg.Any<IScriptObject>());
         }
     }
 }

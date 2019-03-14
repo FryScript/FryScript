@@ -24,6 +24,8 @@ namespace FryScript.Compilation
 
         public ScriptRuntime ScriptRuntime { get; }
 
+        public Type ScriptType { get; set; }
+
         public bool HasDebugHook => _scriptEngine?.DebugHook != null;
 
         public DebugHook DebugHook => _scriptEngine?.DebugHook;
@@ -51,6 +53,7 @@ namespace FryScript.Compilation
             DefaultNodeType = typeof(DefaultNode);
             DefaultLiteralNodeType = typeof(LiteralNode);
             DefaultIdentifierNodeType = typeof(IdentifierNode);
+            ScriptType = typeof(ScriptObject);
         }
 
         public void Extend(ScriptObject scriptObject)
