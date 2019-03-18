@@ -165,12 +165,5 @@ namespace FryScript.UnitTests
             Assert.AreEqual(_obj, result);
             _registry.Received().Import("test:///name.fry", _obj);
         }
-
-        [TestMethod]
-        public void Get()
-        {
-            var sr = new ScriptRuntime();
-            var imp = sr.Get("C:/source/git/FryScript/FryScript/FryScript.UnitTests/bin/Debug/scripts/nestedimport3.fry");
-        }
     }
 }
