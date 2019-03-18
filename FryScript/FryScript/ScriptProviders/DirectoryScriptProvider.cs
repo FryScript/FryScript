@@ -21,7 +21,7 @@ namespace FryScript.ScriptProviders
 
             scriptInfo = null;
 
-            var searchDir = GetSearchDirctory(relativeTo);
+            var searchDir = GetSearchDirectory(relativeTo);
 
             while (searchDir != null)
             {
@@ -34,7 +34,7 @@ namespace FryScript.ScriptProviders
             return false;
         }
 
-        private DirectoryInfo GetSearchDirctory(string relativeTo)
+        private DirectoryInfo GetSearchDirectory(string relativeTo)
         {
             if (relativeTo == null)
                 return _root;

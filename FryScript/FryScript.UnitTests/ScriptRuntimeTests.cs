@@ -88,7 +88,7 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Get_Name_And_Relative_To_Already_Exists()
         {
-            _registry.TryGetObject("name.fry : relativeTo", out IScriptObject obj).Returns(c =>
+            _registry.TryGetObject("name.fry -> relativeTo", out IScriptObject obj).Returns(c =>
             {
                 c[1] = _obj;
 
@@ -98,17 +98,6 @@ namespace FryScript.UnitTests
             var result = _runtime.Get("name.fry", "relativeTo");
 
             Assert.AreEqual(_obj, result);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ScriptLoadException))]
-        public void Get_Name_Does_Not_Exist_As_Script()
-        {
-            _registry.TryGetObject("name", out IScriptObject obj).Returns(false);
-
-            _scriptProvider.TryGetScriptInfo("name", out ScriptInfo scriptInfo).Returns(false);
-
-            _runtime.Get("name");
         }
 
         [TestMethod]
@@ -122,7 +111,7 @@ namespace FryScript.UnitTests
                 Source = "source"
             };
 
-            _scriptProvider.TryGetScriptInfo("name.fry", out ScriptInfo scriptInfoArg).Returns(c =>
+            _scriptProvider.TryGetScriptInfo("name.fry", out ScriptInfo scriptInfoArg, "relativeTo").Returns(c =>
             {
                 c[1] = scriptInfo;
 
@@ -136,10 +125,10 @@ namespace FryScript.UnitTests
                 return true;
             });
 
-            var result = _runtime.Get("name");
+            var result = _runtime.Get("name", "relativeTo");
 
             Assert.AreEqual(_obj, result);
-            _registry.Received().Import("name.fry", _obj);
+            _registry.Received().Import("name.fry -> relativeTo", _obj);
         }
 
         [TestMethod]
@@ -175,6 +164,13 @@ namespace FryScript.UnitTests
 
             Assert.AreEqual(_obj, result);
             _registry.Received().Import("test:///name.fry", _obj);
+        }
+
+        [TestMethod]
+        public void Get()
+        {
+            var sr = new ScriptRuntime();
+            var imp = sr.Get("C:/source/git/FryScript/FryScript/FryScript.UnitTests/bin/Debug/scripts/nestedimport3.fry");
         }
     }
 }

@@ -46,12 +46,12 @@ namespace FryScript
 
             var key = relativeTo == null
                 ? name
-                : $"{name} : {relativeTo}";
+                : $"{name} -> {relativeTo}";
 
             if (_registry.TryGetObject(key, out IScriptObject obj))
                 return obj;
 
-            if (!_scriptProvider.TryGetScriptInfo(name, out ScriptInfo scriptInfo))
+            if (!_scriptProvider.TryGetScriptInfo(name, out ScriptInfo scriptInfo, relativeTo))
                 throw new ScriptLoadException(name, relativeTo);
 
             var resolvedName = scriptInfo.Uri.AbsoluteUri;
@@ -70,6 +70,7 @@ namespace FryScript
             var instance = builder.Build();
 
             _registry.Import(resolvedName, instance);
+            _registry.Import(key, instance);
 
             return instance;
         }
