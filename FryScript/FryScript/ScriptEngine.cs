@@ -2,12 +2,10 @@
 using FryScript.Debugging;
 using FryScript.Helpers;
 using FryScript.HostInterop;
-using FryScript.Parsing;
 using FryScript.ScriptProviders;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace FryScript
@@ -33,7 +31,7 @@ namespace FryScript
 #if NETSTANDARD2_0
         public ScriptEngine()
             : this(
-            new ScriptCompiler(new ScriptParser()),
+            new ScriptCompiler(),
             DefaultExtension,
             new List<IScriptProvider> { new DirectoryScriptProvider(AppContext.BaseDirectory) })
         {
@@ -41,7 +39,7 @@ namespace FryScript
 #else
         public ScriptEngine()
             : this(
-            new ScriptCompiler(new ScriptParser()),
+            new ScriptCompiler(),
             DefaultExtension,
             new List<IScriptProvider> { new DirectoryScriptProvider(AppDomain.CurrentDomain.BaseDirectory) })
         {

@@ -43,5 +43,30 @@ namespace FryScript.Parsing
 
             return parseTree.Root.AstNode as AstNode;
         }
+
+        public IRootNode Parse2(string source, string name, CompilerContext compilerContext)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentNullException("fileName");
+
+            if (string.IsNullOrWhiteSpace("script"))
+                throw new ArgumentNullException("script");
+
+            if (compilerContext == null)
+                throw new ArgumentNullException("conpilerContext");
+
+            var parseTree = _parser.Parse(source, name);
+
+            if (parseTree.HasErrors())
+            {
+                var parseError = parseTree.ParserMessages.First();
+                throw ParserException.SyntaxError(parseError.Message, compilerContext.Name, parseError.Location.Line, parseError.Location.Column);
+            }
+
+            var astBuilder = new AstBuilder(compilerContext);
+            astBuilder.BuildAst(parseTree);
+
+            return parseTree.Root.AstNode as IRootNode;
+        }
     }
 }

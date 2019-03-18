@@ -6,8 +6,7 @@ namespace FryScript
     {
         public object[] MemberData;
         public MemberIndex MemberIndex;
-        public Uri Uri;
-        public Func<IScriptObject, object> Ctor;
+        public IScriptObjectBuilder Builder;
 
         public ObjectCore()
         {

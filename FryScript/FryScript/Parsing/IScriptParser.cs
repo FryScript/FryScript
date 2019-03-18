@@ -12,5 +12,7 @@ namespace FryScript.Parsing
     public interface IScriptParser
     {
         AstNode Parse(string script, string fileName, CompilerContext compilerContext);
+
+        IRootNode Parse2(string source, string name, CompilerContext compilerContext);
     }
 }

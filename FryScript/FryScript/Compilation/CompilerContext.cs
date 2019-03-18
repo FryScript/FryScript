@@ -22,7 +22,7 @@ namespace FryScript.Compilation
 
         public ScriptEngine ScriptEngine { get { return _scriptEngine; } }
 
-        public ScriptRuntime ScriptRuntime { get; }
+        public IScriptRuntime ScriptRuntime { get; }
 
         public Type ScriptType { get; set; }
 
@@ -44,7 +44,7 @@ namespace FryScript.Compilation
             DefaultIdentifierNodeType = typeof(IdentifierNode);
         }
 
-        public CompilerContext(ScriptRuntime scriptRuntime, string name)
+        public CompilerContext(IScriptRuntime scriptRuntime, string name)
             : base(FryScriptLanguageData.LanguageData)
         {
             ScriptRuntime = scriptRuntime ?? throw new ArgumentNullException(nameof(scriptRuntime));

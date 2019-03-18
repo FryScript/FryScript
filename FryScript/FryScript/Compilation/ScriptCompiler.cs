@@ -14,10 +14,17 @@ namespace FryScript.Compilation
 
         public IScriptParser ExpressionParser => _expressionParser;
 
-        public ScriptCompiler(IScriptParser parser = null, IScriptParser expressionParser = null)
+        public ScriptCompiler()
+            : this(new ScriptParser(),
+                  new ScriptParser(FryScriptLanguageData.LanguageData.Grammar.SnippetRoots.Single(n => n.Name == NodeNames.Expression))
+                  )
         {
-            _parser = parser ?? new ScriptParser();
-            _expressionParser = _expressionParser ?? new ScriptParser(FryScriptLanguageData.LanguageData.Grammar.SnippetRoots.Single(n => n.Name == NodeNames.Expression));
+        }
+
+        public ScriptCompiler(IScriptParser parser, IScriptParser expressionParser)
+        {
+            _parser = parser ?? throw new ArgumentNullException(nameof(parser));
+            _expressionParser = expressionParser ?? throw new ArgumentNullException(nameof(expressionParser));
         }
 
         public Func<ScriptObject, object> Compile(string script, string fileName, CompilerContext compilerContext)
@@ -36,7 +43,19 @@ namespace FryScript.Compilation
 
         public Func<IScriptObject, object> Compile2(string source, string name, CompilerContext compilerContext)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(source))
+                throw new ArgumentNullException(nameof(source));
+
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentNullException(nameof(name));
+
+            compilerContext = compilerContext ?? throw new ArgumentNullException(nameof(compilerContext));
+
+            var rootNode = _parser.Parse2(source, name, compilerContext);
+
+            var func = rootNode.Compile2(new Scope());
+
+            return func;
         }
     }
 }

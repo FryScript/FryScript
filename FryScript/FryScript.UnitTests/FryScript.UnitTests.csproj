@@ -64,7 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compilation\CompilerTests.cs" />
+    <Compile Include="Compilation\ScriptCompilerTests.cs" />
     <Compile Include="HostInterop\TypeDescriptor2Tests.cs" />
     <Compile Include="HostInterop\TypeFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,6 +79,8 @@
     <Compile Include="ScriptEngineTests.cs" />
     <Compile Include="ScriptFibreContextTests.cs" />
     <Compile Include="ScriptFunctionTests.cs" />
+    <Compile Include="ScriptObjectBuilderFactoryTests.cs" />
+    <Compile Include="ScriptObjectBuilderTests.cs" />
     <Compile Include="ScriptObjectTests.cs" />
     <Compile Include="ScriptParamsTests.cs" />
     <Compile Include="ScriptPrimitiveTests.cs" />

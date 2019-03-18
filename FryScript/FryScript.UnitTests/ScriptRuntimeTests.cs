@@ -13,6 +13,7 @@ namespace FryScript.UnitTests
         private ScriptRuntime _runtime;
         private IScriptCompiler _compiler;
         private IObjectRegistry _registry;
+        private IScriptObjectBuilderFactory _factory;
 
         private IScriptObject _obj;
         private IScriptProvider _scriptProvider;
@@ -24,7 +25,8 @@ namespace FryScript.UnitTests
             _scriptProvider = Substitute.For<IScriptProvider>();
             _compiler = Substitute.For<IScriptCompiler>();
             _registry = Substitute.For<IObjectRegistry>();
-            _runtime = new ScriptRuntime(_scriptProvider, _compiler, _registry);
+            _factory = Substitute.For<IScriptObjectBuilderFactory>();
+            _runtime = new ScriptRuntime(_scriptProvider, _compiler, _registry, _factory);
 
             _obj = Substitute.For<IScriptObject>();
             _objBuilder = Substitute.For<IScriptObjectBuilder>();
@@ -34,21 +36,28 @@ namespace FryScript.UnitTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Script_Providers()
         {
-            new ScriptRuntime(null, _compiler, _registry);
+            new ScriptRuntime(null, _compiler, _registry, _factory);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Compiler()
         {
-            new ScriptRuntime(_scriptProvider, null, _registry);
+            new ScriptRuntime(_scriptProvider, null, _registry, _factory);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Object_Registry()
         {
-            new ScriptRuntime(_scriptProvider, _compiler, null);
+            new ScriptRuntime(_scriptProvider, _compiler, null, _factory);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_Null_Factory()
+        {
+            new ScriptRuntime(_scriptProvider, _compiler, _registry, null);
         }
 
         [DataTestMethod]
@@ -64,7 +73,7 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Get_Name_Already_Exists()
         {
-            _registry.TryGetObject("name", out IScriptObject obj).Returns(c =>
+            _registry.TryGetObject("name.fry", out IScriptObject obj).Returns(c =>
             {
                 c[1] = _obj;
 
@@ -79,14 +88,14 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Get_Name_And_Relative_To_Already_Exists()
         {
-            _registry.TryGetObject("name : relativeTo", out IScriptObject obj).Returns(c =>
+            _registry.TryGetObject("name.fry : relativeTo", out IScriptObject obj).Returns(c =>
             {
                 c[1] = _obj;
 
                 return true;
             });
 
-            var result = _runtime.Get("name", "relativeTo");
+            var result = _runtime.Get("name.fry", "relativeTo");
 
             Assert.AreEqual(_obj, result);
         }
@@ -105,7 +114,7 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Get_Name_Does_Exist_Secondary_Uri_Lookup()
         {
-            _registry.TryGetObject("name", out IScriptObject obj).Returns(false);
+            _registry.TryGetObject("name.fry", out IScriptObject obj).Returns(false);
 
             var scriptInfo = new ScriptInfo
             {
@@ -113,7 +122,7 @@ namespace FryScript.UnitTests
                 Source = "source"
             };
 
-            _scriptProvider.TryGetScriptInfo("name", out ScriptInfo scriptInfoArg).Returns(c =>
+            _scriptProvider.TryGetScriptInfo("name.fry", out ScriptInfo scriptInfoArg).Returns(c =>
             {
                 c[1] = scriptInfo;
 
@@ -130,7 +139,7 @@ namespace FryScript.UnitTests
             var result = _runtime.Get("name");
 
             Assert.AreEqual(_obj, result);
-            _registry.Received().Import("name", _obj);
+            _registry.Received().Import("name.fry", _obj);
         }
 
         [TestMethod]
@@ -142,27 +151,30 @@ namespace FryScript.UnitTests
             var expectedScriptInfo = new ScriptInfo
             {
                 Source = "source",
-                Uri = new Uri("test://name")
+                Uri = new Uri("test:///name.fry")
             };
 
-            _scriptProvider.TryGetScriptInfo("name", out ScriptInfo scriptInfo).Returns(c =>
+            _scriptProvider.TryGetScriptInfo("name.fry", out ScriptInfo scriptInfo).Returns(c =>
             {
                 c[1] = expectedScriptInfo;
 
                 return true;
             });
 
-            Func<IScriptObject, object> expectedCtor = o => o;
-            _compiler.Compile2("source", "test://name", Arg.Is<CompilerContext>(c =>
+            _compiler.Compile2("source", "test:///name.fry", Arg.Is<CompilerContext>(c =>
                 c.Name == expectedScriptInfo.Uri.AbsoluteUri
                 && c.ScriptRuntime == _runtime
-            )).Returns(c => expectedCtor);
+            )).Returns(new Func<IScriptObject, object>(o => "Constructed!"));
+
+            _factory.Create(typeof(ScriptObject), Arg.Any<Func<IScriptObject, object>>(), new Uri("test:///name.fry"))
+                .Returns(_objBuilder);
+
+            _objBuilder.Build().Returns(_obj);
 
             var result = _runtime.Get("name");
 
-            Assert.AreEqual(new Uri("test://name"), result.ObjectCore.Uri);
-            Assert.AreEqual(expectedCtor, result.ObjectCore.Ctor);
-            _registry.Received().Import("test://name", Arg.Any<IScriptObject>());
+            Assert.AreEqual(_obj, result);
+            _registry.Received().Import("test:///name.fry", _obj);
         }
     }
 }
