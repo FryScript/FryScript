@@ -1,4 +1,5 @@
 ﻿using FryScript.Compilation;
+using FryScript.HostInterop;
 using FryScript.ScriptProviders;
 using System;
 using System.IO;
@@ -10,14 +11,16 @@ namespace FryScript
         private readonly IScriptProvider _scriptProvider;
         private readonly IScriptCompiler _compiler;
         private readonly IObjectRegistry _registry;
-        private readonly IScriptObjectBuilderFactory _factory;
+        private readonly IScriptObjectBuilderFactory _builderFactory;
+        private readonly ITypeFactory _typeFactory;
 
 #if NETSTANDARD2_0
         public ScriptRuntime()
             : this(new DirectoryScriptProvider(AppContext.BaseDirectory),
                   new ScriptCompiler(),
                   new ObjectRegistry(),
-                  new ScriptObjectBuilderFactory())
+                  new ScriptObjectBuilderFactory(),
+                  TypeFactory.Current)
         {
         }
 #else
@@ -25,17 +28,24 @@ namespace FryScript
             : this(new DirectoryScriptProvider(AppDomain.CurrentDomain.BaseDirectory),
                   new ScriptCompiler(),
                   new ObjectRegistry(),
-                  new ScriptObjectBuilderFactory())
+                  new ScriptObjectBuilderFactory(),
+                  TypeFactory.Current)
         {
         }
 #endif
 
-        public ScriptRuntime(IScriptProvider scriptProvider, IScriptCompiler compiler, IObjectRegistry registry, IScriptObjectBuilderFactory factory)
+        public ScriptRuntime(
+            IScriptProvider scriptProvider, 
+            IScriptCompiler compiler, 
+            IObjectRegistry registry, 
+            IScriptObjectBuilderFactory builderFactory,
+            ITypeFactory typeFactory)
         {
             _scriptProvider = scriptProvider ?? throw new ArgumentNullException(nameof(scriptProvider));
             _compiler = compiler ?? throw new ArgumentNullException(nameof(compiler));
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
-            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            _builderFactory = builderFactory ?? throw new ArgumentNullException(nameof(builderFactory));
+            _typeFactory = typeFactory ?? throw new ArgumentNullException(nameof(typeFactory));
         }
 
         public IScriptObject Get(string name, string relativeTo = null)
@@ -64,8 +74,8 @@ namespace FryScript
 
             var context = new CompilerContext(this, resolvedName);
             var ctor = _compiler.Compile2(scriptInfo.Source, resolvedName, context);
-
-            var builder = _factory.Create(context.ScriptType, ctor, scriptInfo.Uri);
+            var scriptType = _typeFactory.CreateScriptableType(context.ScriptType);
+            var builder = _builderFactory.Create(scriptType, ctor, scriptInfo.Uri);
 
             var instance = builder.Build();
 

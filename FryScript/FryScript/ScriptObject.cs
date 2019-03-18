@@ -11,6 +11,7 @@ namespace FryScript
     using CallSites;
     using HostInterop;
 
+    [ScriptableType("[object]")]
     public class ScriptObject : IScriptType, IDynamicMetaObjectProvider, IEnumerable<object>, IScriptObject
     {
         private readonly object _lock = new object();

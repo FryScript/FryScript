@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace FryScript.HostInterop
 {
-    public class TypeFactory
+    public class TypeFactory : ITypeFactory
     {
         private class TypeContext
         {
@@ -62,7 +62,7 @@ namespace FryScript.HostInterop
             {
                 ScriptName = scriptableTypeAttribute.Name,
                 BaseType = type,
-                NewType = _moduleBuilder.DefineType($"Runtime.{type.FullName}", TypeAttributes.Public, type),
+                NewType = _moduleBuilder.DefineType($"Runtime.{type.FullName}.{Guid.NewGuid()}", TypeAttributes.Public, type),
                 TypeInfo = typeInfo
             };
 
