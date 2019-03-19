@@ -10,11 +10,13 @@ namespace FryScript.UnitTests
     public class ScriptEngineScriptsTest
     {
         private ScriptEngine _scriptEngine;
+        private ScriptRuntime _scriptRuntime;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _scriptEngine = new ScriptEngine();
+            _scriptRuntime = new ScriptRuntime();
         }
 
         [TestMethod]
@@ -28,7 +30,7 @@ namespace FryScript.UnitTests
         [ExpectedException(typeof(CompilerException))]
         public void CircularImportTest()
         {
-            _scriptEngine.Get("scripts/circularImport1");
+            _scriptRuntime.Get("scripts/circularImport1");
         }
 
         [TestMethod]

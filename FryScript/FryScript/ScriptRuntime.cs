@@ -1,8 +1,11 @@
 ﻿using FryScript.Compilation;
+using FryScript.Helpers;
 using FryScript.HostInterop;
 using FryScript.ScriptProviders;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace FryScript
 {
@@ -13,6 +16,8 @@ namespace FryScript
         private readonly IObjectRegistry _registry;
         private readonly IScriptObjectBuilderFactory _builderFactory;
         private readonly ITypeFactory _typeFactory;
+
+        private readonly Queue<string> _compileQueue = new Queue<string>();
 
 #if NETSTANDARD2_0
         public ScriptRuntime()
@@ -52,11 +57,11 @@ namespace FryScript
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
 
-            name = Path.ChangeExtension(name, ".fry");
+            name = Path.ChangeExtension(name, ".fry").ToLower();
 
-            var key = relativeTo == null
+            var key = (relativeTo == null
                 ? name
-                : $"{name} -> {relativeTo}";
+                : $"{name} -> {relativeTo}").ToLower();
 
             if (_registry.TryGetObject(key, out IScriptObject obj))
                 return obj;
@@ -72,6 +77,11 @@ namespace FryScript
                 return obj;
             }
 
+            if(_compileQueue.Any(q => q == resolvedName))
+                throw ExceptionHelper.CircularDependency(resolvedName, _compileQueue);
+
+            _compileQueue.Enqueue(resolvedName);
+
             var context = new CompilerContext(this, resolvedName);
             var ctor = _compiler.Compile2(scriptInfo.Source, resolvedName, context);
             var scriptType = _typeFactory.CreateScriptableType(context.ScriptType);
@@ -81,6 +91,8 @@ namespace FryScript
 
             _registry.Import(resolvedName, instance);
             _registry.Import(key, instance);
+
+            _compileQueue.Dequeue();
 
             return instance;
         }
