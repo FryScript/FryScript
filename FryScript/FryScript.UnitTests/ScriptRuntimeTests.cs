@@ -201,9 +201,6 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Import_Registers_New_Type()
         {
-            var rat = new ScriptRuntime();
-            var bat = rat.Import(typeof(ExtendedScriptObject));
-
             _registry.TryGetObject("extendedScriptObject", out IScriptObject obj).Returns(false);
 
             _objectFactory.Create(typeof(ExtendedScriptObject), Arg.Any<Func<IScriptObject, object>>(), new Uri("runtime://extendedScriptObject"))
