@@ -4,7 +4,7 @@ namespace FryScript
 {
     public interface IScriptRuntime
     {
-        IScriptObject Get(string name, string relativeTo = null);
+        IScriptObject Get(string name, Uri relativeTo = null);
 
         //IScriptObject Import(Type type);
 

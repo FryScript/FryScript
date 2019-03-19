@@ -4,6 +4,6 @@ namespace FryScript.ScriptProviders
 {
     public interface IScriptProvider
     {
-        bool TryGetScriptInfo(string path, out ScriptInfo scriptInfo, string relativeTo = null);
+        bool TryGetScriptInfo(string path, out ScriptInfo scriptInfo, Uri relativeTo = null);
     }
 }

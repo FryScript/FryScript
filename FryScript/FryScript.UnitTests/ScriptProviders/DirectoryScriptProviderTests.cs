@@ -71,7 +71,7 @@ namespace FryScript.UnitTests.ScriptProviders
         public void TryGetScriptInfo_Relative_To_Does_Not_Exist()
         {
             _provider = new DirectoryScriptProvider(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts"));
-            var relativeTo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "noFile.fry");
+            var relativeTo = new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "noFile.fry"));
 
             Assert.IsFalse(_provider.TryGetScriptInfo("simpleImport.fry", out ScriptInfo scriptInfo, relativeTo));
             Assert.IsNull(scriptInfo);
@@ -83,7 +83,7 @@ namespace FryScript.UnitTests.ScriptProviders
             _provider = new DirectoryScriptProvider(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts"));
             var expectedUri = new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "simpleImport.fry"));
             var expectedSource = File.ReadAllText(expectedUri.LocalPath);
-            var relativeTo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "errorHandling1.fry");
+            var relativeTo = new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "errorHandling1.fry"));
 
             Assert.IsTrue(_provider.TryGetScriptInfo("simpleImport.fry", out ScriptInfo scriptInfo, relativeTo));
             Assert.AreEqual(expectedUri, scriptInfo.Uri);
@@ -95,9 +95,9 @@ namespace FryScript.UnitTests.ScriptProviders
         {
             var expectedUri = new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "outside.txt"));
             var expectedSource = File.ReadAllText(expectedUri.LocalPath);
-            var relativeTo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "errorHandling1.fry");
+            var relativeTo = new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "errorHandling1.fry"));
 
-            Assert.IsTrue(_provider.TryGetScriptInfo("outside.txt", out ScriptInfo scriptInfo, new Uri(relativeTo).AbsoluteUri));
+            Assert.IsTrue(_provider.TryGetScriptInfo("outside.txt", out ScriptInfo scriptInfo, relativeTo));
             Assert.AreEqual(expectedUri, scriptInfo.Uri);
             Assert.AreEqual(expectedSource, scriptInfo.Source);
         }

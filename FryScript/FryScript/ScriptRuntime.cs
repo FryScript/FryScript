@@ -53,21 +53,21 @@ namespace FryScript
             _typeFactory = typeFactory ?? throw new ArgumentNullException(nameof(typeFactory));
         }
 
-        public IScriptObject Get(string name, string relativeTo = null)
+        public IScriptObject Get(string name, Uri relativeTo = null)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
 
-            name = Path.ChangeExtension(name, ".fry").ToLower();
+            name = Path.ChangeExtension(name, ".fry");
 
-            var key = (relativeTo == null
+            var key = relativeTo == null
                 ? name
-                : $"{name} -> {relativeTo}").ToLower();
+                : $"{name} -> {relativeTo.AbsoluteUri}";
 
             if (_registry.TryGetObject(key, out IScriptObject obj))
                 return obj;
 
             if (!_scriptProvider.TryGetScriptInfo(name, out ScriptInfo scriptInfo, relativeTo))
-                throw new ScriptLoadException(name, relativeTo);
+                throw new ScriptLoadException(name, relativeTo.AbsoluteUri);
 
             var resolvedName = scriptInfo.Uri.AbsoluteUri;
 
@@ -77,12 +77,12 @@ namespace FryScript
                 return obj;
             }
 
-            if(_compileQueue.Any(q => q == resolvedName))
+            if(_compileQueue.Any(q => q.Equals(resolvedName, StringComparison.OrdinalIgnoreCase)))
                 throw ExceptionHelper.CircularDependency(resolvedName, _compileQueue);
 
             _compileQueue.Enqueue(resolvedName);
 
-            var context = new CompilerContext(this, resolvedName);
+            var context = new CompilerContext(this, scriptInfo.Uri);
             var ctor = _compiler.Compile2(scriptInfo.Source, resolvedName, context);
             var scriptType = _typeFactory.CreateScriptableType(context.ScriptType);
             var builder = _builderFactory.Create(scriptType, ctor, scriptInfo.Uri);

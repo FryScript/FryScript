@@ -20,6 +20,8 @@ namespace FryScript.Compilation
         
         public string Name { get { return _name; } }
 
+        public Uri Uri { get; }
+
         public ScriptEngine ScriptEngine { get { return _scriptEngine; } }
 
         public IScriptRuntime ScriptRuntime { get; }
@@ -44,11 +46,11 @@ namespace FryScript.Compilation
             DefaultIdentifierNodeType = typeof(IdentifierNode);
         }
 
-        public CompilerContext(IScriptRuntime scriptRuntime, string name)
+        public CompilerContext(IScriptRuntime scriptRuntime, Uri uri)
             : base(FryScriptLanguageData.LanguageData)
         {
             ScriptRuntime = scriptRuntime ?? throw new ArgumentNullException(nameof(scriptRuntime));
-            _name = name;
+            Uri = uri;
 
             DefaultNodeType = typeof(DefaultNode);
             DefaultLiteralNodeType = typeof(LiteralNode);

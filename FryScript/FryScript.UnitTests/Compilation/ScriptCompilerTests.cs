@@ -26,7 +26,7 @@ namespace FryScript.UnitTests.Compilation
 
             _compiler = new ScriptCompiler(_parser, _expressionParser);
 
-            _context = new CompilerContext(Substitute.For<IScriptRuntime>(), "test");
+            _context = new CompilerContext(Substitute.For<IScriptRuntime>(), new Uri("test:///name"));
 
             _rootNode = Substitute.For<IRootNode>();
         }

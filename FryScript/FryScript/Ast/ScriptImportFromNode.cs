@@ -16,7 +16,9 @@ namespace FryScript.Ast
                 ? ChildNodes.Skip(2).First().ValueString
                 : ChildNodes.Skip(3).First().ValueString;
 
-            var importObj = CompilerContext.ScriptEngine.Get(path, CompilerContext.Name);
+            var importObj = CompilerContext.ScriptEngine != null
+                ? CompilerContext.ScriptEngine.Get(path, CompilerContext.Name)
+                : CompilerContext.ScriptRuntime.Get(path, CompilerContext.Uri);
 
             var importParamsExpr = (ChildNodes.Length == 3
                 ? importObj.GetMembers().Select(m => scope.AddMember(m, this))

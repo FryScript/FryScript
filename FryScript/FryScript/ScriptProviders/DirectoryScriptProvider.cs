@@ -15,7 +15,7 @@ namespace FryScript.ScriptProviders
                 throw new ArgumentException($"Directory path {path} does not exist", nameof(path));
         }
 
-        public bool TryGetScriptInfo(string path, out ScriptInfo scriptInfo, string relativeTo = null)
+        public bool TryGetScriptInfo(string path, out ScriptInfo scriptInfo, Uri relativeTo = null)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
 
@@ -34,17 +34,15 @@ namespace FryScript.ScriptProviders
             return false;
         }
 
-        private DirectoryInfo GetSearchDirectory(string relativeTo)
+        private DirectoryInfo GetSearchDirectory(Uri relativeTo)
         {
             if (relativeTo == null)
                 return _root;
 
-            var uri = new Uri(Uri.UnescapeDataString(relativeTo));
-
-            if (!uri.IsFile)
+            if (!relativeTo.IsFile)
                 return null;
 
-            var relativeFile = new FileInfo(Path.GetFullPath(uri.LocalPath));
+            var relativeFile = new FileInfo(Path.GetFullPath(relativeTo.LocalPath));
 
             if (!relativeFile.Exists)
                 return null;

@@ -101,14 +101,14 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Get_Name_And_Relative_To_Already_Exists()
         {
-            _registry.TryGetObject("name.fry -> relativeTo", out IScriptObject obj).Returns(c =>
+            _registry.TryGetObject("name.fry -> test:///relativeTo", out IScriptObject obj).Returns(c =>
             {
                 c[1] = _obj;
 
                 return true;
             });
 
-            var result = _runtime.Get("name.fry", "relativeTo");
+            var result = _runtime.Get("name.fry", new Uri("test:///relativeTo"));
 
             Assert.AreEqual(_obj, result);
         }
@@ -124,7 +124,7 @@ namespace FryScript.UnitTests
                 Source = "source"
             };
 
-            _scriptProvider.TryGetScriptInfo("name.fry", out ScriptInfo scriptInfoArg, "relativeTo").Returns(c =>
+            _scriptProvider.TryGetScriptInfo("name.fry", out ScriptInfo scriptInfoArg, new Uri("test:///relativeTo")).Returns(c =>
             {
                 c[1] = scriptInfo;
 
@@ -138,10 +138,10 @@ namespace FryScript.UnitTests
                 return true;
             });
 
-            var result = _runtime.Get("name", "relativeTo");
+            var result = _runtime.Get("name", new Uri("test:///relativeTo"));
 
             Assert.AreEqual(_obj, result);
-            _registry.Received().Import("name.fry -> relativeTo", _obj);
+            _registry.Received().Import("name.fry -> test:///relativeTo", _obj);
         }
 
         [TestMethod]
