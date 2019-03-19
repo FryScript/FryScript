@@ -6,7 +6,7 @@ namespace FryScript
     {
         IScriptObject Get(string name, Uri relativeTo = null);
 
-        //IScriptObject Import(Type type);
+        IScriptObject Import(Type type);
 
         //IScriptObject Eval(string script);
     }

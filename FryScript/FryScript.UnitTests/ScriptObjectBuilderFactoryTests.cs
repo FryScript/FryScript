@@ -1,17 +1,41 @@
 ﻿using System;
+using FryScript.HostInterop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
 
 namespace FryScript.UnitTests
 {
     [TestClass]
     public class ScriptObjectBuilderFactoryTests
     {
-        private ScriptObjectBuilderFactory _factory;
+        private ScriptObjectFactory _factory;
+        private ITypeFactory _typeFactory;
+        private IScriptObject _obj;
+        private IScriptObjectBuilder _builder;
+        private Func<Type, Func<IScriptObject, object>, Uri, IScriptObjectBuilder> _factoryFunc;
 
         [TestInitialize]
         public void TestIntialize()
         {
-            _factory = new ScriptObjectBuilderFactory();
+            _builder = Substitute.For<IScriptObjectBuilder>();
+            _factoryFunc = Substitute.For<Func<Type, Func<IScriptObject, object>, Uri, IScriptObjectBuilder>>();
+            _factoryFunc.Invoke(Arg.Any<Type>(), Arg.Any<Func<IScriptObject, object>>(), Arg.Any<Uri>());
+            _typeFactory = Substitute.For<ITypeFactory>();
+            _factory = new ScriptObjectFactory(_factoryFunc, _typeFactory);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_Null_Factory()
+        {
+            new ScriptObjectFactory(null, _typeFactory);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_Null_Type_Factory()
+        {
+            new ScriptObjectFactory(_factoryFunc, null);
         }
 
         [TestMethod]
@@ -38,14 +62,22 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Create_Success()
         {
+            var type = typeof(ScriptObject);
+            var scriptableType = typeof(ScriptObject);
             Func<IScriptObject, object> ctor = o => o;
             var uri = new Uri("test:///name");
 
-            var result = _factory.Create(typeof(ScriptObject), ctor, uri);
-            var obj = result.Build();
+            _typeFactory.CreateScriptableType(type).Returns(scriptableType);
+            _factoryFunc.Invoke(
+                typeof(ScriptObjectBuilder<>).MakeGenericType(scriptableType),
+                ctor,
+                uri).Returns(_builder);
 
-            Assert.AreEqual(uri, result.Uri);
-            Assert.IsTrue(obj is ScriptObject);
+            _builder.Build().Returns(_obj);
+
+            var result = _factory.Create(type, ctor, uri);
+
+            Assert.AreEqual(_obj, result);
         }
     }
 }

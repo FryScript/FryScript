@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace FryScript
 {
@@ -14,8 +15,7 @@ namespace FryScript
         private readonly IScriptProvider _scriptProvider;
         private readonly IScriptCompiler _compiler;
         private readonly IObjectRegistry _registry;
-        private readonly IScriptObjectBuilderFactory _builderFactory;
-        private readonly ITypeFactory _typeFactory;
+        private readonly IScriptObjectFactory _objectFactory;
 
         private readonly Queue<string> _compileQueue = new Queue<string>();
 
@@ -24,8 +24,7 @@ namespace FryScript
             : this(new DirectoryScriptProvider(AppContext.BaseDirectory),
                   new ScriptCompiler(),
                   new ObjectRegistry(),
-                  new ScriptObjectBuilderFactory(),
-                  TypeFactory.Current)
+                  new ScriptObjectFactory())
         {
         }
 #else
@@ -33,8 +32,7 @@ namespace FryScript
             : this(new DirectoryScriptProvider(AppDomain.CurrentDomain.BaseDirectory),
                   new ScriptCompiler(),
                   new ObjectRegistry(),
-                  new ScriptObjectBuilderFactory(),
-                  TypeFactory.Current)
+                  new ScriptObjectFactory())
         {
         }
 #endif
@@ -43,14 +41,12 @@ namespace FryScript
             IScriptProvider scriptProvider, 
             IScriptCompiler compiler, 
             IObjectRegistry registry, 
-            IScriptObjectBuilderFactory builderFactory,
-            ITypeFactory typeFactory)
+            IScriptObjectFactory objectFactory)
         {
             _scriptProvider = scriptProvider ?? throw new ArgumentNullException(nameof(scriptProvider));
             _compiler = compiler ?? throw new ArgumentNullException(nameof(compiler));
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
-            _builderFactory = builderFactory ?? throw new ArgumentNullException(nameof(builderFactory));
-            _typeFactory = typeFactory ?? throw new ArgumentNullException(nameof(typeFactory));
+            _objectFactory = objectFactory ?? throw new ArgumentNullException(nameof(objectFactory));
         }
 
         public IScriptObject Get(string name, Uri relativeTo = null)
@@ -84,10 +80,7 @@ namespace FryScript
 
             var context = new CompilerContext(this, scriptInfo.Uri);
             var ctor = _compiler.Compile2(scriptInfo.Source, resolvedName, context);
-            var scriptType = _typeFactory.CreateScriptableType(context.ScriptType);
-            var builder = _builderFactory.Create(scriptType, ctor, scriptInfo.Uri);
-
-            var instance = builder.Build();
+            var instance = _objectFactory.Create(context.ScriptType, ctor, scriptInfo.Uri);
 
             _registry.Import(resolvedName, instance);
             _registry.Import(key, instance);
@@ -95,6 +88,25 @@ namespace FryScript
             _compileQueue.Dequeue();
 
             return instance;
+        }
+
+        public IScriptObject Import(Type type)
+        {
+            type = type ?? throw new ArgumentNullException(nameof(type));
+
+            var scriptableType = type.GetTypeInfo().GetCustomAttribute<ScriptableTypeAttribute>();
+
+            if (scriptableType == null)
+                throw new ArgumentException($"Type {type.FullName} is not decorated with {typeof(ScriptableTypeAttribute).FullName}", nameof(type));
+
+            if (_registry.TryGetObject(scriptableType.Name, out IScriptObject obj))
+                return obj;
+
+            obj = _objectFactory.Create(type, o => o, new Uri($"runtime://{scriptableType.Name}"));
+
+            _registry.Import(scriptableType.Name, obj);
+
+            return obj;
         }
     }
 }

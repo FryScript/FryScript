@@ -17,8 +17,7 @@ namespace FryScript.UnitTests
         private ScriptRuntime _runtime;
         private IScriptCompiler _compiler;
         private IObjectRegistry _registry;
-        private IScriptObjectBuilderFactory _builderFactory;
-        private ITypeFactory _typeFactory;
+        private IScriptObjectFactory _objectFactory;
 
         private IScriptObject _obj;
         private IScriptProvider _scriptProvider;
@@ -30,9 +29,8 @@ namespace FryScript.UnitTests
             _scriptProvider = Substitute.For<IScriptProvider>();
             _compiler = Substitute.For<IScriptCompiler>();
             _registry = Substitute.For<IObjectRegistry>();
-            _builderFactory = Substitute.For<IScriptObjectBuilderFactory>();
-            _typeFactory = Substitute.For<ITypeFactory>();
-            _runtime = new ScriptRuntime(_scriptProvider, _compiler, _registry, _builderFactory, _typeFactory);
+            _objectFactory = Substitute.For<IScriptObjectFactory>();
+            _runtime = new ScriptRuntime(_scriptProvider, _compiler, _registry, _objectFactory);
 
             _obj = Substitute.For<IScriptObject>();
             _objBuilder = Substitute.For<IScriptObjectBuilder>();
@@ -42,35 +40,28 @@ namespace FryScript.UnitTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Script_Providers()
         {
-            new ScriptRuntime(null, _compiler, _registry, _builderFactory, _typeFactory);
+            new ScriptRuntime(null, _compiler, _registry, _objectFactory);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Compiler()
         {
-            new ScriptRuntime(_scriptProvider, null, _registry, _builderFactory, _typeFactory);
+            new ScriptRuntime(_scriptProvider, null, _registry, _objectFactory);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Object_Registry()
         {
-            new ScriptRuntime(_scriptProvider, _compiler, null, _builderFactory, _typeFactory);
+            new ScriptRuntime(_scriptProvider, _compiler, null, _objectFactory);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Builder_Factory()
         {
-            new ScriptRuntime(_scriptProvider, _compiler, _registry, null, _typeFactory);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Ctor_Null_Type_Factory()
-        {
-            new ScriptRuntime(_scriptProvider, _compiler, _registry, _builderFactory, null);
+            new ScriptRuntime(_scriptProvider, _compiler, _registry, null);
         }
 
         [DataTestMethod]
@@ -168,12 +159,8 @@ namespace FryScript.UnitTests
                 && c.ScriptRuntime == _runtime
             )).Returns(new Func<IScriptObject, object>(o => "Constructed!"));
 
-            _typeFactory.CreateScriptableType(typeof(ScriptObject)).Returns(typeof(ExtendedScriptObject));
-
-            _builderFactory.Create(typeof(ExtendedScriptObject), Arg.Any<Func<IScriptObject, object>>(), new Uri("test:///name.fry"))
-                .Returns(_objBuilder);
-
-            _objBuilder.Build().Returns(_obj);
+            _objectFactory.Create(typeof(ScriptObject), Arg.Any<Func<IScriptObject, object>>(), new Uri("test:///name.fry"))
+                .Returns(_obj);
 
             var result = _runtime.Get("name");
 
@@ -183,11 +170,49 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void MyTestMethod()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Import_Null_Type()
         {
-            var sr = new ScriptRuntime();
-            var t = sr.Get("scripts/simpleimport");
-            var t2 = sr.Get("scripts/exportmembers");
+            _runtime.Import(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_Type_Not_Decorated_With_Scriptable_Type_Attribute()
+        {
+            _runtime.Import(typeof(object));
+        }
+
+        [TestMethod]
+        public void Import_Type_Already_Imported()
+        {
+            _registry.TryGetObject("extendedScriptObject", out IScriptObject obj)
+                .Returns(c =>
+                {
+                    c[1] = _obj;
+                    return true;
+                });
+
+            var result = _runtime.Import(typeof(ExtendedScriptObject));
+
+            Assert.AreEqual(_obj, result);
+        }
+
+        [TestMethod]
+        public void Import_Registers_New_Type()
+        {
+            var rat = new ScriptRuntime();
+            var bat = rat.Import(typeof(ExtendedScriptObject));
+
+            _registry.TryGetObject("extendedScriptObject", out IScriptObject obj).Returns(false);
+
+            _objectFactory.Create(typeof(ExtendedScriptObject), Arg.Any<Func<IScriptObject, object>>(), new Uri("runtime://extendedScriptObject"))
+                .Returns(_obj);
+
+            var result = _runtime.Import(typeof(ExtendedScriptObject));
+
+            Assert.AreEqual(_obj, result);
+            _registry.Received().Import("extendedScriptObject", _obj);
         }
     }
 }
