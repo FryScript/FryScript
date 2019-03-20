@@ -114,12 +114,17 @@ namespace FryScript
             return obj;
         }
 
-        public IScriptObject New(string name)
+        public IScriptObject New(string name, params object[] args)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentNullException(nameof(name));
 
-            return Get(name).ObjectCore.Builder.Build();
+            var instance = Get(name).ObjectCore.Builder.Build();
+
+            if (instance.HasMemberOfType("ctor", typeof(ScriptFunction)))
+                instance.InvokeMember("ctor", args);
+
+            return instance;
         }
     }
 }

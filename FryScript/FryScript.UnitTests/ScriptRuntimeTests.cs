@@ -4,7 +4,9 @@ using FryScript.ScriptProviders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
+using System.Dynamic;
 using System.IO;
+using System.Linq.Expressions;
 
 namespace FryScript.UnitTests
 {
@@ -13,6 +15,23 @@ namespace FryScript.UnitTests
     {
         [ScriptableType("extendedScriptObject")]
         public class ExtendedScriptObject { }
+
+        [ScriptableType("newScriptObject")]
+        public class NewScriptObject : ScriptObject
+        {
+            [ScriptableProperty("arg1")]
+            public string Arg1 { get; set; }
+
+            [ScriptableProperty("arg2")]
+            public string Arg2 { get; set; }
+
+            [ScriptableMethod("ctor")]
+            public void Ctor(string arg1, string arg2)
+            {
+                Arg1 = arg1;
+                Arg2 = arg2;
+            }
+        }
 
         private ScriptRuntime _runtime;
         private IScriptCompiler _compiler;
@@ -261,11 +280,36 @@ namespace FryScript.UnitTests
                 Builder = _objBuilder
             });
 
-            _objBuilder.Build().Returns(Substitute.For<IScriptObject>());
+            _objBuilder.Build().Returns(new ScriptObject());
 
             var result = _runtime.New("name");
 
             Assert.AreNotEqual(_obj, result);
+        }
+
+        [TestMethod]
+        public void New_Gets_Script_And_Creates_New_Instance_With_Args()
+        {
+            _registry.TryGetObject("name", out IScriptObject obj).Returns(c =>
+            {
+                c[1] = _obj;
+
+                return true;
+            });
+
+            _obj.ObjectCore.Returns(new ObjectCore
+            {
+                Builder = _objBuilder
+            });
+
+            _objBuilder.Build().Returns(new NewScriptObject());
+
+            var result = _runtime.New("name", "test", "object") as NewScriptObject;
+
+            Assert.AreNotEqual(_obj, result);
+            Assert.AreEqual("test", result.Arg1);
+            Assert.AreEqual("object", result.Arg2);
+
         }
     }
 }

@@ -78,5 +78,12 @@ namespace FryScript
 
             return member.GetType() == type;
         }
+
+        public static object InvokeMember(this IScriptObject source, string name, params object[] args)
+        {
+            var member = CallSiteCache.Current.GetMember(name, source) as ScriptFunction;
+
+            return member?.Invoke<object>(args);
+        }
     }
 }
