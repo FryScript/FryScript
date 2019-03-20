@@ -83,6 +83,7 @@ namespace FryScript.UnitTests.Compilation
             var result = _compiler.Compile2("source", "name", _context);
 
             Assert.AreEqual(expectedFunc, result);
+            Assert.AreEqual(_expressionParser, _context.ExpressionParser);
         }
     }
 }

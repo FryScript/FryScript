@@ -56,7 +56,9 @@ namespace FryScript.Ast
             var subString = match.Value;
 
             subString = subString.Trim('@', '{', '}');
-            var expressionNode = CompilerContext.ScriptEngine.Compiler.ExpressionParser.Parse(subString, CompilerContext.Name, CompilerContext);
+            var expressionNode = CompilerContext.ScriptEngine != null
+                ? CompilerContext.ScriptEngine.Compiler.ExpressionParser.Parse(subString, CompilerContext.Name, CompilerContext)
+                : CompilerContext.ExpressionParser.Parse(subString, CompilerContext.Uri.AbsoluteUri, CompilerContext);
 
             AdjustNode(expressionNode, match.Length, match.Index);
 

@@ -7,5 +7,7 @@ namespace FryScript
         Uri Uri { get; }
 
         IScriptObject Build();
+
+        IScriptObject Extend(IScriptObject obj);
     }
 }

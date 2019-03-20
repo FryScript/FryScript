@@ -50,6 +50,7 @@ namespace FryScript.Compilation
                 throw new ArgumentNullException(nameof(name));
 
             compilerContext = compilerContext ?? throw new ArgumentNullException(nameof(compilerContext));
+            compilerContext.ExpressionParser = _expressionParser;
 
             var rootNode = _parser.Parse2(source, name, compilerContext);
 

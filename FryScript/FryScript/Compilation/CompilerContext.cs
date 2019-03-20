@@ -28,6 +28,8 @@ namespace FryScript.Compilation
 
         public Type ScriptType { get; set; }
 
+        public IScriptParser ExpressionParser { get; set; }
+
         public bool HasDebugHook => _scriptEngine?.DebugHook != null;
 
         public DebugHook DebugHook => _scriptEngine?.DebugHook;

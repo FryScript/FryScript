@@ -28,16 +28,30 @@ namespace FryScript.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(CompilerException))]
-        public void CircularImportTest()
+        public void Get_Script_With_Circular_Import()
         {
             _scriptRuntime.Get("scripts/circularImport1");
         }
 
         [TestMethod]
         [ExpectedException(typeof(CompilerException))]
-        public void CircularExtendTest()
+        public void Get_Script_With_Circular_Extend()
         {
-            _scriptEngine.Get("scripts/circularExtend1");
+            _scriptRuntime.Get("scripts/circularExtend1");
+        }
+
+        [TestMethod]
+        public void Get_Script_With_Correct_Extend()
+        {
+            var baseScript = _scriptRuntime.Get("scripts/baseScript");
+            var extendingScript = _scriptRuntime.Get("scripts/extendingScript");
+
+            dynamic dExtendingScript = extendingScript;
+
+            Assert.AreEqual("Base script", dExtendingScript.name);
+            Assert.AreEqual("My name is Base script", dExtendingScript.getName());
+            Assert.IsTrue(baseScript.GetType() != extendingScript.GetType());
+            Assert.IsTrue(baseScript.GetType().IsAssignableFrom(extendingScript.GetType()));
         }
 
         [TestMethod]
