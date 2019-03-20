@@ -47,11 +47,16 @@ namespace FryScript
             _compiler = compiler ?? throw new ArgumentNullException(nameof(compiler));
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
             _objectFactory = objectFactory ?? throw new ArgumentNullException(nameof(objectFactory));
+
+            Import(typeof(ScriptError));
         }
 
         public IScriptObject Get(string name, Uri relativeTo = null)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+
+            if (_registry.TryGetObject(name, out IScriptObject obj))
+                return obj;
 
             name = Path.ChangeExtension(name, ".fry");
 
@@ -59,11 +64,11 @@ namespace FryScript
                 ? name
                 : $"{name} -> {relativeTo.AbsoluteUri}";
 
-            if (_registry.TryGetObject(key, out IScriptObject obj))
+            if (_registry.TryGetObject(key, out obj))
                 return obj;
 
             if (!_scriptProvider.TryGetScriptInfo(name, out ScriptInfo scriptInfo, relativeTo))
-                throw new ScriptLoadException(name, relativeTo.AbsoluteUri);
+                throw new ScriptLoadException(name, relativeTo?.AbsoluteUri);
 
             var resolvedName = scriptInfo.Uri.AbsoluteUri;
 
@@ -107,6 +112,14 @@ namespace FryScript
             _registry.Import(scriptableType.Name, obj);
 
             return obj;
+        }
+
+        public IScriptObject New(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentNullException(nameof(name));
+
+            return Get(name).ObjectCore.Builder.Build();
         }
     }
 }

@@ -64,6 +64,15 @@ namespace FryScript.UnitTests
             new ScriptRuntime(_scriptProvider, _compiler, _registry, null);
         }
 
+        [TestMethod]
+        public void Ctor_Registers_Built_In_Types()
+        {
+            _registry = Substitute.For<IObjectRegistry>();
+            _runtime = new ScriptRuntime(_scriptProvider, _compiler, _registry, _objectFactory);
+
+            _registry.Received().Import("error", Arg.Any<IScriptObject>());
+        }
+
         [DataTestMethod]
         [DataRow(null)]
         [DataRow("")]
@@ -76,6 +85,21 @@ namespace FryScript.UnitTests
 
         [TestMethod]
         public void Get_Name_Already_Exists()
+        {
+            _registry.TryGetObject("name", out IScriptObject obj).Returns(c =>
+            {
+                c[1] = _obj;
+
+                return true;
+            });
+
+            var result = _runtime.Get("name");
+
+            Assert.AreEqual(_obj, result);
+        }
+
+        [TestMethod]
+        public void Get_Name_With_Extension_Already_Exists()
         {
             _registry.TryGetObject("name.fry", out IScriptObject obj).Returns(c =>
             {
@@ -210,6 +234,38 @@ namespace FryScript.UnitTests
 
             Assert.AreEqual(_obj, result);
             _registry.Received().Import("extendedScriptObject", _obj);
+        }
+
+        [DataTestMethod]
+        [DataRow(null)]
+        [DataRow("")]
+        [DataRow("  ")]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void New_Invalid_Name(string name)
+        {
+            _runtime.New(name);
+        }
+
+        [TestMethod]
+        public void New_Gets_Script_And_Creates_New_Instance()
+        {
+            _registry.TryGetObject("name", out IScriptObject obj).Returns(c =>
+            {
+                c[1] = _obj;
+
+                return true;
+            });
+
+            _obj.ObjectCore.Returns(new ObjectCore
+            {
+                Builder = _objBuilder
+            });
+
+            _objBuilder.Build().Returns(Substitute.For<IScriptObject>());
+
+            var result = _runtime.New("name");
+
+            Assert.AreNotEqual(_obj, result);
         }
     }
 }

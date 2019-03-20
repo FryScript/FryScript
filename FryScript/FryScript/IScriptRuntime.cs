@@ -8,6 +8,8 @@ namespace FryScript
 
         IScriptObject Import(Type type);
 
+        IScriptObject New(string name);
+
         //IScriptObject Eval(string script);
     }
 }

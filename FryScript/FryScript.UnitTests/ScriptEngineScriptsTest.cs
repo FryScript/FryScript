@@ -1,14 +1,16 @@
-﻿using System;
+﻿using FryScript.Compilation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FryScript.UnitTests
 {
-    using Compilation;
-    using FryScript.Compilation;
 
     [TestClass]
     public class ScriptEngineScriptsTest
     {
+        [ScriptableType("importType")]
+        public class ImportType { }
+
         private ScriptEngine _scriptEngine;
         private ScriptRuntime _scriptRuntime;
 
@@ -22,7 +24,7 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void LocateAndCompileTest()
         {
-            dynamic obj = _scriptEngine.Get("scripts/simpleImport");
+            dynamic obj = _scriptRuntime.Get("scripts/simpleImport");
             Assert.IsTrue(obj.member);
         }
 
@@ -76,11 +78,21 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
+        public void Get_Imported_Type()
+        {
+            _scriptRuntime.Import(typeof(ImportType));
+
+            var importType = _scriptRuntime.Get("importType");
+
+            Assert.IsNotNull(importType);
+        }
+
+        [TestMethod]
         public void NestedExceptionTest()
         {
             try
             {
-                _scriptEngine.Get("scripts/errorHandling1");
+                _scriptRuntime.Get("scripts/errorHandling1");
             }
             catch(FryScriptException ex)
             {
@@ -112,8 +124,8 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void ImportNamedMembersTest()
         {
-            dynamic imports = _scriptEngine.Get("scripts/importNamedMembers");
-            dynamic exports = _scriptEngine.Get("scripts/exportMembers");
+            dynamic imports = _scriptRuntime.Get("scripts/importNamedMembers");
+            dynamic exports = _scriptRuntime.Get("scripts/exportMembers");
 
             Assert.AreEqual(exports.member2, imports.importedMember2);
             Assert.AreEqual(exports.member3, imports.importedMember3);

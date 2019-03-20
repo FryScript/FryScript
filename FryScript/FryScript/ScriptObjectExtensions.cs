@@ -68,5 +68,15 @@ namespace FryScript
 
             return members;
         }
+
+        public static bool HasMemberOfType(this IScriptObject source, string name, Type type)
+        {
+            if (!CallSiteCache.Current.HasMember(name, source))
+                return false;
+
+            var member = CallSiteCache.Current.GetMember(name, source);
+
+            return member.GetType() == type;
+        }
     }
 }

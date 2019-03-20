@@ -323,9 +323,31 @@
 
         public override DynamicMetaObject BindCreateInstance(CreateInstanceBinder binder, DynamicMetaObject[] args)
         {
-            throw new NotImplementedException("Constructor not implemented");
-            //if (ScriptObject.Ctor == null)
-            //    ExceptionHelper.InvalidCreateInstance(ScriptObject.GetScriptType());
+            if (ScriptObject?.ObjectCore?.Builder == null)
+                ExceptionHelper.InvalidCreateInstance(ScriptObject.GetType().FullName);
+
+            var newInstanceExpr = Expression.Parameter(typeof(IScriptObject));
+            var builderExpr = Expression.Constant(ScriptObject.ObjectCore.Builder);
+            var buildExpr = Expression.Call(builderExpr, nameof(IScriptObjectBuilder.Build), null);
+            var assignNewInstanceExpr = Expression.Assign(newInstanceExpr, buildExpr);
+
+            var hasCtorExpr = Expression.IfThen(
+                Expression.Call(
+                    typeof(ScriptObjectExtensions), 
+                    nameof(ScriptObjectExtensions.HasMemberOfType), 
+                    null, 
+                    ScriptObjectExpr,
+                    Expression.Constant("ctor"), 
+                    Expression.Constant(typeof(ScriptFunction))),
+                ExpressionHelper.DynamicInvokeMember(
+                    newInstanceExpr,
+                    "ctor",
+                    args.Select(a => a.Expression).ToArray())
+                );
+
+            var blockExpr = Expression.Block(typeof(object), new[] { newInstanceExpr }, assignNewInstanceExpr, hasCtorExpr, newInstanceExpr);
+
+            return new DynamicMetaObject(blockExpr, BindingRestrictions.GetTypeRestriction(Expression, LimitType));
 
             //var newInstanceExpr = Expression.Parameter(typeof(ScriptObject));
             //var newExpr = Expression.Call(ScriptObjectExpr, "CreateInstance", null);

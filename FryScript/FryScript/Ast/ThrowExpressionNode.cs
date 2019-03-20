@@ -24,7 +24,7 @@ namespace FryScript.Ast
                 scope.TryGetData(ScopeData.CurrentException, out ParameterExpression currentException)
                     ? currentException
                     : ExpressionHelper.Null(typeof(Exception)),
-                Expression.Constant(CompilerContext.Name),
+                Expression.Constant(CompilerContext.Name ?? CompilerContext.Uri.AbsoluteUri),
                 Expression.Constant(location.Line),
                 Expression.Constant(location.Column)
                 );
