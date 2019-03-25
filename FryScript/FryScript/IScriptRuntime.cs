@@ -10,6 +10,6 @@ namespace FryScript
 
         IScriptObject New(string name, params object[] args);
 
-        IScriptObject Eval(string script);
+        object Eval(string script);
     }
 }

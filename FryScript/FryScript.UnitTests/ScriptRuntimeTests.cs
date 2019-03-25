@@ -335,6 +335,14 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Eval_Expression_Success()
         {
+            _compiler.Compile("true;",
+                Arg.Any<string>(),
+                Arg.Is<CompilerContext>(c => c.EvalMode == true))
+                .Returns(o => true);
+
+            dynamic result = _runtime.Eval("true;");
+
+            Assert.IsTrue(result);
         }
     }
 }

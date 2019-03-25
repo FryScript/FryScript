@@ -38,9 +38,9 @@ namespace FryScript
 #endif
 
         public ScriptRuntime(
-            IScriptProvider scriptProvider, 
-            IScriptCompiler compiler, 
-            IObjectRegistry registry, 
+            IScriptProvider scriptProvider,
+            IScriptCompiler compiler,
+            IObjectRegistry registry,
             IScriptObjectFactory objectFactory)
         {
             _scriptProvider = scriptProvider ?? throw new ArgumentNullException(nameof(scriptProvider));
@@ -51,12 +51,14 @@ namespace FryScript
             Import(typeof(ScriptError));
         }
 
-        public IScriptObject Eval(string script)
+        public object Eval(string script)
         {
             if (string.IsNullOrWhiteSpace(script))
                 throw new ArgumentNullException(nameof(script));
 
-            throw new NotImplementedException();
+            var func = _compiler.Compile(script, "eval", new CompilerContext(this, null, true));
+
+            return func(new ScriptObject());
         }
 
         public IScriptObject Get(string name, Uri relativeTo = null)
@@ -86,7 +88,7 @@ namespace FryScript
                 return obj;
             }
 
-            if(_compileQueue.Any(q => q.Equals(resolvedName, StringComparison.OrdinalIgnoreCase)))
+            if (_compileQueue.Any(q => q.Equals(resolvedName, StringComparison.OrdinalIgnoreCase)))
                 throw ExceptionHelper.CircularDependency(resolvedName, _compileQueue);
 
             _compileQueue.Enqueue(resolvedName);
