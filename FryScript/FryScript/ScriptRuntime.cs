@@ -51,6 +51,14 @@ namespace FryScript
             Import(typeof(ScriptError));
         }
 
+        public IScriptObject Eval(string script)
+        {
+            if (string.IsNullOrWhiteSpace(script))
+                throw new ArgumentNullException(nameof(script));
+
+            throw new NotImplementedException();
+        }
+
         public IScriptObject Get(string name, Uri relativeTo = null)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));

@@ -10,6 +10,16 @@ using System.Linq.Expressions;
 
 namespace FryScript.UnitTests
 {
+    [ScriptableType("actor")]
+    public class PlatformActor
+    {
+        [ScriptableMethod("sayHello")]
+        public virtual string SayHello(string name)
+        {
+            return $"Hello {name}";
+        }
+    }
+
     [TestClass]
     public class ScriptRuntimeTests
     {
@@ -310,6 +320,21 @@ namespace FryScript.UnitTests
             Assert.AreEqual("test", result.Arg1);
             Assert.AreEqual("object", result.Arg2);
 
+        }
+
+        [DataTestMethod]
+        [DataRow(null)]
+        [DataRow("")]
+        [DataRow("  ")]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Eval_Invalid_Script(string source)
+        {
+            _runtime.Eval(source);
+        }
+
+        [TestMethod]
+        public void Eval_Expression_Success()
+        {
         }
     }
 }
