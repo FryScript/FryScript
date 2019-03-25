@@ -34,7 +34,7 @@ namespace FryScript.Compilation
 
         public DebugHook DebugHook => _scriptEngine?.DebugHook;
 
-        public bool EvalMode { get; }
+        public bool IsEvalMode { get; }
 
         public CompilerContext(ScriptEngine scriptEngine, string name)
             : base(FryScriptLanguageData.LanguageData)
@@ -55,7 +55,7 @@ namespace FryScript.Compilation
         {
             ScriptRuntime = scriptRuntime ?? throw new ArgumentNullException(nameof(scriptRuntime));
             Uri = uri;
-            EvalMode = evalMode;
+            IsEvalMode = evalMode;
 
             DefaultNodeType = typeof(DefaultNode);
             DefaultLiteralNodeType = typeof(LiteralNode);

@@ -21,7 +21,7 @@ namespace FryScript.Ast
             var identifier = ChildNodes.Skip(1).First() as IdentifierNode;
             var block = ChildNodes.Skip(2).First();
 
-            var identifierExpr = identifier.CreateIdentifier(scope);
+            identifier.CreateIdentifier(scope);
             var exceptionExpr = Expression.Parameter(typeof(Exception), scope.GetTempName(TempPrefix.Exception));
             scope.SetData(ScopeData.CurrentException, exceptionExpr);
 

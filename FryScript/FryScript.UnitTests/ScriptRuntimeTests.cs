@@ -337,7 +337,7 @@ namespace FryScript.UnitTests
         {
             _compiler.Compile("true;",
                 Arg.Any<string>(),
-                Arg.Is<CompilerContext>(c => c.EvalMode == true))
+                Arg.Is<CompilerContext>(c => c.IsEvalMode == true))
                 .Returns(o => true);
 
             dynamic result = _runtime.Eval("true;");

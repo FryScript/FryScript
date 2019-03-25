@@ -50,15 +50,15 @@ namespace FryScript
 
             Import(typeof(ScriptError));
         }
-
+        private readonly ScriptObject _evalContext = new ScriptObject();
         public object Eval(string script)
         {
             if (string.IsNullOrWhiteSpace(script))
                 throw new ArgumentNullException(nameof(script));
 
-            var func = _compiler.Compile(script, "eval", new CompilerContext(this, null, true));
+            var func = _compiler.Compile2(script, "eval", new CompilerContext(this, null, true));
 
-            return func(new ScriptObject());
+            return func(_evalContext);
         }
 
         public IScriptObject Get(string name, Uri relativeTo = null)

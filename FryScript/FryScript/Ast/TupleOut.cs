@@ -7,11 +7,11 @@ using FryScript.Helpers;
 
 namespace FryScript.Ast
 {
-    public class TupleOut : AstNode
+    public class TupleOut : IdentifierNode
     {
         public override Expression GetExpression(Scope scope)
         {
-            return CreateOut(scope);
+            throw new NotImplementedException();
         }
 
 
@@ -21,7 +21,7 @@ namespace FryScript.Ast
             return Expression.Assign(tupleOut, value);
         }
 
-        public ParameterExpression CreateOut(Scope scope)
+        public override void CreateIdentifier(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
@@ -30,8 +30,6 @@ namespace FryScript.Ast
 
             var tupleOutExpr = scope.AddTempMember(TempPrefix.TupleOut, this);
             scope.SetData(ScopeData.TupleOut, tupleOutExpr);
-
-            return tupleOutExpr;
         }
     }
 }

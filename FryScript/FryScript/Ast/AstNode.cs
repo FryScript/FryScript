@@ -56,7 +56,7 @@ namespace FryScript.Ast
             throw new NotImplementedException();
         }
 
-        public virtual ParameterExpression CreateIdentifier(Scope scope)
+        public virtual void CreateIdentifier(Scope scope)
         {
             throw new NotImplementedException();
         }

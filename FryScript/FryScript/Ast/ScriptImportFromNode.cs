@@ -10,21 +10,22 @@ namespace FryScript.Ast
     {
         public override Expression GetExpression(Scope scope)
         {
-            scope = scope ?? throw new ArgumentNullException(nameof(scope));
+            throw new NotImplementedException();
+            //scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            var path = ChildNodes.Length == 3
-                ? ChildNodes.Skip(2).First().ValueString
-                : ChildNodes.Skip(3).First().ValueString;
+            //var path = ChildNodes.Length == 3
+            //    ? ChildNodes.Skip(2).First().ValueString
+            //    : ChildNodes.Skip(3).First().ValueString;
 
-            var importObj = CompilerContext.ScriptEngine != null
-                ? CompilerContext.ScriptEngine.Get(path, CompilerContext.Name)
-                : CompilerContext.ScriptRuntime.Get(path, CompilerContext.Uri);
+            //var importObj = CompilerContext.ScriptEngine != null
+            //    ? CompilerContext.ScriptEngine.Get(path, CompilerContext.Name)
+            //    : CompilerContext.ScriptRuntime.Get(path, CompilerContext.Uri);
 
-            var importParamsExpr = (ChildNodes.Length == 3
-                ? importObj.GetMembers().Select(m => scope.AddMember(m, this))
-                : ChildNodes.Skip(1).Cast<ParameterNamesNode>().First().DeclareParameters(scope)).ToList();
+            //var importParamsExpr = (ChildNodes.Length == 3
+            //    ? importObj.GetMembers().Select(m => scope.AddMember(m, this))
+            //    : ChildNodes.Skip(1).Cast<ParameterNamesNode>().First().DeclareParameters(scope)).ToList();
 
-            return GetImportExpression(scope, importObj, importParamsExpr);
+            //return GetImportExpression(scope, importObj, importParamsExpr);
         }
 
         private Expression GetImportExpression(Scope scope, IScriptObject importObj, List<ParameterExpression> importParamExprs)

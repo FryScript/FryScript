@@ -23,8 +23,8 @@ namespace FryScript.Ast
 
             if (left is IdentifierNode identifier)
             {
-                var paramExpr = identifier.CreateIdentifier(scope);
-                var assignExpr = Expression.Assign(paramExpr, right.GetExpression(scope));
+                identifier.CreateIdentifier(scope);
+                var assignExpr = identifier.SetIdentifier(scope, right.GetExpression(scope));
 
                 return assignExpr;
             }

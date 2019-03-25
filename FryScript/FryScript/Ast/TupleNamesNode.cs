@@ -55,11 +55,19 @@ namespace FryScript.Ast
             return nodes;
         }
 
-        public IEnumerable<ParameterExpression> DeclareVariables(Scope scope, List<ParameterExpression> exprs = null)
+        public void DeclareVariables(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            exprs = exprs ?? new List<ParameterExpression>();
+            DeclareVariables(scope, new List<IdentifierNode>())
+                .ForEach(i => i.CreateIdentifier(scope));
+        }
+
+        private List<IdentifierNode> DeclareVariables(Scope scope, List<IdentifierNode> exprs)
+        {
+            scope = scope ?? throw new ArgumentNullException(nameof(scope));
+
+            exprs = exprs ?? new List<IdentifierNode>();
 
             if (ChildNodes.Length == 2)
             {
@@ -67,16 +75,16 @@ namespace FryScript.Ast
                 if (firstNode is TupleNamesNode tuplesNames)
                     tuplesNames.DeclareVariables(scope, exprs);
                 else if (firstNode.FindChild<IdentifierNode>() is IdentifierNode firstIdentifier)
-                    exprs.Add(firstIdentifier.CreateIdentifier(scope));
+                    exprs.Add(firstIdentifier);
                 else if (firstNode is TupleOut tupleOut)
-                    exprs.Add(tupleOut.CreateOut(scope));
+                    exprs.Add(tupleOut);
             }
 
             var secondNode = ChildNodes.Skip(1).First();
             if (secondNode.FindChild<IdentifierNode>() is IdentifierNode secondIdentifier)
-                exprs.Add(secondIdentifier.CreateIdentifier(scope));
+                exprs.Add(secondIdentifier);
             else if (secondNode is TupleOut tupleOut)
-                exprs.Add(tupleOut.CreateOut(scope));
+                exprs.Add(tupleOut);
 
             return exprs; 
         }

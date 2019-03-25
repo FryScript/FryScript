@@ -24,8 +24,8 @@ namespace FryScript.Ast
                 importScript.SetResolver(() => CompilerContext?.ScriptRuntime?.Get(nameStr, CompilerContext.Uri));
 
             var importScriptExpr = Expression.Constant(importScript);
-            var aliasExpr = alias.CreateIdentifier(scope);
-            var assignAliasExpr = Expression.Assign(aliasExpr, importScriptExpr);
+            alias.CreateIdentifier(scope);
+            var assignAliasExpr = alias.SetIdentifier(scope, importScriptExpr);
 
             CompilerContext.ImportInfos.Add(new ImportInfo
             {

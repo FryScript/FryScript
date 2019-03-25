@@ -13,26 +13,32 @@ namespace FryScript.Ast
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ParameterExpression> DeclareParameters(Scope scope, List<ParameterExpression> exprs = null)
+        public void DeclareParameters(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            exprs = exprs ?? new List<ParameterExpression>();
+            DeclareParameters(scope, new List<IdentifierNode>())
+                .ForEach(i => i.CreateIdentifier(scope));
+        }
 
-            if (ChildNodes.Length == 1)
+        private List<IdentifierNode> DeclareParameters(Scope scope, List<IdentifierNode> exprs = null)
+        {
+            scope = scope ?? throw new ArgumentNullException(nameof(scope));
+
+            exprs = exprs ?? new List<IdentifierNode>();
+
+            if (ChildNodes.Length == 1 && ChildNodes[0] is IdentifierNode firstIdentifier)
             {
-                var identifier = ChildNodes.First();
-                exprs.Add(identifier.CreateIdentifier(scope));
+                exprs.Add(firstIdentifier);
             }
 
 
-            if (ChildNodes.Length == 2)
+            if (ChildNodes.Length == 2 && ChildNodes[1] is IdentifierNode secondIdentifier)
             {
                 var parameterNames = (ParameterNamesNode) ChildNodes.First();
                 parameterNames.DeclareParameters(scope, exprs);
 
-                var identifier = ChildNodes.Skip(1).First();
-                exprs.Add(identifier.CreateIdentifier(scope));
+                exprs.Add(secondIdentifier);
             }
 
             return exprs;

@@ -52,9 +52,7 @@ namespace FryScript.Ast
 
             var paramExpr = scope.AddKeywordMember<IScriptObject>(Keywords.This, this);
 
-            scope = scope.New();
-
-            var bodyExpr = scope.ScopeBlock(GetChildExpression(scope));
+            var bodyExpr = GetChildExpression(scope);
 
             if (CompilerContext.HasDebugHook)
                 bodyExpr = WrapDebugStack(scope, s => bodyExpr, DebugEvent.ScriptInitializing, DebugEvent.ScriptInitialized);

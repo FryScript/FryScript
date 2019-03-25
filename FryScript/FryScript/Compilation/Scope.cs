@@ -15,7 +15,7 @@ namespace FryScript.Compilation
 
         public bool Hoisted { get; }
         public Scope Parent { get; }
-
+        public bool IsRoot => Parent == null;
         public Scope()
             : this(new Dictionary<string, ParameterExpression>(), 
                   new Dictionary<string, object>(),

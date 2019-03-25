@@ -45,11 +45,14 @@ namespace FryScript.Ast
             return setExpr;
         }
 
-        public override ParameterExpression CreateIdentifier(Scope scope)
+        public override void CreateIdentifier(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            return scope.AddMember(ValueString, this);
+            if (CompilerContext.IsEvalMode && scope.IsRoot)
+                return;
+
+            scope.AddMember(ValueString, this);
         }
     }
 }
