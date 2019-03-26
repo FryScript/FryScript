@@ -335,7 +335,7 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Eval_Expression_Success()
         {
-            _compiler.Compile("true;",
+            _compiler.Compile2("true;",
                 Arg.Any<string>(),
                 Arg.Is<CompilerContext>(c => c.IsEvalMode == true))
                 .Returns(o => true);

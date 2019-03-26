@@ -13,7 +13,7 @@ namespace FryScript.Ast
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
             var toThrow = ChildNodes.Skip(1).First();
 
-            var location =ParseNode.Span.Location;
+            var location = ParseNode.Span.Location;
 
             var toThrowExpr = toThrow.GetExpression(scope);
 
@@ -24,7 +24,7 @@ namespace FryScript.Ast
                 scope.TryGetData(ScopeData.CurrentException, out ParameterExpression currentException)
                     ? currentException
                     : ExpressionHelper.Null(typeof(Exception)),
-                Expression.Constant(CompilerContext.Name ?? CompilerContext.Uri.AbsoluteUri),
+                Expression.Constant(CompilerContext.Name ?? CompilerContext?.Uri.AbsoluteUri ?? string.Empty),
                 Expression.Constant(location.Line),
                 Expression.Constant(location.Column)
                 );

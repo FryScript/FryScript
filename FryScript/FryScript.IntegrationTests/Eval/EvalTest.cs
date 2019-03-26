@@ -16,6 +16,7 @@ namespace FryScript.IntegrationTests.Eval
         [TestMethod]
         public void Eval_Expression_Persists_Eval_State()
         {
+            ScriptRuntime.Eval("throw \"Hello\";");
             ScriptRuntime.Eval("var x = 100;");
 
             var result = ScriptRuntime.Eval("x;");
