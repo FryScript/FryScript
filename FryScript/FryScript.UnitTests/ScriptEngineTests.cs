@@ -190,14 +190,14 @@ namespace FryScript.UnitTests
             //Assert.AreEqual(15, constructible.OnCtor);
         }
 
-        [TestMethod]
-        public void ExtendTypeTest()
-        {
-            _scriptEngine.Import<Importable>();
-            dynamic obj = _scriptEngine.Compile("test2", "@extend \"test\"; this.count = 100;");
+        //[TestMethod]
+        //public void ExtendTypeTest()
+        //{
+        //    _scriptEngine.Import<Importable>();
+        //    dynamic obj = _scriptEngine.Compile("test2", "@extend \"test\"; this.count = 100;");
 
-            Assert.AreEqual(100, obj.count);
-        }
+        //    Assert.AreEqual(100, obj.count);
+        //}
 
         [Ignore]
         [TestMethod]

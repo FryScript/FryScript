@@ -11,5 +11,15 @@ namespace FryScript.IntegrationTests
         {
             ScriptRuntime = new ScriptRuntime();
         }
+
+        public dynamic Eval(string script)
+        {
+            return ScriptRuntime.Eval(script);
+        }
+
+        public dynamic Get(string name)
+        {
+            return ScriptRuntime.Get(name);
+        }
     }
 }

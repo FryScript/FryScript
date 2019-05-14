@@ -16,4 +16,22 @@
     <ProjectReference Include="..\FryScript\FryScript.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Scripts\baseScript.fry">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\extendingHost.fry">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\extendingScript.fry">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\importScript.fry">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\newTest.fry">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -68,6 +68,7 @@
     <Compile Include="HostInterop\TypeDescriptor2Tests.cs" />
     <Compile Include="HostInterop\TypeFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptRuntimeExtensionsTests.cs" />
     <Compile Include="ScriptableExtensionsTests.cs" />
     <Compile Include="ScriptArrayTests.cs" />
     <Compile Include="ScriptEngineBoolTests.cs" />

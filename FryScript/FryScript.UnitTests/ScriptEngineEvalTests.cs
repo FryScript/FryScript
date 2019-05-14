@@ -153,13 +153,13 @@ namespace FryScript.UnitTests
             Assert.AreEqual(3, obj);
         }
 
-        [TestMethod]
-        public void EvalExtendTest()
-        {
-            _scriptEngine.Compile("base", "this.baseProp = true;");
-            var obj = Eval("@extend \"base\";");
-            Assert.IsTrue((bool)obj.baseProp);
-        }
+        //[TestMethod]
+        //public void EvalExtendTest()
+        //{
+        //    _scriptEngine.Compile("base", "this.baseProp = true;");
+        //    var obj = Eval("@extend \"base\";");
+        //    Assert.IsTrue((bool)obj.baseProp);
+        //}
 
         [TestMethod]
         [Ignore]
@@ -183,14 +183,14 @@ namespace FryScript.UnitTests
             Eval("@extend \"base\"; @extend \"base\";");
         }
 
-        [TestMethod]
-        public void EvalImportTest()
-        {
-            _scriptEngine.Compile("import", "this.isImported = true;");
-            var obj = Eval("@import \"import\" as imported;");
+        //[TestMethod]
+        //public void EvalImportTest()
+        //{
+        //    _scriptEngine.Compile("import", "this.isImported = true;");
+        //    var obj = Eval("@import \"import\" as imported;");
 
-            Assert.IsTrue(obj.isImported);
-        }
+        //    Assert.IsTrue(obj.isImported);
+        //}
 
         [TestMethod]
         public void EvalVariableDeclarationTest()

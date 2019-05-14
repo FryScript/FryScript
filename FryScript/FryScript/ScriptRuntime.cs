@@ -56,7 +56,7 @@ namespace FryScript
             if (string.IsNullOrWhiteSpace(script))
                 throw new ArgumentNullException(nameof(script));
 
-            var func = _compiler.Compile2(script, "eval", new CompilerContext(this, null, true));
+            var func = _compiler.Compile2(script, "eval", new CompilerContext(this, new Uri("eval://"), true));
 
             return func(_evalContext);
         }

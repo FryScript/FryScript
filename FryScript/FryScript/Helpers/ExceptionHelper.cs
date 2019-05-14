@@ -263,5 +263,10 @@ namespace FryScript.Helpers
         {
             throw CompilerException.FromAst("Cannot use out here", astNode);
         }
+
+        public static CompilerException ExtendUnavailable(AstNode astNode)
+        {
+            throw CompilerException.FromAst("@extend is unavailable", astNode);
+        }
     }
 }

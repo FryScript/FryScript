@@ -16,6 +16,9 @@ namespace FryScript.Ast
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
+            if (CompilerContext.IsEvalMode)
+                ExceptionHelper.ExtendUnavailable(this);
+
             var name = ChildNodes.Skip(1).First();
             var nameStr = ScriptTypeHelper.NormalizeTypeName(name.ValueString);
 

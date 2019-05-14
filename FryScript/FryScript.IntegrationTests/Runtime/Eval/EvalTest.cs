@@ -8,7 +8,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         [TestMethod]
         public void Eval_Expression()
         {
-            var result = ScriptRuntime.Eval("100;");
+            var result = Eval("100;");
 
             Assert.AreEqual(100, result);
         }
@@ -16,7 +16,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         [TestMethod]
         public void Eval_Expression_Persists_Eval_State()
         {
-            ScriptRuntime.Eval("var x = 100;");
+            Eval("var x = 100;");
 
             var result = ScriptRuntime.Eval("x;");
 
