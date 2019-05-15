@@ -12,6 +12,7 @@ namespace FryScript
 {
     public class ScriptRuntime : IScriptRuntime
     {
+        private readonly ScriptObject _evalContext = new ScriptObject();
         private readonly IScriptProvider _scriptProvider;
         private readonly IScriptCompiler _compiler;
         private readonly IObjectRegistry _registry;
@@ -50,13 +51,12 @@ namespace FryScript
 
             Import(typeof(ScriptError));
         }
-        private readonly ScriptObject _evalContext = new ScriptObject();
         public object Eval(string script)
         {
             if (string.IsNullOrWhiteSpace(script))
                 throw new ArgumentNullException(nameof(script));
 
-            var func = _compiler.Compile2(script, "eval", new CompilerContext(this, new Uri("eval://"), true));
+            var func = _compiler.Compile2(script, "eval", new CompilerContext(this, null, true));
 
             return func(_evalContext);
         }
