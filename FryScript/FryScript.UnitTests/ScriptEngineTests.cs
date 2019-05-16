@@ -79,12 +79,12 @@ namespace FryScript.UnitTests
             _scriptEngine = new ScriptEngine();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ImportTypeDoesNotImplementIScriptableTest()
-        {
-            _scriptEngine.Import(typeof(DoesNotImplementIScriptable));
-        }
+        //[TestMethod]
+        //[ExpectedException(typeof(ArgumentException))]
+        //public void ImportTypeDoesNotImplementIScriptableTest()
+        //{
+        //    _scriptEngine.Import(typeof(DoesNotImplementIScriptable));
+        //}
 
         [TestMethod]
         [Ignore]

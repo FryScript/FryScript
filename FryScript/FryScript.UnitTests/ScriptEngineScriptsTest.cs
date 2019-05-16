@@ -56,18 +56,18 @@ namespace FryScript.UnitTests
             Assert.IsTrue(baseScript.GetType().IsAssignableFrom(extendingScript.GetType()));
         }
 
-        [TestMethod]
-        public void NestedImportTest()
-        {
-            dynamic nested3 = _scriptEngine.Get("scripts/nestedImport3");
-            dynamic nested2 = _scriptEngine.Get("scripts/nestedImport2");
-            dynamic nested1 = _scriptEngine.Get("scripts/nestedImport1");
+        //[TestMethod]
+        //public void NestedImportTest()
+        //{
+        //    dynamic nested3 = _scriptEngine.Get("scripts/nestedImport3");
+        //    dynamic nested2 = _scriptEngine.Get("scripts/nestedImport2");
+        //    dynamic nested1 = _scriptEngine.Get("scripts/nestedImport1");
 
-            Assert.AreEqual(nested2, nested3.nestedImport2);
-            Assert.AreEqual(nested1, nested3.nestedImport1);
+        //    Assert.AreEqual(nested2, nested3.nestedImport2);
+        //    Assert.AreEqual(nested1, nested3.nestedImport1);
 
-            Assert.AreEqual(nested1, nested2.nestedImport1);
-        }
+        //    Assert.AreEqual(nested1, nested2.nestedImport1);
+        //}
 
         [TestMethod]
         public void ProtoImportTest()
@@ -109,16 +109,6 @@ namespace FryScript.UnitTests
                     currentEx = currentEx.InnerException;
                 }
             }
-        }
-
-        [TestMethod]
-        public void ImportAllMembersTest()
-        {
-            dynamic imports = _scriptRuntime.Get("scripts/importAllMembers");
-            dynamic exports = _scriptRuntime.Get("scripts/exportMembers");
-
-            Assert.AreEqual(exports.member1, imports.importedMember1);
-            Assert.AreEqual(exports.member2, imports.importedMember2);
         }
 
         [TestMethod]
