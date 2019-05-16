@@ -114,8 +114,7 @@ namespace FryScript.Parsing
 
             scriptExtend.Rule = ToTerm(Keywords.ScriptExtend) + stringLiteral + ";";
             scriptImport.Rule = ToTerm(Keywords.ScriptImport) + stringLiteral + Keywords.As + identifier + ";";
-            scriptImportFrom.Rule = ToTerm(Keywords.ScriptImport) + Keywords.From + stringLiteral + ";"
-                | ToTerm(Keywords.ScriptImport) + parameterNames + Keywords.From + stringLiteral + ";";
+            scriptImportFrom.Rule = ToTerm(Keywords.ScriptImport) + parameterNames + Keywords.From + stringLiteral + ";";
             scriptProto.Rule = ToTerm(Keywords.ScriptProto) + blockStatement;
 
             statements.Rule = MakeStarRule(statements, statement);
