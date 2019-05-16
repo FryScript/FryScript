@@ -1,1 +1,4 @@
 ﻿name = "Import Script";
+
+member1 = () => {};
+member2 = () => {};

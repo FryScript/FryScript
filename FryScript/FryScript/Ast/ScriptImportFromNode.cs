@@ -10,7 +10,14 @@ namespace FryScript.Ast
     {
         public override Expression GetExpression(Scope scope)
         {
-            throw new NotImplementedException();
+            var aliases = ChildNodes.Skip(1).Cast<ImportAliasListNode>().First();
+            var scriptName = ChildNodes.Skip(3).First().ValueString;
+
+            var scriptObject = CompilerContext.ScriptRuntime.Get(scriptName, CompilerContext.Uri);
+
+            var importExpr = aliases.GetExpression(scope, scriptObject);
+
+            return importExpr;
             //scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
             //var path = ChildNodes.Length == 3

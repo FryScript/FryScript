@@ -1,0 +1,6 @@
+﻿@import "importScript" as toExport;
+@import member1, member2 from "importScript";
+
+importedScript = toExport;
+importedMember1 = member1;
+importedMember2 = member2;

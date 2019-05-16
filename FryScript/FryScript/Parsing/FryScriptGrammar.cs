@@ -29,6 +29,8 @@ namespace FryScript.Parsing
             var scriptExtend = new NonTerminal(NodeNames.ScriptExtend, typeof (ScriptExtendNode));
             var scriptImport = new NonTerminal(NodeNames.ScriptImport, typeof (ScriptImportNode));
             var scriptImportFrom = new NonTerminal(NodeNames.ScriptImportFrom, typeof(ScriptImportFromNode));
+            var importAlias = new NonTerminal(NodeNames.ImportAlias, typeof(ImportAliasNode));
+            var importAliasList = new NonTerminal(NodeNames.ImportAliasList, typeof(ImportAliasListNode));
             var scriptProto = new NonTerminal(NodeNames.ScriptProto, typeof(ScriptProtoNode));
             var statements = new NonTerminal(NodeNames.Statements, typeof (StatementsNode));
             var statement = new NonTerminal(NodeNames.Statement, typeof(StatementNode));
@@ -111,10 +113,14 @@ namespace FryScript.Parsing
                                 | scriptImport
                                 | scriptImportFrom
                                 | scriptProto;
+            importAlias.Rule = identifier + Keywords.As + identifier
+                | identifier;
+
+            importAliasList.Rule = MakePlusRule(importAliasList, ToTerm(","), importAlias);
 
             scriptExtend.Rule = ToTerm(Keywords.ScriptExtend) + stringLiteral + ";";
             scriptImport.Rule = ToTerm(Keywords.ScriptImport) + stringLiteral + Keywords.As + identifier + ";";
-            scriptImportFrom.Rule = ToTerm(Keywords.ScriptImport) + parameterNames + Keywords.From + stringLiteral + ";";
+            scriptImportFrom.Rule = ToTerm(Keywords.ScriptImport) + importAliasList + Keywords.From + stringLiteral + ";";
             scriptProto.Rule = ToTerm(Keywords.ScriptProto) + blockStatement;
 
             statements.Rule = MakeStarRule(statements, statement);

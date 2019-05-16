@@ -26,6 +26,9 @@
     <None Update="Scripts\extendingScript.fry">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Scripts\importingScript.fry">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Scripts\importScript.fry">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -29,8 +29,6 @@ namespace FryScript.Ast
                 return assignExpr;
             }
 
-            var tupleNames = left as TupleNamesNode;
-
             var declareTuple = Transform<TupleDeclarationNode>(new[]{
                 null,
                 left,
