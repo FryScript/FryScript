@@ -20,10 +20,22 @@ namespace FryScript.Ast
             var member = dynamicObj[identifier.ValueString];
             var memberExpr = Expression.Constant(member);
 
-            identifier.CreateIdentifier(scope);
-            var setIdentifierExpr = identifier.SetIdentifier(scope, memberExpr);
+            if (ChildNodes.Length == 1)
+            {
+                identifier.CreateIdentifier(scope);
+                var setIdentifierExpr = identifier.SetIdentifier(scope, memberExpr);
 
-            return setIdentifierExpr;
+                return setIdentifierExpr;
+            }
+            else
+            {
+                var alias = ChildNodes.Skip(2).First();
+                alias.CreateIdentifier(scope);
+
+                var setAliasExpr = alias.SetIdentifier(scope, memberExpr);
+
+                return setAliasExpr;
+            }
         }
     }
 }
