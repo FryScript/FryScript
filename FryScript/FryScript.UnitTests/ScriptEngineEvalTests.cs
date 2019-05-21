@@ -1123,19 +1123,19 @@ f().resume();
             Assert.IsTrue(obj);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(CompilerException))]
-        public void EvalMultipleProtoTest()
-        {
-            Eval("@proto{} @proto{}");
-        }
+        //[TestMethod]
+        //[ExpectedException(typeof(CompilerException))]
+        //public void EvalMultipleProtoTest()
+        //{
+        //    Eval("@proto{} @proto{}");
+        //}
 
-        [TestMethod]
-        public void EvalProtoTest()
-        {
-            var obj = Eval("@proto{ this.protoMember = true; }");
-            Assert.IsTrue(obj.protoMember);
-        }
+        //[TestMethod]
+        //public void EvalProtoTest()
+        //{
+        //    var obj = Eval("@proto{ this.protoMember = true; }");
+        //    Assert.IsTrue(obj.protoMember);
+        //}
 
         [TestMethod]
         public void EvalHasTrueTest()

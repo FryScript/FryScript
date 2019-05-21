@@ -89,7 +89,7 @@ namespace FryScript
                 autoConstruct: false
                 );
 
-            CreateProto(scriptObject, compilerContext);
+            //CreateProto(scriptObject, compilerContext);
 
             return func(scriptObject);
         }
@@ -119,7 +119,7 @@ namespace FryScript
 
             scriptObject = new ScriptObject(keyName, func, compilerContext.Extends);
 
-            CreateProto(scriptObject, compilerContext);
+            //CreateProto(scriptObject, compilerContext);
 
             _compileQueue.Dequeue();
             return _scripts[keyName] = scriptObject;
@@ -324,13 +324,13 @@ namespace FryScript
             ctor.Invoke(args);
         }
 
-        private static void CreateProto(ScriptObject scriptObject, CompilerContext compilerContext)
-        {
-            if (compilerContext.ProtoCtor == null || compilerContext.ProtoReference == null)
-                return;
+        //private static void CreateProto(ScriptObject scriptObject, CompilerContext compilerContext)
+        //{
+        //    if (compilerContext.ProtoCtor == null || compilerContext.ProtoReference == null)
+        //        return;
 
-            compilerContext.ProtoCtor(scriptObject);
-            compilerContext.ProtoReference.SetResolver(() => scriptObject);
-        }
+        //    compilerContext.ProtoCtor(scriptObject);
+        //    compilerContext.ProtoReference.SetResolver(() => scriptObject);
+        //}
     }
 }

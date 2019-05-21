@@ -50,6 +50,7 @@ namespace FryScript
             _objectFactory = objectFactory ?? throw new ArgumentNullException(nameof(objectFactory));
 
             Import(typeof(ScriptError));
+            Import(typeof(ScriptPrimitive<bool>));
         }
         public object Eval(string script)
         {

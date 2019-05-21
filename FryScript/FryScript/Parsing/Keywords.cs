@@ -33,7 +33,7 @@ namespace FryScript.Parsing
         public const string Base = "base";
         public const string Is = "is";
         public const string Extends = "extends";
-        public const string Proto = "proto";
+        //public const string Proto = "proto";
         public const string Has = "has";
         public const string Try = "try";
         public const string Catch = "catch";

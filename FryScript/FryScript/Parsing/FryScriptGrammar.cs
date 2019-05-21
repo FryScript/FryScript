@@ -22,7 +22,7 @@ namespace FryScript.Parsing
             var identifier = new IdentifierTerminal(NodeNames.Identifier);
             var @this = new NonTerminal(NodeNames.This, typeof (ThisNode));
             var @base = new NonTerminal(NodeNames.Base, typeof (BaseNode));
-            var proto = new NonTerminal(NodeNames.Proto, typeof(ProtoNode));
+            //var proto = new NonTerminal(NodeNames.Proto, typeof(ProtoNode));
             var script = new NonTerminal(NodeNames.Script, typeof (ScriptNode));
             var scriptHeaders = new NonTerminal(NodeNames.ScriptHeaders, typeof (ScriptHeadersNode));
             var scriptHeader = new NonTerminal(NodeNames.ScriptHeader);
@@ -31,7 +31,7 @@ namespace FryScript.Parsing
             var scriptImportFrom = new NonTerminal(NodeNames.ScriptImportFrom, typeof(ScriptImportFromNode));
             var importAlias = new NonTerminal(NodeNames.ImportAlias, typeof(ImportAliasNode));
             var importAliasList = new NonTerminal(NodeNames.ImportAliasList, typeof(ImportAliasListNode));
-            var scriptProto = new NonTerminal(NodeNames.ScriptProto, typeof(ScriptProtoNode));
+            //var scriptProto = new NonTerminal(NodeNames.ScriptProto, typeof(ScriptProtoNode));
             var statements = new NonTerminal(NodeNames.Statements, typeof (StatementsNode));
             var statement = new NonTerminal(NodeNames.Statement, typeof(StatementNode));
             var semiStatement = new NonTerminal(NodeNames.SemiStatement);
@@ -111,8 +111,8 @@ namespace FryScript.Parsing
 
             scriptHeader.Rule = scriptExtend
                                 | scriptImport
-                                | scriptImportFrom
-                                | scriptProto;
+                                | scriptImportFrom;
+                                //| scriptProto;
             importAlias.Rule = identifier + Keywords.As + identifier
                 | identifier;
 
@@ -121,7 +121,7 @@ namespace FryScript.Parsing
             scriptExtend.Rule = ToTerm(Keywords.ScriptExtend) + stringLiteral + ";";
             scriptImport.Rule = ToTerm(Keywords.ScriptImport) + stringLiteral + Keywords.As + identifier + ";";
             scriptImportFrom.Rule = ToTerm(Keywords.ScriptImport) + importAliasList + Keywords.From + stringLiteral + ";";
-            scriptProto.Rule = ToTerm(Keywords.ScriptProto) + blockStatement;
+            //scriptProto.Rule = ToTerm(Keywords.ScriptProto) + blockStatement;
 
             statements.Rule = MakeStarRule(statements, statement);
 
@@ -310,8 +310,8 @@ namespace FryScript.Parsing
                           | parenExpression
                           | @this
                           | @params
-                          | @base
-                          | @proto;
+                          | @base;
+                          //| @proto;
 
             parenExpression.Rule = ToTerm("(") + expression + PreferShiftHere() + ")" + PreferShiftHere();
 
@@ -351,14 +351,14 @@ namespace FryScript.Parsing
             @this.Rule = ToTerm(Keywords.This);
             @params.Rule = ToTerm(Keywords.Params);
             @base.Rule = ToTerm(Keywords.Base);
-            proto.Rule = ToTerm(Keywords.Proto);
+            //proto.Rule = ToTerm(Keywords.Proto);
 
             Root = script;
 
             NonGrammarTerminals.Add(new CommentTerminal("Comment", "//", "\r\n", "\n"));
             NonGrammarTerminals.Add(new CommentTerminal("Block comment", "/*", "*/"));
 
-            MarkReservedWords(Keywords.This, Keywords.ScriptExtend, Keywords.ScriptImport, Keywords.ScriptProto, Keywords.As, Keywords.Var, Keywords.Null, Keywords.NaN, Keywords.Params, Keywords.Return, Keywords.If, Keywords.Else, Keywords.For, Keywords.New, Keywords.While, Keywords.ForEach, Keywords.In, Keywords.FunctionExtend, Keywords.Base, Keywords.Proto, Keywords.Has, Keywords.Try, Keywords.Catch, Keywords.Finally, Keywords.Throw, Keywords.Fibre, Keywords.Yield, /*Keywords.Begin,*/ Keywords.Yield, Keywords.Await, Keywords.From, Keywords.Out);
+            MarkReservedWords(Keywords.This, Keywords.ScriptExtend, Keywords.ScriptImport, Keywords.ScriptProto, Keywords.As, Keywords.Var, Keywords.Null, Keywords.NaN, Keywords.Params, Keywords.Return, Keywords.If, Keywords.Else, Keywords.For, Keywords.New, Keywords.While, Keywords.ForEach, Keywords.In, Keywords.FunctionExtend, Keywords.Base, /*Keywords.Proto*/ Keywords.Has, Keywords.Try, Keywords.Catch, Keywords.Finally, Keywords.Throw, Keywords.Fibre, Keywords.Yield, /*Keywords.Begin,*/ Keywords.Yield, Keywords.Await, Keywords.From, Keywords.Out);
             MarkTransient(scriptHeader, semiStatement, literal, factor, unaryExpression, tupleName);
             MarkPunctuation(";", ":", ".", ",", "[", "]", "{", "}", "(", ")", "=>", "@", "?");
 

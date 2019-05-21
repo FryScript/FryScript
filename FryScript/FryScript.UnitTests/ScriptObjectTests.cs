@@ -203,18 +203,18 @@ namespace FryScript.UnitTests
             //Assert.AreEqual("Test", _dynamicObj.name);
         }
 
-        [TestMethod]
-        [Ignore]
-        public void ConvertToTargetTest()
-        {
-            //var target = new Target();
+        //[TestMethod]
+        //[Ignore]
+        //public void ConvertToTargetTest()
+        //{
+        //    //var target = new Target();
 
-            //ScriptObject.SetTarget(_scriptObject, target);
+        //    //ScriptObject.SetTarget(_scriptObject, target);
 
-            //var obj = (Target) _dynamicObj;
+        //    //var obj = (Target) _dynamicObj;
 
-            //Assert.AreEqual(target, obj);
-        }
+        //    //Assert.AreEqual(target, obj);
+        //}
 
         [TestMethod]
         [Ignore]
@@ -281,31 +281,31 @@ namespace FryScript.UnitTests
             Assert.AreEqual(ScriptNaN.Value, _dynamicObj.test);
         }
 
-        [TestMethod]
-        [Ignore]
-        public void ConvertTargetImplicitTest()
-        {
-            //var target = new Target();
+        //[TestMethod]
+        //[Ignore]
+        //public void ConvertTargetImplicitTest()
+        //{
+        //    //var target = new Target();
 
-            //ScriptObject.SetTarget(_scriptObject, target);
+        //    //ScriptObject.SetTarget(_scriptObject, target);
 
-            //ImplicitTarget obj = _dynamicObj;
+        //    //ImplicitTarget obj = _dynamicObj;
 
-            //Assert.AreEqual(typeof(ImplicitTarget), obj.GetType());
-        }
+        //    //Assert.AreEqual(typeof(ImplicitTarget), obj.GetType());
+        //}
 
-        [TestMethod]
-        [Ignore]
-        public void ConvertTargetExplicitTest()
-        {
-            //var target = new Target();
+        //[TestMethod]
+        //[Ignore]
+        //public void ConvertTargetExplicitTest()
+        //{
+        //    //var target = new Target();
 
-            //ScriptObject.SetTarget(_scriptObject, target);
+        //    //ScriptObject.SetTarget(_scriptObject, target);
 
-            //var obj = (ExplicitTarget)_dynamicObj;
+        //    //var obj = (ExplicitTarget)_dynamicObj;
 
-            //Assert.AreEqual(typeof(ExplicitTarget), obj.GetType());
-        }
+        //    //Assert.AreEqual(typeof(ExplicitTarget), obj.GetType());
+        //}
 
         //[TestMethod]
         public void ScriptObjVsExpando()

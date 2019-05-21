@@ -158,37 +158,37 @@ namespace FryScript.UnitTests
             //Assert.AreEqual(100, obj.count);
         }
 
-        [TestMethod]
-        [Ignore]
+        //[TestMethod]
+        //[Ignore]
 
-        public void BindTest()
-        {
-            //var importable = new Importable
-            //{
-            //    Count = 200
-            //};
+        //public void BindTest()
+        //{
+        //    var importable = new Importable
+        //    {
+        //        Count = 200
+        //    };
 
-            //_scriptEngine.Import(typeof(Importable));
-            //ScriptObject obj = _scriptEngine.Bind(importable, "test");
+        //    _scriptEngine.Import(typeof(Importable));
+        //    ScriptObject obj = _scriptEngine.Bind(importable, "test");
 
-            //Assert.AreEqual(importable, ScriptObject.GetTarget(obj));
-            //Assert.AreEqual(obj, importable.Script);
-        }
+        //    Assert.AreEqual(importable, ScriptObject.GetTarget(obj));
+        //    Assert.AreEqual(obj, importable.Script);
+        //}
 
-        [Ignore]
-        [TestMethod]
-        public void BindWithArgsTest()
-        {
-            //var constructible = new Constructible();
+        //[Ignore]
+        //[TestMethod]
+        //public void BindWithArgsTest()
+        //{
+        //    //var constructible = new Constructible();
 
-            //_scriptEngine.Import(typeof(Constructible));
-            //dynamic newable = _scriptEngine.Get("newable");
-            //dynamic obj = _scriptEngine.Bind(constructible, "newable", 5, 3);
+        //    //_scriptEngine.Import(typeof(Constructible));
+        //    //dynamic newable = _scriptEngine.Get("newable");
+        //    //dynamic obj = _scriptEngine.Bind(constructible, "newable", 5, 3);
 
-            //Assert.AreEqual(constructible, ScriptObject.GetTarget(obj));
-            //Assert.AreNotEqual(newable, constructible.Script);
-            //Assert.AreEqual(15, constructible.OnCtor);
-        }
+        //    //Assert.AreEqual(constructible, ScriptObject.GetTarget(obj));
+        //    //Assert.AreNotEqual(newable, constructible.Script);
+        //    //Assert.AreEqual(15, constructible.OnCtor);
+        //}
 
         //[TestMethod]
         //public void ExtendTypeTest()
@@ -199,18 +199,18 @@ namespace FryScript.UnitTests
         //    Assert.AreEqual(100, obj.count);
         //}
 
-        [Ignore]
-        [TestMethod]
-        public void ConvertTest()
-        {
-            //var importable = new Importable();
+        //[Ignore]
+        //[TestMethod]
+        //public void ConvertTest()
+        //{
+        //    //var importable = new Importable();
 
-            //_scriptEngine.Import(typeof(Importable));
-            //ScriptObject obj = _scriptEngine.Bind(importable, "test");
+        //    //_scriptEngine.Import(typeof(Importable));
+        //    //ScriptObject obj = _scriptEngine.Bind(importable, "test");
 
-            //Assert.AreEqual(importable, ScriptObject.GetTarget(obj));
-            //Assert.AreEqual(obj, importable.Script);
-        }
+        //    //Assert.AreEqual(importable, ScriptObject.GetTarget(obj));
+        //    //Assert.AreEqual(obj, importable.Script);
+        //}
 
         [TestMethod]
         [Ignore]

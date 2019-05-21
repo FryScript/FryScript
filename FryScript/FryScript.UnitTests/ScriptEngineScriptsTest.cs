@@ -69,13 +69,13 @@ namespace FryScript.UnitTests
         //    Assert.AreEqual(nested1, nested2.nestedImport1);
         //}
 
-        [TestMethod]
-        public void ProtoImportTest()
-        {
-            dynamic protoImport = _scriptEngine.Get("scripts/protoImport");
+        //[TestMethod]
+        //public void ProtoImportTest()
+        //{
+        //    dynamic protoImport = _scriptEngine.Get("scripts/protoImport");
 
-            Assert.AreEqual(true, protoImport.importedMember);
-        }
+        //    Assert.AreEqual(true, protoImport.importedMember);
+        //}
 
         [TestMethod]
         public void Get_Imported_Type()

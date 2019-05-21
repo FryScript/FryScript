@@ -1,6 +1,6 @@
-﻿namespace FryScript.Ast
-{
-    public class ProtoNode : KeywordIdentifierNode
-    {
-    }
-}
+﻿//namespace FryScript.Ast
+//{
+//    public class ProtoNode : KeywordIdentifierNode
+//    {
+//    }
+//}
