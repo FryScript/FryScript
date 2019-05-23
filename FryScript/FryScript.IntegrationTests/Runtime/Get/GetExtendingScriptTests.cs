@@ -15,7 +15,7 @@ namespace FryScript.IntegrationTests.Runtime.Get
         [TestMethod]
         public void Get_Extending_Script_Test()
         {
-            var result = Get("scripts/extendingScript");
+            var result = Get("Scripts/extendingScript");
 
             Assert.AreEqual("Base Script was extended!", result.name);
         }
@@ -25,7 +25,7 @@ namespace FryScript.IntegrationTests.Runtime.Get
         {
             ScriptRuntime.Import<HostType>();
 
-            var result = Get("scripts/extendingHost");
+            var result = Get("Scripts/extendingHost");
 
             Assert.AreEqual("Host Type", result.name);
             Assert.IsTrue(typeof(HostType).IsAssignableFrom((result as object).GetType()));

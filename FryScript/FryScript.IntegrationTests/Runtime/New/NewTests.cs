@@ -8,7 +8,7 @@ namespace FryScript.IntegrationTests.Runtime.New
         [TestMethod]
         public void New_Script_From_Import()
         {
-            dynamic script = ScriptRuntime.New("scripts/newTest");
+            dynamic script = ScriptRuntime.New("Scripts/newTest");
 
             Assert.AreEqual("test1", script.property1);
             Assert.AreEqual(90, script.property2);

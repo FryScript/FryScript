@@ -20,7 +20,8 @@ namespace FryScript.Ast
                 ExceptionHelper.ExtendUnavailable(this);
 
             var name = ChildNodes.Skip(1).First();
-            var nameStr = ScriptTypeHelper.NormalizeTypeName(name.ValueString);
+            //var nameStr = ScriptTypeHelper.NormalizeTypeName(name.ValueString);
+            var nameStr = name.ValueString;
 
             //try
             //{

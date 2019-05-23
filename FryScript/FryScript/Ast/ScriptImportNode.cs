@@ -13,7 +13,8 @@ namespace FryScript.Ast
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
             var name = ChildNodes.Skip(1).Take(1).First();
-            var nameStr = ScriptTypeHelper.NormalizeTypeName(name.ValueString);
+            var nameStr = name.ValueString;
+            //var nameStr = ScriptTypeHelper.NormalizeTypeName(name.ValueString);
             var alias = ChildNodes.Skip(3).Take(1).First();
 
             var importScript = new ScriptObjectReference();

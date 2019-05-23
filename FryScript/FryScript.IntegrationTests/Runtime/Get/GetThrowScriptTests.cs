@@ -9,7 +9,7 @@ namespace FryScript.IntegrationTests.Runtime.Get
         [ExpectedException(typeof(FryScriptException))]
         public void Get_Script_Throws_Exception()
         {
-            ScriptRuntime.Get("scripts/throwScript");
+            ScriptRuntime.Get("Scripts/throwScript");
         }
     }
 }
