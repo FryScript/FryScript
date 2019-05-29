@@ -21,5 +21,10 @@ namespace FryScript.IntegrationTests
         {
             return ScriptRuntime.Get(name);
         }
+
+        public dynamic New(string name, params object[] args)
+        {
+            return ScriptRuntime.New(name, args);
+        }
     }
 }

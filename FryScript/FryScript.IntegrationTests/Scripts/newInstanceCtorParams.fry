@@ -1,0 +1,3 @@
+﻿ctor = arg => {
+	member1 = arg;
+};

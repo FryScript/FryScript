@@ -1,0 +1,7 @@
+﻿@extend "newInstanceCtorParams";
+
+ctor extend (arg1, arg2) => {
+	base(arg1);
+
+	member2 = arg2;
+};
