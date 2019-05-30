@@ -5,6 +5,19 @@ namespace FryScript.IntegrationTests.Runtime.Eval
     [TestClass]
     public class EvalCtorTests : IntegrationTestBase
     {
+        [ScriptableType("importableType")]
+        public class ImportableType
+        {
+            [ScriptableProperty("number")]
+            public int Number { get; set; }
+
+            [ScriptableMethod("ctor")]
+            public void Ctor(int number)
+            {
+                Number = number;
+            }
+        }
+
         [TestMethod]
         public void New_Instance_From_Imported_Script()
         {
@@ -40,7 +53,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         }
 
         [TestMethod]
-        public void New_Instance_From_Imported_Script_With_Extended_Ctor_Params()
+        public void New_Instance_From_Imported_Script_With_Extending_Ctor_Params()
         {
             Eval("@import \"Scripts/newExtendCtorParams\" as newExtendCtorParams;");
 
@@ -51,6 +64,18 @@ namespace FryScript.IntegrationTests.Runtime.Eval
             Assert.IsFalse(newExtendCtorParams.HasMember("member2"));
             Assert.AreEqual(true, result.member1);
             Assert.AreEqual(90, result.member2);
+        }
+
+        [TestMethod]
+        public void New_Instance_From_Imported_Type_Ctor_Params()
+        {
+            ScriptRuntime.Import<ImportableType>();
+
+            Eval("@import \"importableType\" as importableType;");
+
+            var result = Eval("new importableType(999);");
+
+            Assert.AreEqual(999, result.number);
         }
     }
 }

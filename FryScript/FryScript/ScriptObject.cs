@@ -87,42 +87,25 @@ namespace FryScript
             return Extends.Contains(scriptType);
         }
 
-        internal object Extend(ScriptObject scriptObject)
-        {
-            if(scriptObject.Ctor != null)
-                scriptObject.Ctor(this);
+        //internal bool TryGetMemberOfType<T>(string name, out T value)
+        //{
+        //    lock(_lock)
+        //    {
+        //        value = default(T);
 
-            return this;
-        }
+        //        if (!CallSiteCache.Current.HasMember(name, this))
+        //            return false;
 
-        internal ScriptObject CreateInstance()
-        {
-            return new ScriptObject(
-                scriptType: ScriptType,
-                ctor: Ctor,
-                extends: Extends
-                );
-        }
+        //        var rawValue = CallSiteCache.Current.GetMember(name, this);
 
-        internal bool TryGetMemberOfType<T>(string name, out T value)
-        {
-            lock(_lock)
-            {
-                value = default(T);
+        //        if (!(rawValue is T))
+        //            return false;
 
-                if (!CallSiteCache.Current.HasMember(name, this))
-                    return false;
+        //        value = (T)rawValue;
 
-                var rawValue = CallSiteCache.Current.GetMember(name, this);
-
-                if (!(rawValue is T))
-                    return false;
-
-                value = (T)rawValue;
-
-                return true;
-            }
-        }
+        //        return true;
+        //    }
+        //}
 
         public string GetScriptType()
         {

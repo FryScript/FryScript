@@ -53,15 +53,25 @@ namespace FryScript.Helpers
 
         public static bool ExtendsScriptType(object target, object value)
         {
-            target = target ?? throw new ArgumentNullException(nameof(target));
-            value = value ?? throw new ArgumentNullException(nameof(value));
+            var subType = target.GetType();
+            var superType = value.GetType();
 
-            var compareType = GetScriptType(value);
+            if (superType.IsAssignableFrom(subType))
+                return true;
 
-            if (target is IScriptType scriptTypeTarget)
-                return scriptTypeTarget.ExtendsScriptType(compareType);
+            if (target is IScriptObject && value is ScriptObject)
+                return true;
+            
+            throw new NotImplementedException();
+            //target = target ?? throw new ArgumentNullException(nameof(target));
+            //value = value ?? throw new ArgumentNullException(nameof(value));
 
-            return GetScriptType(target) == compareType;
+            //var compareType = GetScriptType(value);
+
+            //if (target is IScriptType scriptTypeTarget)
+            //    return scriptTypeTarget.ExtendsScriptType(compareType);
+
+            //return GetScriptType(target) == compareType;
         }
 
         public static string GetPesudoScriptType(Type type)

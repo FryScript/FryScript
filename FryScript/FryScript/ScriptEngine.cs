@@ -315,14 +315,14 @@ namespace FryScript
             }
         }
 
-        private static void InvokeConstructor(ScriptObject obj, params object[] args)
-        {
-            ScriptFunction ctor;
-            if (!obj.TryGetMemberOfType("ctor", out ctor))
-                return;
+        //private static void InvokeConstructor(ScriptObject obj, params object[] args)
+        //{
+        //    ScriptFunction ctor;
+        //    if (!obj.TryGetMemberOfType("ctor", out ctor))
+        //        return;
 
-            ctor.Invoke(args);
-        }
+        //    ctor.Invoke(args);
+        //}
 
         //private static void CreateProto(ScriptObject scriptObject, CompilerContext compilerContext)
         //{

@@ -105,8 +105,8 @@ namespace FryScript.Helpers
 
             var isScriptType = ScriptTypeHelper.IsScriptType(target.Value, arg.Value);
 
-            var restrictions = RestrictionsHelper.GetScriptTypeRestriction(target)
-                .Merge(RestrictionsHelper.GetScriptTypeRestriction(arg));
+            var restrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
+                .Merge(BindingRestrictions.GetTypeRestriction(arg.Expression, arg.LimitType));
 
             return new DynamicMetaObject(
                 Expression.Constant(isScriptType, typeof(object)),
@@ -122,8 +122,8 @@ namespace FryScript.Helpers
 
             var extendsScriptType = ScriptTypeHelper.ExtendsScriptType(target.Value, arg.Value);
 
-            var restrictions = RestrictionsHelper.GetScriptTypeRestriction(target)
-                .Merge(RestrictionsHelper.GetScriptTypeRestriction(arg));
+            var restrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
+                .Merge(BindingRestrictions.GetTypeRestriction(arg.Expression, arg.LimitType));
 
             return new DynamicMetaObject(
                 Expression.Constant(extendsScriptType, typeof(object)),

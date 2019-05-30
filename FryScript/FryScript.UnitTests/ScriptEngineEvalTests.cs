@@ -812,35 +812,6 @@ this;
         }
 
         [TestMethod]
-        [Ignore]
-        public void EvalNewTest()
-        {
-            var obj = Eval("this.x = 10; this.y = false; this.instance = () => new this(); this;");
-            var instance = obj.instance();
-            instance.x = 20;
-            instance.y = true;
-
-            Assert.AreNotEqual(obj, instance);
-            Assert.AreEqual(20, instance.x);
-            Assert.AreEqual(true, instance.y);
-            Assert.AreEqual(10, obj.x);
-            Assert.AreEqual(false, obj.y);
-        }
-
-        [TestMethod]
-        [Ignore]
-        public void EvalCtorTest()
-        {
-            var obj =
-                Eval(
-                    "this.x = 10; this.y = false; this.ctor = () => this.z = true; this.instance = () => new this(); this;");
-
-            var instance = obj.instance();
-
-            Assert.AreEqual(true, instance.z);
-        }
-
-        [TestMethod]
         public void EvalWhileTest()
         {
             var obj = Eval("var x = 0; while(x < 10) x++; this.x = x; this;");
@@ -1081,47 +1052,17 @@ f().resume();
             Assert.IsFalse(obj);
         }
 
-        [TestMethod]
-        public void EvalExtendsObjectTypeTest()
-        {
-            var obj = Eval("this extends ({});");
-            Assert.IsTrue(obj);
-        }
+        
 
-        [TestMethod]
-        public void EvalExtendsSelfTest()
-        {
-            var obj = Eval("this extends this;");
-            Assert.IsTrue(obj);
-        }
+       
 
-        [TestMethod]
-        public void EvalExtendsIntTest()
-        {
-            var obj = Eval("0 extends 0;");
-            Assert.IsTrue(obj);
-        }
+       
 
-        [TestMethod]
-        public void EvalExtendsFloatTest()
-        {
-            var obj = Eval("0.0 extends 0.0;");
-            Assert.IsTrue(obj);
-        }
+        
 
-        [TestMethod]
-        public void EvalExtendsBoolTest()
-        {
-            var obj = Eval("true extends false;");
-            Assert.IsTrue(obj);
-        }
+       
 
-        [TestMethod]
-        public void EvalExtendsStringTest()
-        {
-            var obj = Eval("\"\" extends \"\";");
-            Assert.IsTrue(obj);
-        }
+       
 
         //[TestMethod]
         //[ExpectedException(typeof(CompilerException))]

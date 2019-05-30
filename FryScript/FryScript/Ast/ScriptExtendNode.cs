@@ -10,8 +10,6 @@ namespace FryScript.Ast
 {
     public class ScriptExtendNode : AstNode
     {
-        private static readonly MethodInfo ScriptObject_Extend = typeof(ScriptObject).GetMethod(nameof(ScriptObject.Extend), BindingFlags.NonPublic | BindingFlags.Instance);
-
         public override Expression GetExpression(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
