@@ -38,7 +38,14 @@ namespace FryScript.Helpers
 
         public static bool IsScriptType(object target, object value)
         {
-            target = target ?? throw new ArgumentNullException(nameof(target));
+            var targetType = target?.GetType();
+            var valueType = value?.GetType();
+
+            //if (targetType == null || valueType == null)
+                //return false;
+
+            return targetType == valueType;
+           /* target = target ?? throw new ArgumentNullException(nameof(target));
             value = value ?? throw new ArgumentNullException(nameof(value));
 
             var compareType = GetScriptType(value);
@@ -48,7 +55,7 @@ namespace FryScript.Helpers
 
             var isScriptType = GetScriptType(target) == compareType;
 
-            return isScriptType;
+            return isScriptType;*/
         }
 
         public static bool ExtendsScriptType(object target, object value)

@@ -35,7 +35,27 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         }
 
         [TestMethod]
-        public void True_Extends_False()
+        public void Null_Extends_Null()
+        {
+            var result = Eval("null extends null;");
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Other_Extends_Null()
+        {
+            var result = Eval("100 extends null;");
+        }
+
+        [TestMethod]
+        public void Null_Extends_Other()
+        {
+            var result = Eval("null extends false;");
+        }
+
+        [TestMethod]
+        public void Bool_Extends_Bool()
         {
             var result = Eval("true extends false;");
 
@@ -78,14 +98,6 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         public void This_Extends_This()
         {
             var result = Eval("this extends this;");
-
-            Assert.IsTrue(result);
-        }
-
-        [TestMethod]
-        public void Float_Extends_Int()
-        {
-            var result = Eval("0.0 extends 0;");
 
             Assert.IsTrue(result);
         }
