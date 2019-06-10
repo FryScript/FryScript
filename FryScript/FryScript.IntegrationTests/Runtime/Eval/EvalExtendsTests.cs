@@ -39,19 +39,23 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         {
             var result = Eval("null extends null;");
 
-            Assert.IsTrue(result);
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
         public void Other_Extends_Null()
         {
             var result = Eval("100 extends null;");
+
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
         public void Null_Extends_Other()
         {
             var result = Eval("null extends false;");
+
+            Assert.IsFalse(result);
         }
 
         [TestMethod]

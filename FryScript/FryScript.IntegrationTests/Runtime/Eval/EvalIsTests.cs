@@ -38,6 +38,38 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         {
             var result = Eval("null is null;");
 
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void Int_Is_Int()
+        {
+            var result = Eval("100 is 900;");
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Float_Is_Float()
+        {
+            var result = Eval("1.0 is 2.0;");
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void String_Is_String()
+        {
+            var result = Eval("\"a\" is \"b\";");
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Bool_Is_Bool()
+        {
+            var result = Eval("true is false;");
+
             Assert.IsTrue(result);
         }
     }

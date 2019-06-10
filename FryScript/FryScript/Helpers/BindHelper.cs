@@ -47,6 +47,18 @@ namespace FryScript.Helpers
             var rightType = arg.LimitType;
             var scriptableOp = (ScriptableBinaryOperater)binder.Operation;
 
+            if(scriptableOp == ScriptableBinaryOperater.Divide && arg.Value != null && (int)arg.Value == 0)
+            {
+                var convertExpr = Expression.Convert(arg.Expression, arg.LimitType);
+
+                var argEqualZeroExpr = Expression.Equal(
+                    Expression.Convert(convertExpr, typeof(int)),
+                    Expression.Constant(0));
+
+                return new DynamicMetaObject(Expression.Constant(ScriptNaN.Value),
+                    BindingRestrictions.GetExpressionRestriction(argEqualZeroExpr));
+            }
+
             if(leftType == rightType)
             {
                 if (TypeProvider.Current.TryGetBinaryOperator(target.LimitType, scriptableOp, arg.LimitType, out opInfo))
