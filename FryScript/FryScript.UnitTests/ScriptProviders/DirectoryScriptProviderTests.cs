@@ -53,7 +53,7 @@ namespace FryScript.UnitTests.ScriptProviders
             var expectedUri = new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts", "errorHandling1.fry"));
             var expectedSource = File.ReadAllText(expectedUri.LocalPath);
 
-            Assert.IsTrue(_provider.TryGetScriptInfo("./scripts/errorHandling1.fry", out ScriptInfo scriptInfo));
+            Assert.IsTrue(_provider.TryGetScriptInfo("./Scripts/errorHandling1.fry", out ScriptInfo scriptInfo));
             Assert.AreEqual(expectedUri, scriptInfo.Uri);
             Assert.AreEqual(expectedSource, scriptInfo.Source);
         }

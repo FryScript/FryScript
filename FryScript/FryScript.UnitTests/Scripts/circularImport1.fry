@@ -1,4 +1,4 @@
-﻿@import "scripts/circularImport2" as circularImport2;
+﻿@import "Scripts/circularImport2" as circularImport2;
 this.method = () => {};
 
 circularImport2.method();

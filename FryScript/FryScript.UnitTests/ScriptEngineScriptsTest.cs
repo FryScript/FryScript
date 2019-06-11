@@ -24,7 +24,7 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void LocateAndCompileTest()
         {
-            dynamic obj = _scriptRuntime.Get("scripts/simpleImport");
+            dynamic obj = _scriptRuntime.Get("Scripts/simpleImport");
             Assert.IsTrue(obj.member);
         }
 
@@ -32,21 +32,21 @@ namespace FryScript.UnitTests
         [ExpectedException(typeof(CompilerException))]
         public void Get_Script_With_Circular_Import()
         {
-            _scriptRuntime.Get("scripts/circularImport1");
+            _scriptRuntime.Get("Scripts/circularImport1");
         }
 
         [TestMethod]
         [ExpectedException(typeof(CompilerException))]
         public void Get_Script_With_Circular_Extend()
         {
-            _scriptRuntime.Get("scripts/circularExtend1");
+            _scriptRuntime.Get("Scripts/circularExtend1");
         }
 
         [TestMethod]
         public void Get_Script_With_Correct_Extend()
         {
-            var baseScript = _scriptRuntime.Get("scripts/baseScript");
-            var extendingScript = _scriptRuntime.Get("scripts/extendingScript");
+            var baseScript = _scriptRuntime.Get("Scripts/baseScript");
+            var extendingScript = _scriptRuntime.Get("Scripts/extendingScript");
 
             dynamic dExtendingScript = extendingScript;
 
@@ -92,7 +92,7 @@ namespace FryScript.UnitTests
         {
             try
             {
-                _scriptRuntime.Get("scripts/errorHandling1");
+                _scriptRuntime.Get("Scripts/errorHandling1");
             }
             catch(FryScriptException ex)
             {
@@ -114,8 +114,8 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void ImportNamedMembersTest()
         {
-            dynamic imports = _scriptRuntime.Get("scripts/importNamedMembers");
-            dynamic exports = _scriptRuntime.Get("scripts/exportMembers");
+            dynamic imports = _scriptRuntime.Get("Scripts/importNamedMembers");
+            dynamic exports = _scriptRuntime.Get("Scripts/exportMembers");
 
             Assert.AreEqual(exports.member2, imports.importedMember2);
             Assert.AreEqual(exports.member3, imports.importedMember3);
