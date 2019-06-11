@@ -45,11 +45,6 @@ namespace FryScript.Helpers
             return Null(typeof(object));
         }
 
-        public static Expression ScriptNaN()
-        {
-            return Expression.Constant(FryScript.ScriptNaN.Value, typeof(object));
-        }
-
         public static Expression DynamicConvert(Expression expression, Type type)
         {
             expression = expression ?? throw new ArgumentNullException(nameof(expression));

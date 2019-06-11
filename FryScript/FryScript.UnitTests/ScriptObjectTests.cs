@@ -274,13 +274,6 @@ namespace FryScript.UnitTests
             Task.WaitAll(task1, task2);
         }
 
-        [TestMethod]
-        public void SetMemberFloatNanTest()
-        {
-            _dynamicObj.test = float.NaN;
-            Assert.AreEqual(ScriptNaN.Value, _dynamicObj.test);
-        }
-
         //[TestMethod]
         //[Ignore]
         //public void ConvertTargetImplicitTest()

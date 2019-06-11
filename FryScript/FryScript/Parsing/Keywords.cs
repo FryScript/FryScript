@@ -17,7 +17,6 @@ namespace FryScript.Parsing
         public const string Null = "null";
         public const string True = "true";
         public const string False = "false";
-        public const string NaN = "NaN";
         public const string Return = "return";
         public const string Params = "params";
         public const string If = "if";

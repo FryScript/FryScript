@@ -38,14 +38,6 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         }
 
         [TestMethod]
-        public void Int_Divide_By_Zero()
-        {
-            var result = Eval("100 / 0;");
-
-            Assert.AreEqual(ScriptNaN.Value, result);
-        }
-
-        [TestMethod]
         public void Int_Equal()
         {
             var result = Eval("20 == 20;");
