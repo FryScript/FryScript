@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
 {
@@ -14,9 +15,31 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void String_Subtract()
         {
             Eval("\"no\" - \"subtract\";");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void String_Multiply()
+        {
+            Eval("\"one\" * \"two\";");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void String_Divide()
+        {
+            Eval("\"ten\" / \"two\";");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void String_Modulo()
+        {
+            Eval("\"fifteen\" % \"five\";");
         }
 
         [TestMethod]
