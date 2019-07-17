@@ -38,14 +38,6 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         }
 
         [TestMethod]
-        public void Int_Modulo()
-        {
-            var result = Eval("6 % 2;");
-
-            Assert.AreEqual(6 % 2, result);
-        }
-
-        [TestMethod]
         public void Int_Equal()
         {
             var result = Eval("20 == 20;");

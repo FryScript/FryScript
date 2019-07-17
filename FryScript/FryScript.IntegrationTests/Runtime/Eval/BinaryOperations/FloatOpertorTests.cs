@@ -38,14 +38,6 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         }
 
         [TestMethod]
-        public void Float_Modulo()
-        {
-            var result = Eval("10.0 % 5.0;");
-
-            Assert.AreEqual(10.0f % 5.0f, result);
-        }
-
-        [TestMethod]
         public void Foat_Equal()
         {
             var result = Eval("5.0 == 5.0;");
