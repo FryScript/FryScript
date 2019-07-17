@@ -11,25 +11,19 @@ namespace FryScript.Ast
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            ChildNodes = ChildNodes
-                .Concat(new[] { new YieldStatementNode { ChildNodes = new AstNode[] { null, null } } })
-                .ToArray();
+            if (ChildNodes.Length == 0)
+                ChildNodes = new[] { Transform<StatementNode>(Transform<YieldStatementNode>(null, null)) };
 
+            var childNode = ChildNodes.Last();
 
-
-            //if (ChildNodes.Length == 0)
-            //    ChildNodes = new[] { Transform<StatementNode>(Transform<YieldStatementNode>(null, null)) };
-
-            //var childNode = ChildNodes.Last();
-
-            //if (childNode.GetType() == typeof(ExpressionNode))
-            //{
-            //    ChildNodes[ChildNodes.Length - 1] = Transform<StatementNode>(Transform<YieldStatementNode>(null, null, childNode));
-            //}
-            //else
-            //{
-            //    TransformBlockStatement(childNode);
-            //}
+            if (childNode.GetType() == typeof(ExpressionNode))
+            {
+                ChildNodes[ChildNodes.Length - 1] = Transform<StatementNode>(Transform<YieldStatementNode>(null, null, childNode));
+            }
+            else
+            {
+                TransformBlockStatement(childNode);
+            }
 
             return GetChildExpression(scope);
         }
@@ -50,7 +44,7 @@ namespace FryScript.Ast
                 lastStatementNode.ChildNodes[lastStatementNode.ChildNodes.Length - 1] = Transform<YieldStatementNode>(null, null, innerStatementNode);
             }
 
-            else if (innerStatementNode.GetType() == typeof(YieldStatementNode))
+            if (innerStatementNode.GetType() == typeof(YieldStatementNode))
             {
                 var yieldStatement = (YieldStatementNode)innerStatementNode;
 
@@ -58,17 +52,7 @@ namespace FryScript.Ast
                     return;
 
                 yieldStatement.ChildNodes = new AstNode[] { null }.Concat(yieldStatement.ChildNodes).ToArray();
-            }
-
-            else
-            {
-                var yieldNode = new YieldStatementNode
-                {
-                    ChildNodes = new AstNode[3]
-                };
-
-                innerStatementNode.ChildNodes = innerStatementNode.ChildNodes.Concat(new[] { yieldNode }).ToArray();
-            }
+            };
         }
     }
 }
