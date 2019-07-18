@@ -85,7 +85,7 @@ namespace FryScript
 
         public override DynamicMetaObject GetMetaObject(Expression parameter)
         {
-            return new MetaScriptFibreContext(parameter, BindingRestrictions.Empty, this);
+            return new MetaScriptObject(parameter, BindingRestrictions.Empty, this);
         }
 
         public static ScriptFibreContext New(Func<ScriptFibreContext, object> target)
