@@ -17,7 +17,7 @@ namespace FryScript.Helpers
         {
             typeof(string),
             typeof(Func<ScriptObject, object>),
-            typeof(HashSet<string>),
+            //typeof(HashSet<string>),
             typeof(bool)
         });
                 //(from c in typeof(ScriptObject).GetTypeInfo().DeclaredConstructors
@@ -227,7 +227,7 @@ namespace FryScript.Helpers
                 ScriptObjectCtor,
                 scriptType ?? Null(typeof(string)),
                 ctor ?? Null(typeof(Func<ScriptObject, object>)),
-                extends ?? Null(typeof(HashSet<string>)),
+                //extends ?? Null(typeof(HashSet<string>)),
                 autoConstruct ?? Expression.Constant(true));
         }
 

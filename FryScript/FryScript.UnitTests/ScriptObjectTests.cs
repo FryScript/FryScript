@@ -62,22 +62,22 @@ namespace FryScript.UnitTests
             _dynamicObj = _scriptObject;
         }
 
+        //[TestMethod]
+        //[Ignore]
+        //public void SetMemberTest()
+        //{
+        //    //_dynamicObj.test = 100;
+        //    //_dynamicObj.test = 200;
+
+        //    //MemberLookupInfo info;
+        //    ////MemberIndexLookup.Current.TryGetMemberIndex(ScriptObject.GetMemberIndex(_scriptObject), "test", out info);
+        //    //var memberData = _scriptObject.ObjectCore.MemberData;
+
+        //    //Assert.AreEqual(200, memberData[info.Index]);
+        //}
+
         [TestMethod]
-        [Ignore]
-        public void SetMemberTest()
-        {
-            //_dynamicObj.test = 100;
-            //_dynamicObj.test = 200;
-
-            //MemberLookupInfo info;
-            ////MemberIndexLookup.Current.TryGetMemberIndex(ScriptObject.GetMemberIndex(_scriptObject), "test", out info);
-            //var memberData = _scriptObject.ObjectCore.MemberData;
-
-            //Assert.AreEqual(200, memberData[info.Index]);
-        }
-
-        [TestMethod]
-        public void GetMemberTest()
+        public void Set_Member_Get_Member_Test()
         {
             _dynamicObj.test = 100;
 
@@ -137,16 +137,16 @@ namespace FryScript.UnitTests
             Assert.AreEqual(100, _scriptObject["test"]);
         }
 
-        [TestMethod]
-        [Ignore]
-        public void GetTargetIndexTest()
-        {
-            //var target = new Target();
-            //ScriptObject.SetTarget(_scriptObject, target);
+        //[TestMethod]
+        //[Ignore]
+        //public void GetTargetIndexTest()
+        //{
+        //    //var target = new Target();
+        //    //ScriptObject.SetTarget(_scriptObject, target);
 
-            //_dynamicObj.name = "test";
-            //Assert.AreEqual("test", _scriptObject["name"]);
-        }
+        //    //_dynamicObj.name = "test";
+        //    //Assert.AreEqual("test", _scriptObject["name"]);
+        //}
 
         [TestMethod]
         public void GetDynamicIndexTest()
@@ -156,17 +156,17 @@ namespace FryScript.UnitTests
             Assert.AreEqual(100, _dynamicObj["test"]);
         }
 
-        [TestMethod]
-        [Ignore]
-        public void GetTargetDynamicIndexTest()
-        {
-            //var target = new Target();
-            //ScriptObject.SetTarget(_scriptObject, target);
+        //[TestMethod]
+        //[Ignore]
+        //public void GetTargetDynamicIndexTest()
+        //{
+        //    //var target = new Target();
+        //    //ScriptObject.SetTarget(_scriptObject, target);
 
-            //target.Indexes["name"] = "test";
+        //    //target.Indexes["name"] = "test";
 
-            //Assert.AreEqual(_dynamicObj["name"], "test");
-        }
+        //    //Assert.AreEqual(_dynamicObj["name"], "test");
+        //}
 
         [TestMethod]
         public void InvokeMemberTest()
@@ -190,18 +190,18 @@ namespace FryScript.UnitTests
             //Assert.AreEqual(target.Name, "Test");
         }
 
-        [TestMethod]
-        [Ignore]
-        public void GetTargetMemberTest()
-        {
-            //var target = new Target
-            //{
-            //    Name = "Test"
-            //};
-            //ScriptObject.SetTarget(_scriptObject, target);
+        //[TestMethod]
+        //[Ignore]
+        //public void GetTargetMemberTest()
+        //{
+        //    //var target = new Target
+        //    //{
+        //    //    Name = "Test"
+        //    //};
+        //    //ScriptObject.SetTarget(_scriptObject, target);
 
-            //Assert.AreEqual("Test", _dynamicObj.name);
-        }
+        //    //Assert.AreEqual("Test", _dynamicObj.name);
+        //}
 
         //[TestMethod]
         //[Ignore]
