@@ -84,7 +84,7 @@ namespace FryScript
 
             var scriptObject = new ScriptObject(
                 scriptType: name,
-                extends: compilerContext.Extends,
+                //extends: compilerContext.Extends,
                 ctor: func,
                 autoConstruct: false
                 );
@@ -117,7 +117,7 @@ namespace FryScript
 
             var func = _compiler.Compile(script, keyName, compilerContext);
 
-            scriptObject = new ScriptObject(keyName, func, compilerContext.Extends);
+            scriptObject = new ScriptObject(keyName, func);
 
             //CreateProto(scriptObject, compilerContext);
 
@@ -184,11 +184,11 @@ namespace FryScript
 
             var ctor = TypeProvider.Current.GetCtor(type);
 
-            _scripts[keyName] = new ScriptObject(
-                scriptType: keyName,
-                ctor: ctor,
-                extends: new HashSet<string>()
-                );
+            //_scripts[keyName] = new ScriptObject(
+            //    scriptType: keyName,
+            //    ctor: ctor,
+            //    extends: new HashSet<string>()
+            //    );
         }
 
         public void Import<T>()
@@ -216,11 +216,11 @@ namespace FryScript
 
             var scriptCtor = ScriptableCtorHelper.GetCtor(ctor);
 
-            _scripts[keyName] = new ScriptObject(
-                scriptType: keyName,
-                ctor: scriptCtor,
-                extends: new HashSet<string>()
-                );
+            //_scripts[keyName] = new ScriptObject(
+            //    scriptType: keyName,
+            //    ctor: scriptCtor,
+            //    extends: new HashSet<string>()
+            //    );
         }
 
         //public ScriptObject Bind(IScriptable scriptable, string name, params object[] args)

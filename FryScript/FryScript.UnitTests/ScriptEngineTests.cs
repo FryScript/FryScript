@@ -94,69 +94,69 @@ namespace FryScript.UnitTests
             _scriptEngine.Import(typeof(NoPublicParameterlessConstructor));
         }
 
-        [TestMethod]
-        [Ignore]
+        //[TestMethod]
+        //[Ignore]
 
-        public void ImportTest()
-        {
-            //_scriptEngine.Import(typeof(Importable));
+        //public void ImportTest()
+        //{
+        //    //_scriptEngine.Import(typeof(Importable));
 
-            //var obj = _scriptEngine.Get("test");
+        //    //var obj = _scriptEngine.Get("test");
 
-            //var target = (Importable)ScriptObject.GetTarget(obj);
+        //    //var target = (Importable)ScriptObject.GetTarget(obj);
 
-            //Assert.IsNotNull(target);
-            //Assert.AreEqual(obj, target.Script);
-            //Assert.AreEqual("test", obj.GetScriptType());
-        }
+        //    //Assert.IsNotNull(target);
+        //    //Assert.AreEqual(obj, target.Script);
+        //    //Assert.AreEqual("test", obj.GetScriptType());
+        //}
 
-        [TestMethod]
-        [Ignore]
+        //[TestMethod]
+        //[Ignore]
 
-        public void ImportCtorTest()
-        {
-            //_scriptEngine.Import("test", () => new Importable("Test Name"));
+        //public void ImportCtorTest()
+        //{
+        //    //_scriptEngine.Import("test", () => new Importable("Test Name"));
 
-            //var obj = _scriptEngine.Get("test");
+        //    //var obj = _scriptEngine.Get("test");
 
-            //var target = (Importable)ScriptObject.GetTarget(obj);
+        //    //var target = (Importable)ScriptObject.GetTarget(obj);
 
-            //Assert.IsNotNull(target);
-            //Assert.AreEqual("Test Name", target.Name);
-            //Assert.AreEqual(obj, target.Script);
-            //Assert.AreEqual("test", obj.GetScriptType());
-        }
+        //    //Assert.IsNotNull(target);
+        //    //Assert.AreEqual("Test Name", target.Name);
+        //    //Assert.AreEqual(obj, target.Script);
+        //    //Assert.AreEqual("test", obj.GetScriptType());
+        //}
 
-        [TestMethod]
-        [Ignore]
+        //[TestMethod]
+        //[Ignore]
 
-        public void ImportSetPropertyTest()
-        {
-            //_scriptEngine.Import(typeof(Importable));
+        //public void ImportSetPropertyTest()
+        //{
+        //    //_scriptEngine.Import(typeof(Importable));
 
-            //dynamic obj = _scriptEngine.Get("test");
+        //    //dynamic obj = _scriptEngine.Get("test");
 
-            //var target = (Importable) ScriptObject.GetTarget(obj);
+        //    //var target = (Importable) ScriptObject.GetTarget(obj);
 
-            //obj.count = 100;
+        //    //obj.count = 100;
 
-            //Assert.AreEqual(100, target.Count);
-        }
+        //    //Assert.AreEqual(100, target.Count);
+        //}
 
-        [TestMethod]
-        [Ignore]
+        //[TestMethod]
+        //[Ignore]
 
-        public void ImportGetPropertyTest()
-        {
-            //_scriptEngine.Import(typeof(Importable));
+        //public void ImportGetPropertyTest()
+        //{
+        //    //_scriptEngine.Import(typeof(Importable));
 
-            //dynamic obj = _scriptEngine.Get("test");
+        //    //dynamic obj = _scriptEngine.Get("test");
 
-            //var target = (Importable)ScriptObject.GetTarget(obj);
-            //target.Count = 100;
+        //    //var target = (Importable)ScriptObject.GetTarget(obj);
+        //    //target.Count = 100;
 
-            //Assert.AreEqual(100, obj.count);
-        }
+        //    //Assert.AreEqual(100, obj.count);
+        //}
 
         //[TestMethod]
         //[Ignore]
@@ -212,81 +212,81 @@ namespace FryScript.UnitTests
         //    //Assert.AreEqual(obj, importable.Script);
         //}
 
-        [TestMethod]
-        [Ignore]
-        public void MethodCallTest()
-        {
-            //var importable1 = new Importable("Mango");
-            //var importable2 = new Importable("Mikey");
+        //[TestMethod]
+        //[Ignore]
+        //public void MethodCallTest()
+        //{
+        //    //var importable1 = new Importable("Mango");
+        //    //var importable2 = new Importable("Mikey");
 
-            //_scriptEngine.Import(typeof(Importable));
+        //    //_scriptEngine.Import(typeof(Importable));
 
-            //dynamic obj1 = _scriptEngine.Bind(importable1, "test");
-            //dynamic obj2 = _scriptEngine.Bind(importable2, "test");
+        //    //dynamic obj1 = _scriptEngine.Bind(importable1, "test");
+        //    //dynamic obj2 = _scriptEngine.Bind(importable2, "test");
 
-            //var result = obj1.sayHelloTo(obj2);
+        //    //var result = obj1.sayHelloTo(obj2);
 
-            //Assert.AreEqual("Mango says hello to Mikey!", result);
-        }
+        //    //Assert.AreEqual("Mango says hello to Mikey!", result);
+        //}
 
-        [Ignore]
-        [TestMethod]
-        public void NewTest()
-        {
-            //_scriptEngine.Import<Importable>();
+        //[Ignore]
+        //[TestMethod]
+        //public void NewTest()
+        //{
+        //    //_scriptEngine.Import<Importable>();
 
-            //dynamic obj = _scriptEngine.New("test");
+        //    //dynamic obj = _scriptEngine.New("test");
 
-            //Assert.IsTrue(ScriptObject.GetTarget(obj) is Importable);
-        }
+        //    //Assert.IsTrue(ScriptObject.GetTarget(obj) is Importable);
+        //}
 
-        [TestMethod]
-        [Ignore]
-        public void NewWithArgsTest()
-        {
-            //_scriptEngine.Import<Constructible>();
+        //[TestMethod]
+        //[Ignore]
+        //public void NewWithArgsTest()
+        //{
+        //    //_scriptEngine.Import<Constructible>();
 
-            //dynamic newable = _scriptEngine.Get("newable");
-            //dynamic obj = _scriptEngine.New("newable", 10, 10);
+        //    //dynamic newable = _scriptEngine.Get("newable");
+        //    //dynamic obj = _scriptEngine.New("newable", 10, 10);
 
-            //Assert.AreNotEqual(newable, obj);
-            //Assert.AreEqual(100, obj.onCtor);
-        }
+        //    //Assert.AreNotEqual(newable, obj);
+        //    //Assert.AreEqual(100, obj.onCtor);
+        //}
 
-        [TestMethod]
-        [Ignore]
-        public void NewByTypeTest()
-        {
-            _scriptEngine.Import<Importable>();
+        //[TestMethod]
+        //[Ignore]
+        //public void NewByTypeTest()
+        //{
+        //    _scriptEngine.Import<Importable>();
 
-            var obj = _scriptEngine.New<Importable>("test");
+        //    var obj = _scriptEngine.New<Importable>("test");
 
-            Assert.IsNotNull(obj.Script);
-        }
+        //    Assert.IsNotNull(obj.Script);
+        //}
 
 
-        [TestMethod]
-        [Ignore]
-        public void NewByTypeTestWithArgs()
-        {
-            _scriptEngine.Import<Constructible>();
+        //[TestMethod]
+        //[Ignore]
+        //public void NewByTypeTestWithArgs()
+        //{
+        //    _scriptEngine.Import<Constructible>();
 
-            var newable = _scriptEngine.Get("newable");
-            var obj = _scriptEngine.New<Constructible>("newable", 5, 2);
+        //    var newable = _scriptEngine.Get("newable");
+        //    var obj = _scriptEngine.New<Constructible>("newable", 5, 2);
 
-            Assert.AreNotEqual(newable, obj.Script);
-            Assert.AreEqual(10, obj.OnCtor);
-        }
+        //    Assert.AreNotEqual(newable, obj.Script);
+        //    Assert.AreEqual(10, obj.OnCtor);
+        //}
 
-        [TestMethod]
-        [Ignore]
-        [ExpectedException(typeof(ArgumentException))]
-        public void NewByTypeInvalidTypeTest()
-        {
-            _scriptEngine.Compile("invalid", "this;");
-            _scriptEngine.Import<Importable>();
+        //[TestMethod]
+        //[Ignore]
+        //[ExpectedException(typeof(ArgumentException))]
+        //public void NewByTypeInvalidTypeTest()
+        //{
+        //    _scriptEngine.Compile("invalid", "this;");
+        //    _scriptEngine.Import<Importable>();
 
-            _scriptEngine.New<Importable>("invalid");
-        }
+        //    _scriptEngine.New<Importable>("invalid");
+        //}
     }
 }

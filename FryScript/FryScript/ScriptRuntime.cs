@@ -22,7 +22,7 @@ namespace FryScript
 
 #if NETSTANDARD2_0
         public ScriptRuntime()
-            : this(new DirectoryScriptProvider(AppContext.BaseDirectory),
+            : this(new DirectoryScriptProvider(Environment.CurrentDirectory),
                   new ScriptCompiler(),
                   new ObjectRegistry(),
                   new ScriptObjectFactory())

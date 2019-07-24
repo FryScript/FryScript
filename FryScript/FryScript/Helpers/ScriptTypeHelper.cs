@@ -66,10 +66,10 @@ namespace FryScript.Helpers
             if (superType.IsAssignableFrom(subType))
                 return true;
 
-            if (target is IScriptObject && value is ScriptObject)
+            if (target is IScriptObject && value.GetType() == typeof(ScriptObject))
                 return true;
-            
-            throw new NotImplementedException();
+
+            return false;
             //target = target ?? throw new ArgumentNullException(nameof(target));
             //value = value ?? throw new ArgumentNullException(nameof(value));
 

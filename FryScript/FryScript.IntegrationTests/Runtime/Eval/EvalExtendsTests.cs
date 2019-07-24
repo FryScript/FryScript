@@ -22,6 +22,17 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         }
 
         [TestMethod]
+        public void Script_B_Does_Not_Extend_Script_A()
+        {
+            Eval("@import \"Scripts/extendingScript\" as a;");
+            Eval("@import \"Scripts/baseScript\" as b;");
+
+            var result = Eval("b extends a;");
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
         public void Imported_Object_Extends_Object_Root()
         {
             ScriptRuntime.Import<ImportedObject>();

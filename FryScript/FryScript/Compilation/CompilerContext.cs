@@ -63,16 +63,16 @@ namespace FryScript.Compilation
             ScriptType = typeof(ScriptObject);
         }
 
-        public void Extend(ScriptObject scriptObject)
-        {
-            scriptObject = scriptObject ?? throw new ArgumentNullException(nameof(scriptObject));
+        //public void Extend(ScriptObject scriptObject)
+        //{
+        //    scriptObject = scriptObject ?? throw new ArgumentNullException(nameof(scriptObject));
 
-            Extends.Add(scriptObject.ScriptType);
+        //    Extends.Add(scriptObject.ScriptType);
 
-            foreach (var extend in scriptObject.Extends)
-            {
-                Extends.Add(extend);
-            }
-        }
+        //    foreach (var extend in scriptObject.Extends)
+        //    {
+        //        Extends.Add(extend);
+        //    }
+        //}
     }
 }

@@ -18,7 +18,7 @@ namespace FryScript
         public const string ObjectName = "[object]";
 
         internal string ScriptType;
-        internal HashSet<string> Extends;
+        //internal HashSet<string> Extends;
 
         internal Func<ScriptObject, object> Ctor;
 
@@ -38,30 +38,30 @@ namespace FryScript
         public ScriptObject(
             string scriptType = null,
             Func<ScriptObject, object> ctor = null,
-            HashSet<string> extends = null, 
+            //HashSet<string> extends = null, 
             bool autoConstruct = true)
         {
             ScriptType = scriptType ?? ObjectName;
             Ctor = ctor;
-            Extends = extends;
+            //Extends = extends;
 
             if (Ctor != null && autoConstruct)
                 Ctor(this);
         }
          
-        public bool IsScript(ScriptObject scriptObject)
-        {
-            if (scriptObject.ScriptType == ObjectName)
-                return true;
+        //public bool IsScript(ScriptObject scriptObject)
+        //{
+        //    if (scriptObject.ScriptType == ObjectName)
+        //        return true;
 
-            if (Extends == null)
-                return false;
+        //    if (Extends == null)
+        //        return false;
 
-            if (ScriptType == scriptObject.ScriptType)
-                return true;
+        //    if (ScriptType == scriptObject.ScriptType)
+        //        return true;
 
-            return Extends.Contains(scriptObject.ScriptType);
-        }
+        //    return Extends.Contains(scriptObject.ScriptType);
+        //}
 
         public bool IsScriptType(string scriptType)
         {
@@ -73,18 +73,19 @@ namespace FryScript
 
         public bool ExtendsScriptType(string scriptType)
         {
-            scriptType = ScriptTypeHelper.NormalizeTypeName(scriptType);
+            throw new NotImplementedException();
+            //scriptType = ScriptTypeHelper.NormalizeTypeName(scriptType);
 
-            if (scriptType == ObjectName)
-                return true;
+            //if (scriptType == ObjectName)
+            //    return true;
 
-            if (IsScriptType(scriptType))
-                return true;
+            //if (IsScriptType(scriptType))
+            //    return true;
 
-            if (Extends == null)
-                return false;
+            //if (Extends == null)
+            //    return false;
 
-            return Extends.Contains(scriptType);
+            //return Extends.Contains(scriptType);
         }
 
         //internal bool TryGetMemberOfType<T>(string name, out T value)

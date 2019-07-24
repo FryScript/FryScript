@@ -161,20 +161,20 @@ namespace FryScript.UnitTests
         //    Assert.IsTrue((bool)obj.baseProp);
         //}
 
-        [TestMethod]
-        [Ignore]
+        //[TestMethod]
+        //[Ignore]
 
-        public void EvalInheritanceTest()
-        {
-            var base1 = _scriptEngine.Compile("base1", "this;");
-            var base2 = _scriptEngine.Compile("base2", "@extend \"base1\";");
-            var base3 = _scriptEngine.Compile("base3", "@extend \"base2\";");
-            ScriptObject obj = Eval("@extend \"base3\";");
+        //public void EvalInheritanceTest()
+        //{
+        //    var base1 = _scriptEngine.Compile("base1", "this;");
+        //    var base2 = _scriptEngine.Compile("base2", "@extend \"base1\";");
+        //    var base3 = _scriptEngine.Compile("base3", "@extend \"base2\";");
+        //    ScriptObject obj = Eval("@extend \"base3\";");
 
-            Assert.IsTrue(obj.IsScript(base1));
-            Assert.IsTrue(obj.IsScript(base2));
-            Assert.IsTrue(obj.IsScript(base3));
-        }
+        //    Assert.IsTrue(obj.IsScript(base1));
+        //    Assert.IsTrue(obj.IsScript(base2));
+        //    Assert.IsTrue(obj.IsScript(base3));
+        //}
 
         [TestMethod]
         [ExpectedException(typeof(CompilerException))]
@@ -1015,27 +1015,6 @@ f().resume();
         {
             var obj = Eval("\"\" is \"\";");
             Assert.IsTrue(obj);
-        }
-
-        [TestMethod]
-        [Ignore]
-        public void EvalExtendsExtendingTest()
-        {
-            _scriptEngine.Compile("base1", "this;");
-            _scriptEngine.Compile("base2", "@extend \"base1\";");
-            var obj = Eval("@import \"base1\" as base1; @import \"base2\" as base2; base2 extends base1;");
-            Assert.IsTrue(obj);
-        }
-
-        [TestMethod]
-        [Ignore]
-
-        public void EvalExtendsNonExtendingTest()
-        {
-            _scriptEngine.Compile("base1", "this;");
-            _scriptEngine.Compile("base2", "@extend \"base1\";");
-            var obj = Eval("@import \"base1\" as base1; @import \"base2\" as base2; base1 extends base2;");
-            Assert.IsFalse(obj);
         }
 
         [TestMethod]

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FryScript.CallSites;
+using FryScript.Helpers;
+using System;
 
 namespace FryScript
 {
-    using System.Collections;
-    using Ast;
-    using Helpers;
-    using CallSites;
     public class FryScriptException : Exception
     {
         public string Name { get; set; }
