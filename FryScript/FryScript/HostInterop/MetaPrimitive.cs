@@ -112,10 +112,16 @@ namespace FryScript.HostInterop
         {
             binder = binder ?? throw new ArgumentNullException(nameof(binder));
 
-            if (ExpressionHelper.TryGetMethodExpression(Expression.Convert(Expression, LimitType), binder.Name, out Expression expression))
-                return new DynamicMetaObject(expression, RestrictionsHelper.TypeOrNullRestriction(this));
+            if(Value == null)
+                ExceptionHelper.MemberUndefined(binder.Name);
 
-            throw ExceptionHelper.MemberUndefined(binder.Name);
+            var restrictions = RestrictionsHelper.TypeOrNullRestriction(this);
+            if (ExpressionHelper.TryGetMethodExpression(Expression.Convert(Expression, LimitType), binder.Name, out Expression expression))
+                return new DynamicMetaObject(expression, restrictions);
+
+            return new DynamicMetaObject(ExpressionHelper.Null(), restrictions);
+
+            //throw ExceptionHelper.MemberUndefined(binder.Name);
         }
 
         public override DynamicMetaObject BindSetMember(SetMemberBinder binder, DynamicMetaObject value)

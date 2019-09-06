@@ -111,10 +111,17 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FryScriptException))]
         public void EvalGetMemberUndefinedTest()
         {
-            Eval("this.undefined;");
+            var obj = Eval("this.undefined;");
+            Assert.IsNull(obj);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FryScriptException))]
+        public void EvalGetMemberOfNullTest()
+        {
+            Eval("this.undefined = null; this.undefined.member;");
         }
 
         [TestMethod]
@@ -471,10 +478,10 @@ this;
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FryScriptException))]
         public void EvalBlockStatementScopeTest()
         {
-            Eval("{var test = 100;} test;");
+            var obj = Eval("{var test = 100;} test;");
+            Assert.IsNull(obj);
         }
 
         [TestMethod]
@@ -492,10 +499,10 @@ this;
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FryScriptException))]
         public void EvalIfStatementScopeTest()
         {
-            Eval("if(true) var x = true; x;");
+            var obj = Eval("if(true) var x = true; x;");
+            Assert.IsNull(obj);
         }
 
         [TestMethod]
@@ -506,10 +513,10 @@ this;
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FryScriptException))]
         public void EvalIfElseStatementScopeTest()
         {
-            Eval("if(true == false) var x = true; else var x = false; x;");
+            var obj = Eval("if(true == false) var x = true; else var x = false; x;");
+            Assert.IsNull(obj);
         }
 
         [TestMethod]
@@ -1110,7 +1117,7 @@ f().resume();
         [TestMethod]
         public void EvalTryCatchTest()
         {
-            var obj = Eval("var x = {}; try{ x.undefined; }catch error{ x.undefined = 100;} x;");
+            var obj = Eval("var x = {}; try{ x.undefined.member; }catch error{ x.undefined = 100;} x;");
             Assert.AreEqual(100, obj.undefined);
         }
 

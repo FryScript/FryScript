@@ -154,6 +154,23 @@
 
                 return new DynamicMetaObject(setMemberExpr, restrictions);
             }
+            else
+            {
+                var callExpr = Expression.Call(
+                    typeof(ScriptObjectExtensions),
+                    nameof(ScriptObjectExtensions.IsValidGetMember),
+                    null,
+                    Expression.Convert(Expression, typeof(IScriptObject)),
+                    Expression.Constant(ScriptObject.ObjectCore.MemberIndex)
+                    );
+                var valueExpr = ExpressionHelper.Null();
+                var restrictions = GetDefaultRestrictions()
+                    .Merge(BindingRestrictions.GetExpressionRestriction(
+                    callExpr
+                        ));
+
+                return new DynamicMetaObject(valueExpr, restrictions);
+            }
 
             //if (ScriptObject.HasTarget &&
             //    ExpressionHelper.TryGetMethodExpression(Expression.Convert(ScriptObjectTargetExpr, ScriptObject.TargetType), binder.Name, out methodExpr))
@@ -174,7 +191,7 @@
             //    return new DynamicMetaObject(setMemberExpr, restrictions);
             //}
 
-            throw ExceptionHelper.MemberUndefined(binder.Name);
+            //throw ExceptionHelper.MemberUndefined(binder.Name);
         }
 
         public override DynamicMetaObject BindSetIndex(SetIndexBinder binder, DynamicMetaObject[] indexes, DynamicMetaObject value)

@@ -18,6 +18,7 @@ namespace FryScript.UnitTests
         public void TestIntialize()
         {
             _builder = Substitute.For<IScriptObjectBuilder>();
+            _obj = Substitute.For<IScriptObject>();
             _factoryFunc = Substitute.For<Func<Type, Func<IScriptObject, object>, Uri, IScriptObjectBuilder>>();
             _factoryFunc.Invoke(Arg.Any<Type>(), Arg.Any<Func<IScriptObject, object>>(), Arg.Any<Uri>());
             _typeFactory = Substitute.For<ITypeFactory>();
