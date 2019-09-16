@@ -1131,7 +1131,7 @@ f().resume();
         [TestMethod]
         public void EvalTryCatchFinallyTest()
         {
-            var obj = Eval("var x = {}; try{ x.undefined; }catch error{ x.undefined = 10;}finally{ x.undefined *= 200;} x;");
+            var obj = Eval("var x = {}; try{ x.undefined(); }catch error{ x.undefined = 10;}finally{ x.undefined *= 200;} x;");
             Assert.AreEqual(2000, obj.undefined);
         }
 

@@ -85,10 +85,11 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FryScriptException))]
         public void GetMemberUndefinedTest()
         {
             var result = _dynamicObj.test;
+
+            Assert.IsNull(result);
         }
 
         [TestMethod]
