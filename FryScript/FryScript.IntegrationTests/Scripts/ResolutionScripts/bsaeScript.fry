@@ -1,0 +1,3 @@
+﻿@import "toImport" as toImport;
+
+this.toImport = toImport;
