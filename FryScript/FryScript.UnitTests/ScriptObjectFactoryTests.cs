@@ -80,5 +80,20 @@ namespace FryScript.UnitTests
 
             Assert.AreEqual(_obj, result);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CreatePrimitive_Null_Type()
+        {
+            _factory.CreatePrimitive(null);
+        }
+
+        [TestMethod]
+        public void CreatePrimitive_Success()
+        {
+            var result = _factory.CreatePrimitive(typeof(string));
+
+            Assert.IsInstanceOfType(result, typeof(ScriptPrimitive<string>));
+        }
     }
 }

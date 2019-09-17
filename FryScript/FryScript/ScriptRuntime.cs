@@ -17,6 +17,7 @@ namespace FryScript
         private readonly IScriptCompiler _compiler;
         private readonly IObjectRegistry _registry;
         private readonly IScriptObjectFactory _objectFactory;
+        private readonly ITypeProvider _typeProvider;
 
         private readonly Queue<string> _compileQueue = new Queue<string>();
 
@@ -25,7 +26,8 @@ namespace FryScript
             : this(new DirectoryScriptProvider(Environment.CurrentDirectory),
                   new ScriptCompiler(),
                   new ObjectRegistry(),
-                  new ScriptObjectFactory())
+                  new ScriptObjectFactory(),
+                  TypeProvider.Current)
         {
         }
 #else
@@ -33,7 +35,8 @@ namespace FryScript
             : this(new DirectoryScriptProvider(AppDomain.CurrentDomain.BaseDirectory),
                   new ScriptCompiler(),
                   new ObjectRegistry(),
-                  new ScriptObjectFactory())
+                  new ScriptObjectFactory(),
+                  TypeProvider.Current)
         {
         }
 #endif
@@ -42,14 +45,22 @@ namespace FryScript
             IScriptProvider scriptProvider,
             IScriptCompiler compiler,
             IObjectRegistry registry,
-            IScriptObjectFactory objectFactory)
+            IScriptObjectFactory objectFactory,
+            ITypeProvider typeProvider)
         {
             _scriptProvider = scriptProvider ?? throw new ArgumentNullException(nameof(scriptProvider));
             _compiler = compiler ?? throw new ArgumentNullException(nameof(compiler));
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
             _objectFactory = objectFactory ?? throw new ArgumentNullException(nameof(objectFactory));
+            _typeProvider = typeProvider ?? throw new ArgumentNullException(nameof(typeProvider));
 
             Import(typeof(ScriptError));
+
+            foreach(var type in _typeProvider.GetPrimitives())
+            {
+                var primitive = _objectFactory.CreatePrimitive(type);
+                _registry.Import(type.Name, primitive);
+            }
         }
         public object Eval(string script)
         {

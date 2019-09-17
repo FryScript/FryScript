@@ -9,6 +9,9 @@ namespace FryScript
     public class ScriptPrimitive<T> : ScriptObject
     {
         public T Target { get; set; }
+
+        public Type TargetType => typeof(T);
+
         public ScriptPrimitive()
         {
             Target = (T)typeof(T).GetDefaultValue();

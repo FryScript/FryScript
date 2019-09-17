@@ -51,6 +51,7 @@ namespace FryScript.UnitTests
         private IScriptObject _obj;
         private IScriptProvider _scriptProvider;
         private IScriptObjectBuilder _objBuilder;
+        private ITypeProvider _typeProvider;
 
         [TestInitialize]
         public void TestInitialize()
@@ -59,7 +60,8 @@ namespace FryScript.UnitTests
             _compiler = Substitute.For<IScriptCompiler>();
             _registry = Substitute.For<IObjectRegistry>();
             _objectFactory = Substitute.For<IScriptObjectFactory>();
-            _runtime = new ScriptRuntime(_scriptProvider, _compiler, _registry, _objectFactory);
+            _typeProvider = Substitute.For<ITypeProvider>();
+            _runtime = new ScriptRuntime(_scriptProvider, _compiler, _registry, _objectFactory, _typeProvider);
 
             _obj = Substitute.For<IScriptObject>();
             _objBuilder = Substitute.For<IScriptObjectBuilder>();
@@ -69,35 +71,42 @@ namespace FryScript.UnitTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Script_Providers()
         {
-            new ScriptRuntime(null, _compiler, _registry, _objectFactory);
+            new ScriptRuntime(null, _compiler, _registry, _objectFactory, _typeProvider);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Compiler()
         {
-            new ScriptRuntime(_scriptProvider, null, _registry, _objectFactory);
+            new ScriptRuntime(_scriptProvider, null, _registry, _objectFactory, _typeProvider);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Object_Registry()
         {
-            new ScriptRuntime(_scriptProvider, _compiler, null, _objectFactory);
+            new ScriptRuntime(_scriptProvider, _compiler, null, _objectFactory, _typeProvider);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Builder_Factory()
         {
-            new ScriptRuntime(_scriptProvider, _compiler, _registry, null);
+            new ScriptRuntime(_scriptProvider, _compiler, _registry, null, _typeProvider);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_Null_Type_Provider()
+        {
+            new ScriptRuntime(_scriptProvider, _compiler, _registry, _objectFactory, null);
         }
 
         [TestMethod]
         public void Ctor_Registers_Built_In_Types()
         {
             _registry = Substitute.For<IObjectRegistry>();
-            _runtime = new ScriptRuntime(_scriptProvider, _compiler, _registry, _objectFactory);
+            _runtime = new ScriptRuntime(_scriptProvider, _compiler, _registry, _objectFactory, _typeProvider);
 
             _registry.Received().Import("error", Arg.Any<IScriptObject>());
         }

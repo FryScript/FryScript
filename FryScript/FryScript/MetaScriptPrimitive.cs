@@ -48,21 +48,21 @@
 
         public override DynamicMetaObject BindCreateInstance(CreateInstanceBinder binder, DynamicMetaObject[] args)
         {
-            //if(!TypeProvider.Current.TryGetTypeOperator(ScriptObject.TargetType, ScriptableTypeOperator.Ctor, out MethodInfo ctorInfo))
-            //    throw new FryScriptException(string.Format("Type {0} does not have a scriptable constructor defined", typeof(T).FullName));
+            if(!TypeProvider.Current.TryGetTypeOperator(ScriptObject.TargetType, ScriptableTypeOperator.Ctor, out MethodInfo ctorInfo))
+               throw new FryScriptException(string.Format("Type {0} does not have a scriptable constructor defined", typeof(T).FullName));
 
-            //var parameterTypes = ctorInfo.GetParameters().Select(p => p.ParameterType).ToArray();
-            //var argExprs = parameterTypes.Select(
-            //    (t, i) => i == 0
-            //        ? ScriptObjectTargetExpr
-            //        : i > 0 && i < args.Length
-            //            ? ExpressionHelper.DynamicConvert(args[i].Expression, t)
-            //            : Expression.Default(t)
-            //    ).ToArray();
+            var parameterTypes = ctorInfo.GetParameters().Select(p => p.ParameterType).ToArray();
+            var argExprs = parameterTypes.Select(
+               (t, i) => i == 0
+                   ? ScriptObjectTargetExpr
+                   : i > 0 && i < args.Length
+                       ? ExpressionHelper.DynamicConvert(args[i].Expression, t)
+                       : Expression.Default(t)
+               ).ToArray();
 
-            //var invokeExpr = Expression.Call(ctorInfo, argExprs);
+            var invokeExpr = Expression.Call(ctorInfo, argExprs);
 
-            //return GetMetaObject(invokeExpr);
+            return GetMetaObject(invokeExpr);
 
             throw new NotImplementedException();
         }

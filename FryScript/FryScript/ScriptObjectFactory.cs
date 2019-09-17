@@ -34,5 +34,16 @@ namespace FryScript
 
             return instance;
         }
+
+        public IScriptObject CreatePrimitive(Type type)
+        {
+            type = type ?? throw new ArgumentNullException(nameof(type));
+            
+            var scriptPrimitiveType = typeof(ScriptPrimitive<>).MakeGenericType(type);
+
+            var obj = Activator.CreateInstance(scriptPrimitiveType);
+
+            return obj  as IScriptObject;
+        }
     }
 }

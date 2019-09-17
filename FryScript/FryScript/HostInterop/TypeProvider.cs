@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace FryScript.HostInterop
 {
-    public class TypeProvider
+    public class TypeProvider : ITypeProvider
     {
         public static TypeProvider Current = new TypeProvider();
 
@@ -102,7 +102,7 @@ namespace FryScript.HostInterop
 
             return GetDescriptor(type, d => d.HasMethod(name) || d.HasProperty(name))
                    || GetExtender(type, e => e.HasExtensionMethod(name))
-                   || GetExtender(typeof (object), e => e.HasExtensionMethod(name));
+                   || GetExtender(typeof(object), e => e.HasExtensionMethod(name));
         }
 
         public bool TryGetIndex(Type type, Type indexType, out PropertyInfo propertyInfo)
@@ -123,8 +123,8 @@ namespace FryScript.HostInterop
 
         public bool TryGetBinaryOperator(Type left, ScriptableBinaryOperater operation, Type right, out MethodInfo methodInfo)
         {
-            methodInfo = GetExtender(left ?? throw new ArgumentNullException(nameof(left)), 
-                e => e.GetBinaryOperator(operation, 
+            methodInfo = GetExtender(left ?? throw new ArgumentNullException(nameof(left)),
+                e => e.GetBinaryOperator(operation,
                 right ?? throw new ArgumentNullException(nameof(right))));
 
             return methodInfo != null;
@@ -168,7 +168,20 @@ namespace FryScript.HostInterop
             _primitives.Add(type);
         }
 
-        public void RegisterExtensions(Type extensionType)
+        public void RegisterPrimitive<T>(ScriptPrimitive<T> primitive)
+        {
+            primitive = primitive ?? throw new ArgumentNullException(nameof(primitive));
+
+            var primitiveType = typeof(T);
+
+            if (_primitives.Contains(primitiveType))
+                return;
+
+            _primitives.Add(primitiveType);
+        }
+
+        public void
+        RegisterExtensions(Type extensionType)
         {
             extensionType = extensionType ?? throw new ArgumentNullException(nameof(extensionType));
 
@@ -230,7 +243,7 @@ namespace FryScript.HostInterop
             if (primitive == null)
                 return new MetaPrimitive(expression, primitive);
 
-            if(expression.Type.IsGenericType && expression.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (expression.Type.IsGenericType && expression.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 var wrappedType = expression.Type.GetGenericArguments()[0];
                 expression = Expression.Convert(expression, wrappedType);
@@ -308,7 +321,7 @@ namespace FryScript.HostInterop
         {
             var parameterInfos = methodInfo.GetParameters();
 
-            if(parameterInfos.Length == 0)
+            if (parameterInfos.Length == 0)
                 throw new InvalidOperationException(string.Format("Method {0} must have 1 or more parameters to be used as type extension", methodInfo.Name));
 
             var typeExtender = FindTypeExtender(parameterInfos[0].ParameterType);
