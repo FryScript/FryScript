@@ -29,15 +29,6 @@ namespace FryScript.Binders
             var invokeExpr = ExpressionHelper.DynamicInvoke(metaobject.Expression, args.Select(a => a.Expression).ToArray());
 
             return new DynamicMetaObject(invokeExpr, metaobject.Restrictions);
-
-            // var metaObject = TypeProvider.Current.GetMetaObject(target.Expression, target.Value);
-
-            // if (metaObject == null)
-            //     ExceptionHelper.NonInvokeMember(target.LimitType);
-
-            // metaObject = metaObject.BindInvokeMember(this, args);
-
-            // return new DynamicMetaObject(metaObject.Expression, GetDefaultRestrictions(target));
         }
 
         private BindingRestrictions GetDefaultRestrictions(DynamicMetaObject target)
