@@ -13,18 +13,23 @@ namespace FryScript.Binders
 
             if (TryNullCheck(target, out result) || TryNullCheck(arg, out result))
                 return result;
-            
+
             var metaObject = DynamicMetaObjectHelper.GetDynamicMetaObject(target);
 
             var bindIsOperationProvider = metaObject as IBindIsOperationProvider;
 
-            if(bindIsOperationProvider == null)
+            if (bindIsOperationProvider == null)
                 return new DynamicMetaObject(
                     Expression.Constant(false, typeof(object)),
                     BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
                     );
 
             return bindIsOperationProvider.BindIsOperation(this, args[0]);
+        }
+
+        public DynamicMetaObject FallbackIs(DynamicMetaObject target, DynamicMetaObject value)
+        {
+            throw ExceptionHelper.InvalidIsOperation(target.LimitType);
         }
 
         private static bool TryNullCheck(DynamicMetaObject target, out DynamicMetaObject result)

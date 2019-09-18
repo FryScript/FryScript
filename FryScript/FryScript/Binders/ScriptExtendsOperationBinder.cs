@@ -27,6 +27,11 @@ namespace FryScript.Binders
             return bindExtendsOperationProvider.BindExtendsOperation(this, arg);
         }
 
+        public DynamicMetaObject FallbackExtends(DynamicMetaObject target, DynamicMetaObject value)
+        {
+            throw ExceptionHelper.InvalidExtendsOperation(target.LimitType);
+        }
+
         private static bool TryNullCheck(DynamicMetaObject target, out DynamicMetaObject result)
         {
             result = null;

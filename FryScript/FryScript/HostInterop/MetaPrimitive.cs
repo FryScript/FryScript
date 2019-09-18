@@ -24,22 +24,6 @@ namespace FryScript.HostInterop
             
         }
 
-        public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
-        {
-            binder = binder ?? throw new ArgumentNullException(nameof(binder));
-
-            if(Value == null)
-                ExceptionHelper.MemberUndefined(binder.Name);
-
-            var restrictions = RestrictionsHelper.TypeOrNullRestriction(this);
-            if (ExpressionHelper.TryGetMethodExpression(Expression.Convert(Expression, LimitType), binder.Name, out Expression expression))
-                return new DynamicMetaObject(expression, restrictions);
-
-            return new DynamicMetaObject(ExpressionHelper.Null(), restrictions);
-
-            //throw ExceptionHelper.MemberUndefined(binder.Name);
-        }
-
         public override DynamicMetaObject BindSetMember(SetMemberBinder binder, DynamicMetaObject value)
         {
             throw ExceptionHelper.NonSetMember(LimitType);
