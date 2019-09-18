@@ -24,11 +24,6 @@ namespace FryScript.HostInterop
             
         }
 
-        public override DynamicMetaObject BindSetMember(SetMemberBinder binder, DynamicMetaObject value)
-        {
-            throw ExceptionHelper.NonSetMember(LimitType);
-        }
-
         public override DynamicMetaObject BindInvokeMember(InvokeMemberBinder binder, DynamicMetaObject[] args)
         {
             binder = binder ?? throw new ArgumentNullException(nameof(binder));
