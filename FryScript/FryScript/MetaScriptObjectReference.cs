@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace FryScript
 {
-    public class MetaScriptObjectReference : ScriptMetaObjectBase
+    public class MetaScriptObjectReference : MetaScriptObjectBase
     {
         public ScriptObjectReference Reference { get { return (ScriptObjectReference) Value; } }
 

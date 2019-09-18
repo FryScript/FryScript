@@ -10,7 +10,7 @@
     using Helpers;
     using HostInterop;
 
-    public class MetaScriptObject : ScriptMetaObjectBase
+    public class MetaScriptObject : MetaScriptObjectBase
     {
         private static readonly MethodInfo NewMethodInfo = typeof(ScriptObject).GetMethod("New", BindingFlags.NonPublic | BindingFlags.Instance);
 

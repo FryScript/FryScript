@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace FryScript.HostInterop
 {
-    public sealed class MetaPrimitive : ScriptMetaObjectBase
+    public sealed class MetaPrimitive : MetaScriptObjectBase
     {
         public Expression TypedExpression { get { return Expression.Convert(Expression, LimitType); } }
 
