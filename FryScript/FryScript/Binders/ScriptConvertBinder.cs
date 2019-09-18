@@ -96,10 +96,6 @@ namespace FryScript.Binders
 
                     return new DynamicMetaObject(callExpr, restrictions);
                 }
-
-                // return new DynamicMetaObject(Expression.Convert(target.Expression, Type),
-                //     BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
-                //     );
             }
 
             if (target.Value is IScriptable)
@@ -118,22 +114,6 @@ namespace FryScript.Binders
 
                 return new DynamicMetaObject(convertExpr, restrictions);
             }
-
-            // if (target.Value is IConvertible && typeof(IConvertible).IsAssignableFrom(Type))
-            // {
-            //     var changeTypeExpr = Expression.Call(
-            //     typeof(Convert),
-            //     "ChangeType",
-            //     null,
-            //     Expression.Convert(target.Expression, typeof(object)),
-            //     Expression.Constant(Type));
-
-            //     var convertExpr = Expression.Convert(changeTypeExpr, Type);
-
-            //     var restrictions = RestrictionsHelper.TypeOrNullRestriction(target);
-
-            //     return new DynamicMetaObject(convertExpr, restrictions);
-            // }
 
             throw ExceptionHelper.InvalidConvert(target.LimitType, Type);
         }
