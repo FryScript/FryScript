@@ -24,81 +24,81 @@ namespace FryScript.HostInterop
             
         }
 
-        public override DynamicMetaObject BindConvert(ConvertBinder binder)
-        {
-            binder = binder ?? throw new ArgumentNullException(nameof(binder));
+        // public override DynamicMetaObject BindConvert(ConvertBinder binder)
+        // {
+        //     //binder = binder ?? throw new ArgumentNullException(nameof(binder));
 
-            if (binder.Type == typeof(object))
-            {
-                var expr = Expression.Convert(Expression, typeof(object));
-                var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+        //     // if (binder.Type == typeof(object))
+        //     // {
+        //     //     var expr = Expression.Convert(Expression, typeof(object));
+        //     //     var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
 
-                return new DynamicMetaObject(expr, restrictions);
-            }
+        //     //     return new DynamicMetaObject(expr, restrictions);
+        //     // }
 
-            if(LimitType == binder.Type)
-            {
-                var expr = Expression.Convert(Expression, LimitType);
-                var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+        //     // if(LimitType == binder.Type)
+        //     // {
+        //     //     var expr = Expression.Convert(Expression, LimitType);
+        //     //     var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
 
-                return new DynamicMetaObject(expr, restrictions);
-            }
+        //     //     return new DynamicMetaObject(expr, restrictions);
+        //     // }
 
-            if (LimitType.TryCanConvert(binder.Type, out MethodInfo convertMethod))
-            {
-                var expr = Expression.Convert(Expression, LimitType, convertMethod);
-                var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+        //     // if (LimitType.TryCanConvert(binder.Type, out MethodInfo convertMethod))
+        //     // {
+        //     //     var expr = Expression.Convert(Expression, LimitType, convertMethod);
+        //     //     var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
 
-                return new DynamicMetaObject(expr, restrictions);
-            }
+        //     //     return new DynamicMetaObject(expr, restrictions);
+        //     // }
 
-            if (TypeProvider.Current.TryGetConvertOperator(LimitType, binder.Type, out convertMethod))
-            {
-                var callExpr = Expression.Call(
-                    convertMethod,
-                    Expression.Convert(Expression, LimitType));
+        //     // if (TypeProvider.Current.TryGetConvertOperator(LimitType, binder.Type, out convertMethod))
+        //     // {
+        //     //     var callExpr = Expression.Call(
+        //     //         convertMethod,
+        //     //         Expression.Convert(Expression, LimitType));
 
-                var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+        //     //     var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
 
-                return new DynamicMetaObject(callExpr, restrictions);
-            }
+        //     //     return new DynamicMetaObject(callExpr, restrictions);
+        //     // }
 
-            if(TypeProvider.Current.IsNumericType(LimitType) && TypeProvider.Current.IsNumericType(binder.Type))
-            {
-                var convertExpr = Expression.Convert(Expression, LimitType);
-                convertExpr = Expression.Convert(convertExpr, binder.Type);
+        //     // if(TypeProvider.Current.IsNumericType(LimitType) && TypeProvider.Current.IsNumericType(binder.Type))
+        //     // {
+        //     //     var convertExpr = Expression.Convert(Expression, LimitType);
+        //     //     convertExpr = Expression.Convert(convertExpr, binder.Type);
 
-                var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+        //     //     var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
 
-                return new DynamicMetaObject(convertExpr, restrictions);
-            }
+        //     //     return new DynamicMetaObject(convertExpr, restrictions);
+        //     // }
 
-            if(binder.Type.IsNullable())
-            {
-                var unwrappedNullable = binder.Type.UnwrapNullable();
+        //     // if(binder.Type.IsNullable())
+        //     // {
+        //     //     var unwrappedNullable = binder.Type.UnwrapNullable();
 
-                if (TypeProvider.Current.TryGetConvertOperator(LimitType, unwrappedNullable, out convertMethod))
-                {
-                    Expression callExpr = Expression.Call(
-                        convertMethod,
-                        Expression.Convert(Expression, LimitType));
+        //     //     if (TypeProvider.Current.TryGetConvertOperator(LimitType, unwrappedNullable, out MethodInfo convertMethod))
+        //     //     {
+        //     //         Expression callExpr = Expression.Call(
+        //     //             convertMethod,
+        //     //             Expression.Convert(Expression, LimitType));
 
-                    callExpr = Expression.Convert(callExpr, binder.Type);
+        //     //         callExpr = Expression.Convert(callExpr, binder.Type);
 
-                    var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+        //     //         var restrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
 
-                    return new DynamicMetaObject(callExpr, restrictions);
-                }
+        //     //         return new DynamicMetaObject(callExpr, restrictions);
+        //     //     }
 
                 
 
-                return new DynamicMetaObject(Expression.Convert(Expression, binder.Type),
-                    BindingRestrictions.GetTypeRestriction(Expression, LimitType)
-                    );
-            }
+        //     //     return new DynamicMetaObject(Expression.Convert(Expression, binder.Type),
+        //     //         BindingRestrictions.GetTypeRestriction(Expression, LimitType)
+        //     //         );
+        //     // }
 
-            throw ExceptionHelper.InvalidConvert(LimitType, binder.Type);
-        }
+        //     //throw ExceptionHelper.InvalidConvert(LimitType, binder.Type);
+        // }
 
         public override DynamicMetaObject BindBinaryOperation(BinaryOperationBinder binder, DynamicMetaObject arg)
         {
