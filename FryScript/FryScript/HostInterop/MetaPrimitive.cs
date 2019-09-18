@@ -23,10 +23,5 @@ namespace FryScript.HostInterop
         {
             
         }
-
-        public override DynamicMetaObject BindExtendsOperation(ScriptExtendsOperationBinder binder, DynamicMetaObject value)
-        {
-            return BindHelper.BindExtendsOperation(binder, this, value);
-        }
     }
 }
