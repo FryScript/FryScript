@@ -24,19 +24,6 @@ namespace FryScript.HostInterop
             
         }
 
-        public override DynamicMetaObject BindInvokeMember(InvokeMemberBinder binder, DynamicMetaObject[] args)
-        {
-            binder = binder ?? throw new ArgumentNullException(nameof(binder));
-            args = args ?? throw new ArgumentNullException(nameof(args));
-
-
-            var getBinder = BinderCache.Current.GetMemberBinder(binder.Name);
-            var metaobject = BindGetMember(getBinder);
-            var invokeExpr = ExpressionHelper.DynamicInvoke(metaobject.Expression, args.Select(a => a.Expression).ToArray());
-
-            return new DynamicMetaObject(invokeExpr, metaobject.Restrictions);
-        }
-
         public override DynamicMetaObject BindIsOperation(ScriptIsOperationBinder binder, DynamicMetaObject value)
         {
             return BindHelper.BindIsOperation(binder, this, value);
