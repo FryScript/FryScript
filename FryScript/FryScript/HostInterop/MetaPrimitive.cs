@@ -24,26 +24,9 @@ namespace FryScript.HostInterop
             
         }
 
-        // public override DynamicMetaObject BindIsOperation(ScriptIsOperationBinder binder, DynamicMetaObject value)
-        // {
-        //     return BindHelper.BindIsOperation(binder, this, value);
-        // }
-
         public override DynamicMetaObject BindExtendsOperation(ScriptExtendsOperationBinder binder, DynamicMetaObject value)
         {
             return BindHelper.BindExtendsOperation(binder, this, value);
-        }
-
-        public override DynamicMetaObject BindHasOperation(ScriptHasOperationBinder binder)
-        {
-            binder = binder ?? throw new ArgumentNullException(nameof(binder));
-
-            var hasMember = TypeProvider.Current.HasMember(LimitType, binder.Name);
-
-            return new DynamicMetaObject(
-                    Expression.Constant(hasMember, typeof(object)),
-                    BindingRestrictions.GetTypeRestriction(Expression, LimitType)
-                );
         }
     }
 }

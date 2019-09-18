@@ -131,6 +131,19 @@ namespace FryScript.Helpers
                 );
         }
 
+        public static DynamicMetaObject BindHasOperation(ScriptHasOperationBinder binder, DynamicMetaObject target)
+        {
+            binder = binder ?? throw new ArgumentNullException(nameof(binder));
+            target = target ?? throw new ArgumentNullException(nameof(target));
+
+            var hasMember = TypeProvider.Current.HasMember(target.LimitType, binder.Name);
+
+            return new DynamicMetaObject(
+                    Expression.Constant(hasMember, typeof(object)),
+                    BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
+                );
+        }
+
         public static DynamicMetaObject BindInvoke(DynamicMetaObjectBinder binder, DynamicMetaObject target, DynamicMetaObject delegateTarget, DynamicMetaObject[] args)
         {
             binder = binder ?? throw new ArgumentNullException(nameof(binder));

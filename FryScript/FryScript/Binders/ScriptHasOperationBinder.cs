@@ -37,7 +37,7 @@ namespace FryScript.Binders
 
         public DynamicMetaObject FallbackHas(DynamicMetaObject target)
         {
-            throw ExceptionHelper.InvalidHasOperation(target.LimitType);
+            return BindHelper.BindHasOperation(this, target);
         }
     }
 }
