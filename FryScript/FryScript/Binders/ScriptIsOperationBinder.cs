@@ -14,7 +14,7 @@ namespace FryScript.Binders
             if (TryNullCheck(target, out result) || TryNullCheck(value, out result))
                 return result;
 
-            var bindIsOperationProvider = target as IBindIsOperationProvider;
+            var bindIsOperationProvider = target as MetaScriptObjectBase;
 
             if (bindIsOperationProvider == null)
                 return FallbackIs(target, value);

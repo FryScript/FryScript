@@ -6,9 +6,9 @@ namespace FryScript
 {
     public class MetaScriptObjectReference : MetaScriptObjectBase
     {
-        public ScriptObjectReference Reference { get { return (ScriptObjectReference) Value; } }
+        public ScriptObjectReference Reference { get { return (ScriptObjectReference)Value; } }
 
-        public Expression ReferenceExpr { get { return Expression.Convert(Expression, typeof (ScriptObjectReference)); } }
+        public Expression ReferenceExpr { get { return Expression.Convert(Expression, typeof(ScriptObjectReference)); } }
 
         public Expression TargetExpr { get { return Expression.Property(ReferenceExpr, "Target"); } }
 
@@ -69,27 +69,30 @@ namespace FryScript
         {
             var metaObject = Reference.Target.GetMetaObject(TargetExpr);
 
-            var isOperationProvider = metaObject as IBindIsOperationProvider;
+            if (metaObject is MetaScriptObjectBase metaScriptObjectBase)
+                return GetReferenceMetaObject(metaScriptObjectBase.BindIsOperation(binder, value));
 
-            return GetReferenceMetaObject(isOperationProvider.BindIsOperation(binder, value));
+            return base.BindIsOperation(binder, value);
         }
 
         public override DynamicMetaObject BindExtendsOperation(ScriptExtendsOperationBinder binder, DynamicMetaObject value)
         {
             var metaObject = Reference.Target.GetMetaObject(TargetExpr);
 
-            var extendsOperationProvider = metaObject as IBindExtendsOperationProvider;
+            if (metaObject is MetaScriptObjectBase metaScriptObjectBase)
+                return GetReferenceMetaObject(metaScriptObjectBase.BindExtendsOperation(binder, value));
 
-            return GetReferenceMetaObject(extendsOperationProvider.BindExtendsOperation(binder, value));
+            return base.BindExtendsOperation(binder, value);
         }
 
         public override DynamicMetaObject BindHasOperation(ScriptHasOperationBinder binder)
         {
             var metaObject = Reference.Target.GetMetaObject(TargetExpr);
 
-            var hasOperationProvider = metaObject as IBindHasOperationProvider;
+            if (metaObject is MetaScriptObjectBase metaScriptObjectBase)
+                return GetReferenceMetaObject(metaScriptObjectBase.BindHasOperation(binder));
 
-            return GetReferenceMetaObject(hasOperationProvider.BindHasOperation(binder));
+            return base.BindHasOperation(binder);
         }
 
         private DynamicMetaObject GetReferenceMetaObject(DynamicMetaObject metaObject)

@@ -22,7 +22,7 @@ namespace FryScript.Binders
 
         public override DynamicMetaObject Bind(DynamicMetaObject target, DynamicMetaObject[] args)
         {
-            var bindHasOperationProvider = target as IBindHasOperationProvider;
+            var bindHasOperationProvider = target as MetaScriptObjectBase;
 
             if (bindHasOperationProvider == null)
                 return BindHelper.BindHasOperation(this, target);

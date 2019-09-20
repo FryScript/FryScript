@@ -5,10 +5,7 @@
     using Binders;
     using System;
 
-    public abstract class MetaScriptObjectBase : DynamicMetaObject,
-        IBindExtendsOperationProvider,
-        IBindHasOperationProvider,
-        IBindIsOperationProvider
+    public abstract class MetaScriptObjectBase : DynamicMetaObject
     {
         protected MetaScriptObjectBase(Expression expression, BindingRestrictions restrictions, object value)
             : base(expression, restrictions, value)
