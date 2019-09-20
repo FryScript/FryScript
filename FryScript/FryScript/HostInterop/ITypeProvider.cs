@@ -11,7 +11,7 @@ namespace FryScript.HostInterop
         Func<ScriptObject, object> GetCtor(Type type);
         Type GetHighestNumericType(params Type[] types);
         IEnumerable<string> GetMemberNames(Type type);
-        DynamicMetaObject GetMetaObject(Expression expression, object primitive);
+
         IEnumerable<ScriptableMethodInfo> GetMethods(Type type);
         IEnumerable<Type> GetPrimitives();
         Type GetProxy(Type type);

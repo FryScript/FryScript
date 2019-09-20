@@ -236,24 +236,6 @@ namespace FryScript.HostInterop
             return methodInfo != null;
         }
 
-        public DynamicMetaObject GetMetaObject(Expression expression, object primitive)
-        {
-            expression = expression ?? throw new ArgumentNullException(nameof(expression));
-
-            if (primitive == null)
-                return new MetaPrimitive(expression, primitive);
-
-            if (expression.Type.IsGenericType && expression.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                var wrappedType = expression.Type.GetGenericArguments()[0];
-                expression = Expression.Convert(expression, wrappedType);
-            }
-
-            return primitive != null && _primitives.Contains(primitive.GetType())
-                ? new MetaPrimitive(expression, primitive)
-                : null;
-        }
-
         public Type GetHighestNumericType(params Type[] types)
         {
             types = types ?? throw new ArgumentNullException(nameof(types));

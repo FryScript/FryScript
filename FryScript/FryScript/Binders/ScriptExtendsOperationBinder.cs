@@ -9,22 +9,16 @@ namespace FryScript.Binders
         public override DynamicMetaObject Bind(DynamicMetaObject target, DynamicMetaObject[] args)
         {
             DynamicMetaObject result;
-            var arg = args[0];
+            var value = args[0];
 
-            if (TryNullCheck(target, out result) || TryNullCheck(arg, out result))
+            if (TryNullCheck(target, out result) || TryNullCheck(value, out result))
                 return result;
 
-            var metaObject = DynamicMetaObjectHelper.GetDynamicMetaObject(target);
-
-            var bindExtendsOperationProvider = metaObject as IBindExtendsOperationProvider;
+            var bindExtendsOperationProvider = target as IBindExtendsOperationProvider;
 
             if (bindExtendsOperationProvider == null)
-                return new DynamicMetaObject(
-                    Expression.Constant(false, typeof(object)),
-                    BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
-                    );
-
-            return bindExtendsOperationProvider.BindExtendsOperation(this, arg);
+                return FallbackExtends(target, value);
+            return bindExtendsOperationProvider.BindExtendsOperation(this, value);
         }
 
         public DynamicMetaObject FallbackExtends(DynamicMetaObject target, DynamicMetaObject value)
