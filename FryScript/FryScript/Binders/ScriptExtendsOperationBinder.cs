@@ -8,21 +8,19 @@ namespace FryScript.Binders
     {
         public override DynamicMetaObject Bind(DynamicMetaObject target, DynamicMetaObject[] args)
         {
-            DynamicMetaObject result;
             var value = args[0];
 
-            if (TryNullCheck(target, out result) || TryNullCheck(value, out result))
-                return result;
+            if (target is MetaScriptObjectBase metaScriptObjectBase)
+                return metaScriptObjectBase.BindExtendsOperation(this, value);
 
-            var bindExtendsOperationProvider = target as MetaScriptObjectBase;
-
-            if (bindExtendsOperationProvider == null)
-                return FallbackExtends(target, value);
-            return bindExtendsOperationProvider.BindExtendsOperation(this, value);
+            return FallbackExtends(target, value);
         }
 
         public DynamicMetaObject FallbackExtends(DynamicMetaObject target, DynamicMetaObject value)
         {
+            if (TryNullCheck(target, out DynamicMetaObject result) || TryNullCheck(value, out result))
+                return result;
+
             return BindHelper.BindExtendsOperation(this, target, value);
         }
 

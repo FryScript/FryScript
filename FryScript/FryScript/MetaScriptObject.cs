@@ -442,35 +442,25 @@
             return ScriptObject.GetMembers();
         }
 
-        public override DynamicMetaObject BindIsOperation(ScriptIsOperationBinder binder, DynamicMetaObject value)
-        {
-            return BindHelper.BindIsOperation(binder, this, value);
-        }
+        // public override DynamicMetaObject BindHasOperation(ScriptHasOperationBinder binder)
+        // {
+        //     var hasMember = ScriptObject.GetMembers().Any(m => m == binder.Name);
 
-        public override DynamicMetaObject BindExtendsOperation(ScriptExtendsOperationBinder binder, DynamicMetaObject value)
-        {
-            return BindHelper.BindExtendsOperation(binder, this, value);
-        }
+        //     var restrictions = GetDefaultRestrictions()
+        //             .Merge(
+        //             BindingRestrictions.GetExpressionRestriction(
+        //                 Expression.Call(
+        //                     typeof(ScriptObjectExtensions),
+        //                     nameof(ScriptObjectExtensions.IsValidGetMember),
+        //                     null,
+        //                     Expression.Convert(Expression, typeof(IScriptObject)),
+        //                     Expression.Constant(ScriptObject.ObjectCore.MemberIndex)
+        //                     )
+        //                 )
+        //             );
 
-        public override DynamicMetaObject BindHasOperation(ScriptHasOperationBinder binder)
-        {
-            var hasMember = ScriptObject.GetMembers().Any(m => m == binder.Name);
-
-            var restrictions = GetDefaultRestrictions()
-                    .Merge(
-                    BindingRestrictions.GetExpressionRestriction(
-                        Expression.Call(
-                            typeof(ScriptObjectExtensions),
-                            nameof(ScriptObjectExtensions.IsValidGetMember),
-                            null,
-                            Expression.Convert(Expression, typeof(IScriptObject)),
-                            Expression.Constant(ScriptObject.ObjectCore.MemberIndex)
-                            )
-                        )
-                    );
-
-            return new DynamicMetaObject(Expression.Constant(hasMember, typeof(object)), restrictions);
-        }
+        //     return new DynamicMetaObject(Expression.Constant(hasMember, typeof(object)), restrictions);
+        // }
 
         //public override DynamicMetaObject BindBeginMemberOperation(ScriptBeginMemberOperationBinder binder, DynamicMetaObject target, DynamicMetaObject[] args)
         //{

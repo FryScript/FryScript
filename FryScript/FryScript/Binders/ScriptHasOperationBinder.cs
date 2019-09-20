@@ -14,7 +14,7 @@ namespace FryScript.Binders
 
         public ScriptHasOperationBinder(string name)
         {
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");
 
             _name = name;
@@ -22,12 +22,10 @@ namespace FryScript.Binders
 
         public override DynamicMetaObject Bind(DynamicMetaObject target, DynamicMetaObject[] args)
         {
-            var bindHasOperationProvider = target as MetaScriptObjectBase;
-
-            if (bindHasOperationProvider == null)
-                return BindHelper.BindHasOperation(this, target);
-
-            return bindHasOperationProvider.BindHasOperation(this);
+            if (target is MetaScriptObjectBase metaScriptObjectBase)
+                return metaScriptObjectBase.BindHasOperation(this);
+            
+            return FallbackHas(target);
         }
 
         public DynamicMetaObject FallbackHas(DynamicMetaObject target)
