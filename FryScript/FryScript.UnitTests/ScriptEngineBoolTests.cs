@@ -53,13 +53,6 @@ namespace FryScript.UnitTests
             Assert.AreEqual(0f, Eval("false.toFloat();"));
         }
 
-        [TestMethod]
-        public void DefaultPrimitiveBooleanTest()
-        {
-            var obj = _scriptEngine.Get("[bool]") as ScriptPrimitive<bool>;
-            Assert.AreEqual(default(bool), obj.Target);
-        }
-
         private dynamic Eval(string script)
         {
             return _scriptEngine.Eval(script);

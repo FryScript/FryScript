@@ -170,20 +170,6 @@ namespace FryScript.UnitTests
             Assert.AreEqual(100, Eval("100.4.toInt();"));
         }
 
-        [TestMethod]
-        public void DefaultPrimitiveFloatTest()
-        {
-            var obj = _scriptEngine.Get("[float]") as ScriptPrimitive<bool>;
-            Assert.AreEqual(default(float), obj.Target);
-        }
-
-        [TestMethod]
-        public void NewPrimitiveFloatTest()
-        {
-            var obj = Eval("@import \"[float]\" as float; new float();");
-            Assert.AreEqual(0f, obj);
-        }
-
         private dynamic Eval(string script)
         {
             return _scriptEngine.Eval(script);
