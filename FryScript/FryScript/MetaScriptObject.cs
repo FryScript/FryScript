@@ -10,7 +10,7 @@
     using Helpers;
     using HostInterop;
 
-    public class MetaScriptObject : ScriptMetaObjectBase
+    public class MetaScriptObject : MetaScriptObjectBase
     {
         private static readonly MethodInfo NewMethodInfo = typeof(ScriptObject).GetMethod("New", BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -440,16 +440,6 @@
         public override IEnumerable<string> GetDynamicMemberNames()
         {
             return ScriptObject.GetMembers();
-        }
-
-        public override DynamicMetaObject BindIsOperation(ScriptIsOperationBinder binder, DynamicMetaObject value)
-        {
-            return BindHelper.BindIsOperation(binder, this, value);
-        }
-
-        public override DynamicMetaObject BindExtendsOperation(ScriptExtendsOperationBinder binder, DynamicMetaObject value)
-        {
-            return BindHelper.BindExtendsOperation(binder, this, value);
         }
 
         public override DynamicMetaObject BindHasOperation(ScriptHasOperationBinder binder)
