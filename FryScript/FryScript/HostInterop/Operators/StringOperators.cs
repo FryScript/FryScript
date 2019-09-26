@@ -1,4 +1,6 @@
-﻿namespace FryScript.HostInterop.Operators
+﻿using System;
+
+namespace FryScript.HostInterop.Operators
 {
 
     public static class StringOperators
@@ -26,7 +28,9 @@
         [ScriptableTypeOperation(ScriptableTypeOperator.Ctor)]
         public static object Ctor(this string value)
         {
-            return string.Empty;
+            value = value ?? throw new ArgumentNullException(nameof(value));
+            
+            return value;
         }
 
         [ScriptableConvertOperation]

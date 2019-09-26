@@ -1,4 +1,6 @@
-﻿namespace FryScript.HostInterop.Operators
+﻿using System;
+
+namespace FryScript.HostInterop.Operators
 {
     public static class BooleanOperators
     {
@@ -19,7 +21,13 @@
         [ScriptableTypeOperation(ScriptableTypeOperator.Ctor)]
         public static object Ctor(this bool value)
         {
-            return default(bool);
+            return value;
+        }
+
+        [ScriptableTypeOperation(ScriptableTypeOperator.Invoke)]
+        public static object Invoke(this bool value)
+        {
+            throw new NotImplementedException();
         }
     }
 }

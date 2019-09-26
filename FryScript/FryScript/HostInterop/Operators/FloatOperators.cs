@@ -19,7 +19,7 @@
         [ScriptableTypeOperation(ScriptableTypeOperator.Ctor)]
         public static object Ctor(this float value)
         {
-            return default(float);
+            return value;
         }
 
         [ScriptableConvertOperation]
