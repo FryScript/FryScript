@@ -78,23 +78,6 @@ namespace FryScript.UnitTests
             Eval("\"invalid\".toFloat();");
         }
 
-        [TestMethod]
-        [Ignore]
-
-        public void DefaultPrimitiveStringTest()
-        {
-            //var obj = _scriptEngine.Get("[string]");
-            //Assert.AreEqual(string.Empty, ScriptObject.GetTarget(obj));
-        }
-
-        [TestMethod]
-        [Ignore]
-        public void NewPrimitiveStringTest()
-        {
-            var obj = Eval("@import \"[string]\" as string; new string();");
-            Assert.AreEqual(string.Empty, obj);
-        }
-
         private dynamic Eval(string script)
         {
             return _scriptEngine.Eval(script);

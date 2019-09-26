@@ -101,18 +101,6 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        [Ignore]
-        public void SetTargetDynamicIndexTest()
-        {
-            //var target = new Target();
-            //ScriptObject.SetTarget(_scriptObject, target);
-
-            //_dynamicObj["name"] = "test";
-
-            //Assert.AreEqual(target.Indexes["name"], "test");
-        }
-
-        [TestMethod]
         public void SetIndexTest()
         {
             _scriptObject["test"] = 100;
@@ -180,45 +168,6 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        [Ignore]
-        public void SetTargetMemberTest()
-        {
-            //var target = new Target();
-            //ScriptObject.SetTarget(_scriptObject, target);
-
-            //_dynamicObj.name = "Test";
-
-            //Assert.AreEqual(target.Name, "Test");
-        }
-
-        //[TestMethod]
-        //[Ignore]
-        //public void GetTargetMemberTest()
-        //{
-        //    //var target = new Target
-        //    //{
-        //    //    Name = "Test"
-        //    //};
-        //    //ScriptObject.SetTarget(_scriptObject, target);
-
-        //    //Assert.AreEqual("Test", _dynamicObj.name);
-        //}
-
-        //[TestMethod]
-        //[Ignore]
-        //public void ConvertToTargetTest()
-        //{
-        //    //var target = new Target();
-
-        //    //ScriptObject.SetTarget(_scriptObject, target);
-
-        //    //var obj = (Target) _dynamicObj;
-
-        //    //Assert.AreEqual(target, obj);
-        //}
-
-        [TestMethod]
-        [Ignore]
         public void SetMemberThreadingTest()
         {
             const int numLoops = 100;

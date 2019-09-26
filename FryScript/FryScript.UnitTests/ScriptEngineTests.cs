@@ -86,13 +86,6 @@ namespace FryScript.UnitTests
         //    _scriptEngine.Import(typeof(DoesNotImplementIScriptable));
         //}
 
-        [TestMethod]
-        [Ignore]
-        [ExpectedException(typeof (ArgumentException))]
-        public void ImportTypeDoesNotHavePublicParameterlessCtorTest()
-        {
-            _scriptEngine.Import(typeof(NoPublicParameterlessConstructor));
-        }
 
         //[TestMethod]
         //[Ignore]
