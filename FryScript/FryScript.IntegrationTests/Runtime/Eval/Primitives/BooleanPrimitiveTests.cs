@@ -10,9 +10,9 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
         {
             Eval("@import \"boolean\" as bool;");
 
-            var result = Eval("new bool(true);");
+            var result = Eval("new bool();");
 
-            Assert.IsTrue(result);
+            Assert.IsFalse(result);
         }
 
         [TestMethod]

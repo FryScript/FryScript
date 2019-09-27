@@ -10,9 +10,9 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
         {
             Eval("@import \"string\" as string;");
 
-            var result = Eval("new string(\"Test\");");
+            var result = Eval("new string();");
 
-            Assert.AreEqual("Test", result);
+            Assert.AreEqual(string.Empty, result);
         }
     }
 }

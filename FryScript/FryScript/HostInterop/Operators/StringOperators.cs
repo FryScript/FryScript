@@ -28,9 +28,7 @@ namespace FryScript.HostInterop.Operators
         [ScriptableTypeOperation(ScriptableTypeOperator.Ctor)]
         public static object Ctor(this string value)
         {
-            value = value ?? throw new ArgumentNullException(nameof(value));
-            
-            return value;
+            return Default(value);
         }
 
         [ScriptableConvertOperation]

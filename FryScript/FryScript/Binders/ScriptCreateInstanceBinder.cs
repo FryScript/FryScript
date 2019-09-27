@@ -22,16 +22,20 @@ namespace FryScript.Binders
                 throw new FryScriptException(string.Format("Type {0} does not have a scriptable constructor defined", target.LimitType.FullName));
 
             var parameterTypes = ctorInfo.GetParameters().Select(p => p.ParameterType).ToArray();
-            var argExprs = parameterTypes.Select(
-               (t, i) => ExpressionHelper.DynamicConvert(args[i].Expression, t)
-               ).ToArray();
+
+            var argExprs = new[]{
+                target
+            }.Concat(
+                args
+            ).Where((a, i) => i < parameterTypes.Length)
+            .Select((a, i) => ExpressionHelper.DynamicConvert(a.Expression, parameterTypes[i]));
 
             var invokeExpr = Expression.Call(ctorInfo, argExprs);
 
             return new DynamicMetaObject(
                 invokeExpr,
                 BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
-                );
+            );
         }
     }
 }

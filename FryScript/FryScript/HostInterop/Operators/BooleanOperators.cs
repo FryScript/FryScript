@@ -21,7 +21,7 @@ namespace FryScript.HostInterop.Operators
         [ScriptableTypeOperation(ScriptableTypeOperator.Ctor)]
         public static object Ctor(this bool value)
         {
-            return value;
+            return Default(value);
         }
 
         [ScriptableTypeOperation(ScriptableTypeOperator.Invoke)]

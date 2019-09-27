@@ -10,9 +10,9 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
         {
             Eval("@import \"single\" as float;");
 
-            var result = Eval("new float(100.5);");
+            var result = Eval("new float();");
 
-            Assert.AreEqual(100.5, result);
+            Assert.AreEqual(0.0, result);
         }
     }
 }

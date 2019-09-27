@@ -18,14 +18,19 @@ namespace FryScript.Binders
         public override DynamicMetaObject FallbackInvoke(DynamicMetaObject target, DynamicMetaObject[] args, DynamicMetaObject errorSuggestion)
         {
             if (!TypeProvider.Current.IsPrimitive(target.LimitType) ||
-                !TypeProvider.Current.TryGetConvertOperator(typeof(object), target.LimitType,
-                out MethodInfo convertMethod)
+                !TypeProvider.Current.TryGetTypeOperator(target.LimitType, ScriptableTypeOperator.Invoke,
+                out MethodInfo invokeMethod)
                 )
                 throw ExceptionHelper.NonInvokable(target.LimitType);
 
-            var invokeArgs = convertMethod.GetParameters()
-                .Select((p, i) => ExpressionHelper.DynamicConvert(args[i].Expression, p.ParameterType));
-            var invokeExpr = Expression.Call(convertMethod, invokeArgs);
+            var invokeArgs = new[]{
+                target.Expression
+            }.Concat(invokeMethod.GetParameters()
+            .Select(
+                (p, i) => ExpressionHelper.DynamicConvert(args[i].Expression, p.ParameterType))
+            );
+            
+            var invokeExpr = Expression.Call(invokeMethod, invokeArgs);
             var convertExpr = ExpressionHelper.DynamicConvert(invokeExpr, typeof(object));
 
             return new DynamicMetaObject(
