@@ -24,5 +24,25 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
 
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        public void Cast_Float_To_Bool()
+        {
+            Eval("@import \"boolean\" as bool;");
+
+            var result = Eval("bool(1.0);");
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Cast_String_To_Bool()
+        {
+            Eval("@import \"boolean\" as bool;");
+
+            var result = Eval("bool(\"true\");");
+
+            Assert.IsTrue(result);
+        }
     }
 }

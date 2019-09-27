@@ -23,14 +23,16 @@ namespace FryScript.Binders
                 )
                 throw ExceptionHelper.NonInvokable(target.LimitType);
 
-            var invokeArgs = new[]{
-                target.Expression
-            }.Concat(invokeMethod.GetParameters()
-            .Select(
-                (p, i) => ExpressionHelper.DynamicConvert(args[i].Expression, p.ParameterType))
-            );
+            var parameterTypes = invokeMethod.GetParameters().Select( p => p.ParameterType).ToArray();
+
+            var argExprs = new[]{
+                target
+            }.Concat(
+                args
+            ).Where((a, i) => i < parameterTypes.Length)
+            .Select((a, i) => ExpressionHelper.DynamicConvert(a.Expression, parameterTypes[i]));
             
-            var invokeExpr = Expression.Call(invokeMethod, invokeArgs);
+            var invokeExpr = Expression.Call(invokeMethod, argExprs);
             var convertExpr = ExpressionHelper.DynamicConvert(invokeExpr, typeof(object));
 
             return new DynamicMetaObject(
