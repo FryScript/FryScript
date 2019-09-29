@@ -1,4 +1,6 @@
-﻿namespace FryScript.HostInterop.Operators
+﻿using System;
+
+namespace FryScript.HostInterop.Operators
 {
     public static class FloatOperators
     {
@@ -20,6 +22,12 @@
         public static object Ctor(this float value)
         {
             return Default(value);
+        }
+
+        [ScriptableTypeOperation(ScriptableTypeOperator.Invoke)]
+        public static object Invoke(this float value, object arg)
+        {
+            return Convert.ChangeType(arg, typeof(float));
         }
 
         [ScriptableConvertOperation]

@@ -27,7 +27,7 @@ namespace FryScript.HostInterop.Operators
         [ScriptableTypeOperation(ScriptableTypeOperator.Invoke)]
         public static object Invoke(this bool value, object arg)
         {
-            return (bool)Convert.ChangeType(arg, typeof(bool));
+            return Convert.ChangeType(arg, typeof(bool));
         }
     }
 }

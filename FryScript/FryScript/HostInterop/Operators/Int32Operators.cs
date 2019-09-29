@@ -27,7 +27,7 @@ namespace FryScript.HostInterop.Operators
         [ScriptableTypeOperation(ScriptableTypeOperator.Invoke)]
         public static object Invoke(this int value, object arg)
         {
-            throw new NotImplementedException();
+            return Convert.ChangeType(arg, typeof(int));
         }
 
         [ScriptableConvertOperation]

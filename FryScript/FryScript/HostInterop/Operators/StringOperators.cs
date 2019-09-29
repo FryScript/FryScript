@@ -31,6 +31,12 @@ namespace FryScript.HostInterop.Operators
             return Default(value);
         }
 
+        [ScriptableTypeOperation(ScriptableTypeOperator.Invoke)]
+        public static object Invoke(this string value, object arg)
+        {
+            return Convert.ChangeType(arg, typeof(string));
+        }
+
         [ScriptableConvertOperation]
         public static bool Boolean(this string value)
         {
