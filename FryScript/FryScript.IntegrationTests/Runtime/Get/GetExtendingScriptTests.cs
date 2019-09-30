@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using FryScript.Compilation;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FryScript.IntegrationTests.Runtime.Get
 {
@@ -29,6 +30,13 @@ namespace FryScript.IntegrationTests.Runtime.Get
 
             Assert.AreEqual("Host Type", result.name);
             Assert.IsTrue(typeof(HostType).IsAssignableFrom((result as object).GetType()));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void Get_Multiple_Extend_Statements()
+        {
+            ScriptRuntime.Get("Scripts/extendingMultiple");
         }
     }
 }

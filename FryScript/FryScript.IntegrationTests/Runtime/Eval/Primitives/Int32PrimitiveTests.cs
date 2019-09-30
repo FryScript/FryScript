@@ -6,6 +6,12 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
     public class Int32PrimitiveTests : IntegrationTestBase
     {
         [TestMethod]
+        public void Int()
+        {
+            Assert.AreEqual(10, Eval("10;"));
+        }
+
+        [TestMethod]
         public void New_Int32()
         {
             Eval("@import \"int32\" as int;");

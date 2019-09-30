@@ -6,6 +6,12 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
     public class StringPrimitiveTests : IntegrationTestBase
     {
         [TestMethod]
+        public void String()
+        {
+            Assert.AreEqual("test", Eval("\"test\";"));
+        }
+
+        [TestMethod]
         public void New_String()
         {
             Eval("@import \"string\" as string;");

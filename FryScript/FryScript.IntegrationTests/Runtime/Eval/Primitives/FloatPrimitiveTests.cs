@@ -6,6 +6,12 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
     public class FloatPrimitiveTests : IntegrationTestBase
     {
         [TestMethod]
+        public void Float()
+        {
+            Assert.AreEqual(15.8f, Eval("15.8;"));
+        }
+
+        [TestMethod]
         public void New_Float()
         {
             Eval("@import \"single\" as float;");

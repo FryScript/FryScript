@@ -6,6 +6,18 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
     public class BooleanPrimiiveTests : IntegrationTestBase
     {
         [TestMethod]
+        public void Bool_True()
+        {
+            Assert.IsTrue(Eval("true;"));
+        }
+
+        [TestMethod]
+        public void Bool_False()
+        {
+            Assert.IsFalse(Eval("false;"));
+        }
+
+        [TestMethod]
         public void New_Bool()
         {
             Eval("@import \"boolean\" as bool;");
