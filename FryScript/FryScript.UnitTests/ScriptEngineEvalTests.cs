@@ -50,172 +50,6 @@ namespace FryScript.UnitTests
             {
                 DetailedExceptions = false
             };
-
-            //_scriptEngine.DebugHook = TestDebugger.Hook;
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(CompilerException))]
-        public void EvalMultipleExtendTest()
-        {
-            Eval("@extend \"base\"; @extend \"base\";");
-        }
-
-        //[TestMethod]
-        //public void EvalImportTest()
-        //{
-        //    _scriptEngine.Compile("import", "this.isImported = true;");
-        //    var obj = Eval("@import \"import\" as imported;");
-
-        //    Assert.IsTrue(obj.isImported);
-        //}
-
-        [TestMethod]
-        public void EvalVariableDeclarationTest()
-        {
-            var obj = Eval("var test;");
-            Assert.AreEqual(null, obj);
-        }
-
-        [TestMethod]
-        public void EvalVariableDeclarationAssignTest()
-        {
-            var obj = Eval("var test = true;");
-            Assert.AreEqual(true, obj);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof (CompilerException))]
-        public void EvalMultipleDeclarationTest()
-        {
-            Eval("var test = 100; var test = 200;");
-        }
-
-        [TestMethod]
-        public void EvalAssignSingleMemberTest()
-        {
-            var obj = Eval("var test; test = 200;");
-            Assert.AreEqual(200, obj);
-        }
-
-        [TestMethod]
-        public void EvalAssignImplicitThisTest()
-        {
-            var obj = Eval("test = 100; this;");
-            Assert.AreEqual(100, obj.test);
-        }
-
-        [TestMethod]
-        public void EvalObjectLiteralTest()
-        {
-            var obj = Eval("{test : false};");
-            Assert.AreEqual(false, obj.test);
-        }
-
-        [TestMethod]
-        public void EvalObjectLiteralIsAssignedScriptTypeTest()
-        {
-            ScriptObject obj = Eval("{test: 100};");
-            Assert.AreEqual(ScriptObject.ObjectName, obj.GetScriptType());
-        }
-
-        [TestMethod]
-        public void EvalObjectLiteralUsesDifferentThisTest()
-        {
-            var obj = Eval("this.test = 100; this.sub = {test : 200}; this;");
-            Assert.AreEqual(100, obj.test);
-            Assert.AreEqual(200, obj.sub.test);
-        }
-
-        [TestMethod]
-        public void EvalObjectLiteralHoistedInFibreDoesNotUseScriptThisTest()
-        {
-            var obj = Eval(@"
-
-this.f1 = fibre() => {
-    yield return {
-        prop1: 100,
-        prop2: 200
-    };
-};
-
-this;
-");
-            var result = obj.f1().execute();
-
-            Assert.IsFalse((obj as ScriptObject).HasMember("prop1"));
-            Assert.IsFalse((obj as ScriptObject).HasMember("prop2"));
-
-            Assert.IsTrue((result as ScriptObject).HasMember("prop1"));
-            Assert.IsTrue((result as ScriptObject).HasMember("prop2"));
-
-        }
-
-        [TestMethod]
-        public void EvalObjectScriptTypeIsAssignedTest()
-        {
-            ScriptObject obj = Eval("this;");
-
-            Assert.AreNotEqual(ScriptObject.ObjectName, obj.GetScriptType());
-        }
-
-        [TestMethod]
-        public void EvalScriptTypeIsAssignedTest()
-        {
-            ScriptObject obj = Eval("this;");
-
-            Assert.IsNotNull(obj.GetScriptType());
-            Assert.AreNotEqual(ScriptObject.ObjectName, obj.GetScriptType());
-        }
-
-        [TestMethod]
-        public void EvalFunctionTest()
-        {
-            var obj = Eval("()=>{};");
-
-            Assert.IsTrue(obj is ScriptFunction);
-        }
-
-        [TestMethod]
-        public void EvalShorthandFunctionTest()
-        {
-            var obj = Eval("var x=100; ()=> x;");
-            Assert.AreEqual(100, obj());
-        }
-
-        [TestMethod]
-        public void EvalFunctionReturnsLastExpressionTest()
-        {
-            var obj = Eval("()=>{var x = 100; x;};");
-            Assert.AreEqual(100, obj());
-        }
-
-        [TestMethod]
-        public void EvalFunctionArgsTest()
-        {
-            var obj = Eval("a=>{a;};");
-            Assert.AreEqual("test", obj("test"));
-        }
-
-        [TestMethod]
-        public void EvalFunctionArgsShortHandTest()
-        {
-            var obj = Eval("a=>a;");
-            Assert.AreEqual("test", obj("test"));
-        }
-
-        [TestMethod]
-        public void EvalFunctionReturnExpressionTest()
-        {
-            var obj = Eval("a=>{return a;};");
-            Assert.AreEqual(true, obj(true));
-        }
-
-        [TestMethod]
-        public void EvalFunctionReturnNoExpressionTest()
-        {
-            var obj = Eval("a => {return;};");
-            Assert.IsNull(obj());
         }
 
         [TestMethod]
@@ -239,7 +73,7 @@ this;
         }
 
         [TestMethod]
-        [ExpectedException(typeof (CompilerException))]
+        [ExpectedException(typeof(CompilerException))]
         public void EvalReturnOutsideOfFunctionInvalidTest()
         {
             _scriptEngine.Eval("return 100;");
@@ -909,17 +743,17 @@ f().resume();
             Assert.IsFalse(obj);
         }
 
-        
 
-       
 
-       
 
-        
 
-       
 
-       
+
+
+
+
+
+
 
         //[TestMethod]
         //[ExpectedException(typeof(CompilerException))]
@@ -1020,7 +854,7 @@ f().resume();
             {
                 Eval("throw {message:\"error\"};");
             }
-            catch(FryScriptException ex)
+            catch (FryScriptException ex)
             {
                 dynamic data = ex.ScriptData;
                 Assert.AreEqual("error", data.message);
@@ -2008,6 +1842,33 @@ var {x, y, z} = {""multiple"", ""tuple"", ""values""};
         {
             var curMethod = new StackTrace().GetFrames().Skip(1).First().GetMethod().Name;
             return _scriptEngine.Eval(curMethod, script);
+        }
+
+        [Ignore]
+        [TestMethod]
+        public void EvalObjectLiteralIsAssignedScriptTypeTest()
+        {
+            ScriptObject obj = Eval("{test: 100};");
+            Assert.AreEqual(ScriptObject.ObjectName, obj.GetScriptType());
+        }
+
+        [Ignore]
+        [TestMethod]
+        public void EvalObjectScriptTypeIsAssignedTest()
+        {
+            ScriptObject obj = Eval("this;");
+
+            Assert.AreNotEqual(ScriptObject.ObjectName, obj.GetScriptType());
+        }
+
+        [Ignore]
+        [TestMethod]
+        public void EvalScriptTypeIsAssignedTest()
+        {
+            ScriptObject obj = Eval("this;");
+
+            Assert.IsNotNull(obj.GetScriptType());
+            Assert.AreNotEqual(ScriptObject.ObjectName, obj.GetScriptType());
         }
     }
 }

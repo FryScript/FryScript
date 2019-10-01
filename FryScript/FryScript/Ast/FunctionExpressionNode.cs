@@ -25,6 +25,9 @@ namespace FryScript.Ast
 
             var parameterExprs = scope.GetLocalExpressions().ToArray();
 
+            if(parameterExprs.Length > 16)
+                throw CompilerException.FromAst("A function cannot declare more than 16 parameters", parameters);
+
             scope = scope.New();
             var returnTarget = scope.SetData(ScopeData.ReturnTarget, Expression.Label(typeof (object), scope.GetTempName(TempPrefix.ReturnTarget)));
 

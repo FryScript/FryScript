@@ -6,6 +6,26 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
     public class AssignmentTests : IntegrationTestBase
     {
         [TestMethod]
+        public void Variable_Declaration()
+        {
+            Eval("var test;");
+
+            var result = Eval("test;");
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public void Assign_Variable_Declaration()
+        {
+            Eval("var test = 100;");
+
+            var result = Eval("test;");
+
+            Assert.AreEqual(100, result);
+        }
+
+        [TestMethod]
         public void Multiple_Assignment()
         {
             Eval("var obj1; var obj2;");

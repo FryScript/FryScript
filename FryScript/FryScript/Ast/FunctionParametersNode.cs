@@ -8,6 +8,8 @@ namespace FryScript.Ast
 {
     public class FunctionParametersNode : AstNode
     {
+        public int Count => ChildNodes.Count();
+        
         public override Expression GetExpression(Scope scope)
         {
             throw new NotImplementedException();
