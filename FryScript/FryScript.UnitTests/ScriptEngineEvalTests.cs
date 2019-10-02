@@ -53,13 +53,6 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void EvalMemberInvokeTest()
-        {
-            var obj = Eval("x = {func: () => 100}; x.func();");
-            Assert.AreEqual(100, obj);
-        }
-
-        [TestMethod]
         public void EvalEmptyArrayTest()
         {
             var obj = Eval("[];");
