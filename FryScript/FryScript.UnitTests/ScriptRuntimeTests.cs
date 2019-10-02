@@ -108,7 +108,9 @@ namespace FryScript.UnitTests
             _registry = Substitute.For<IObjectRegistry>();
             _runtime = new ScriptRuntime(_scriptProvider, _compiler, _registry, _objectFactory, _typeProvider);
 
-            _registry.Received().Import("error", Arg.Any<IScriptObject>());
+            _registry.Received().Import("error", Arg.Is<IScriptObject>(a => a is ScriptError));
+            _registry.Received().Import("array", Arg.Is<IScriptObject>(a => a is ScriptArray));
+            _registry.Received().Import("function", Arg.Is<IScriptObject>(a => a is ScriptFunction));
         }
 
         [DataTestMethod]

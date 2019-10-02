@@ -10,13 +10,20 @@ namespace FryScript.UnitTests
     public class ScriptArrayTests
     {
         private ScriptArray _scriptArray;
-        private dynamic _dynamicArray;
+        private dynamic _dynamicArray => _scriptArray;
 
         [TestInitialize]
         public void TestInititalize()
         {
             _scriptArray = new ScriptArray();
-            _dynamicArray = _scriptArray;
+        }
+
+        [TestMethod]
+        public void Ctor_Size()
+        {
+            _scriptArray = new ScriptArray(10);
+
+            Assert.AreEqual(10, _scriptArray.Count);
         }
 
         [TestMethod]

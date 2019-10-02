@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace FryScript
 {
     using System.Collections;
+    using System.Dynamic;
     using Helpers;
     using HostInterop;
 
@@ -55,6 +56,11 @@ namespace FryScript
         public ScriptArray()
             : this(null)
         {
+        }
+
+        public ScriptArray(int capacity)
+        {
+            _items = new List<object>(new object[capacity]);
         }
 
         [ScriptableMethod("add")]
@@ -147,6 +153,11 @@ namespace FryScript
         public static explicit operator object[](ScriptArray array)
         {
             return array._items.ToArray();
+        }
+
+        public override DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
+        {
+            return new MetaScriptArray(parameter, BindingRestrictions.Empty, this);
         }
     }
 }

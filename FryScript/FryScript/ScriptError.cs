@@ -1,7 +1,7 @@
 ﻿namespace FryScript
 {
     [ScriptableType("error")]
-    public class ScriptError
+    public class ScriptError : ScriptObject
     {
         [ScriptableProperty("message")]
         public string Message { get; set; }
@@ -10,7 +10,7 @@
         public object InnerObject { get; set; }
 
         [ScriptableMethod("ctor")]
-        public void Ctor(string message, object innerObject)
+        public void Constructor(string message, object innerObject)
         {
             Message = message;
             InnerObject = innerObject;

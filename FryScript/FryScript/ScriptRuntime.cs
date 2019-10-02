@@ -54,7 +54,9 @@ namespace FryScript
             _objectFactory = objectFactory ?? throw new ArgumentNullException(nameof(objectFactory));
             _typeProvider = typeProvider ?? throw new ArgumentNullException(nameof(typeProvider));
 
-            Import(typeof(ScriptError));
+            _registry.Import("error", new ScriptError());
+            _registry.Import("array", new ScriptArray());
+            _registry.Import("function", new ScriptFunction(new Action(() => {})));
 
             foreach(var type in _typeProvider.GetPrimitives())
             {

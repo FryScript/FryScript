@@ -53,32 +53,6 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void EvalEmptyArrayTest()
-        {
-            var obj = Eval("[];");
-            Assert.AreEqual(0, obj.count);
-        }
-
-        [TestMethod]
-        public void EvalArrayTest()
-        {
-            var obj = Eval("[1,true,\"test\", 2.0];");
-
-            Assert.AreEqual(1, obj[0]);
-            Assert.AreEqual(true, obj[1]);
-            Assert.AreEqual("test", obj[2]);
-            Assert.AreEqual(2.0f, obj[3]);
-        }
-
-        [TestMethod]
-        public void EvalArrayGetIndexTest()
-        {
-            var obj = Eval("var test = [1]; test[0];");
-
-            Assert.AreEqual(1, obj);
-        }
-
-        [TestMethod]
         public void EvalArraySetIndexTest()
         {
             var obj = Eval("var test = [0]; test[0] = 100; test[0];");
