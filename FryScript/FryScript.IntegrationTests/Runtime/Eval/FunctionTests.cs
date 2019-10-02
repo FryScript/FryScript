@@ -158,169 +158,192 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         [TestMethod]
         public void Function_Return_Value()
         {
-            var result = Eval("() => false;");
+            Eval("func = () => false;");
 
-            Assert.IsFalse(result());
+            Assert.IsFalse(Eval("func();"));
         }
 
         [TestMethod]
         public void Function_Body()
         {
-            var result = Eval("() => { 100; };");
+            Eval("func = () => { 100; };");
 
-            Assert.AreEqual(100, result());
+            Assert.AreEqual(100, Eval("func();"));
         }
 
         [TestMethod]
         public void Function_Body_Returns_Last_Expression()
         {
-            var result = Eval("() => { var x = 100; x;};");
+            Eval("func = () => { var x = 100; x;};");
 
-            Assert.AreEqual(100, result());
+            Assert.AreEqual(100, Eval("func();"));
         }
 
         [TestMethod]
         public void Function_Body_Return_Statement_With_Value()
         {
-            var result = Eval("() => { return 100;};");
+            Eval("func = () => { return 100;};");
 
-            Assert.AreEqual(100, result());
+            Assert.AreEqual(100, Eval("func();"));
         }
 
         [TestMethod]
         public void Function_Body_Return_Statement_With_No_Value()
         {
-            var result = Eval("() => { return; };");
+            Eval("func = () => { return; };");
 
-            Assert.IsNull(result());
+            Assert.IsNull(Eval("func();"));
         }
 
         [TestMethod]
         public void Function_With_One_Argument()
         {
-            var result = Eval("a => a;");
+            Eval("func = a => a;");
 
-            Assert.AreEqual(1, result(1));
+            Assert.AreEqual(1, Eval("func(1);"));
         }
 
         [TestMethod]
         public void Function_With_Two_Arguments()
         {
-            var result = Eval("(a, b) => a + b;");
+            Eval("func = (a, b) => a + b;");
 
-            Assert.AreEqual(2, result(1, 1));
+            Assert.AreEqual(2, Eval("func(1, 1);"));
         }
 
         [TestMethod]
         public void Function_With_Three_Arguments()
         {
-            var result = Eval("(a, b, c) => a + b + c;");
+            Eval("func = (a, b, c) => a + b + c;");
 
-            Assert.AreEqual(3, result(1, 1, 1));
+            Assert.AreEqual(3, Eval("func(1, 1, 1);"));
         }
 
         [TestMethod]
         public void Function_With_Four_Arguments()
         {
-            var result = Eval("(a, b, c, d) => a + b + c + d;");
+            Eval("func = (a, b, c, d) => a + b + c + d;");
 
-            Assert.AreEqual(4, result(1, 1, 1, 1));
+            Assert.AreEqual(4, Eval("func(1, 1, 1, 1);"));
         }
 
         [TestMethod]
         public void Function_With_Five_Arguments()
         {
-            var result = Eval("(a, b, c, d, e) => a + b + c + d + e;");
+            Eval("func = (a, b, c, d, e) => a + b + c + d + e;");
 
-            Assert.AreEqual(5, result(1, 1, 1, 1, 1));
+            Assert.AreEqual(5, Eval("func(1, 1, 1, 1, 1);"));
         }
 
         [TestMethod]
         public void Function_With_Six_Arguments()
         {
-            var result = Eval("(a, b, c, d, e, f) => a + b + c + d + e + f;");
+            Eval("func = (a, b, c, d, e, f) => a + b + c + d + e + f;");
 
-            Assert.AreEqual(6, result(1, 1, 1, 1, 1, 1));
+            Assert.AreEqual(6, Eval("func(1, 1, 1, 1, 1, 1);"));
         }
 
         [TestMethod]
         public void Function_With_Seven_Arguments()
         {
-            var result = Eval("(a, b, c, d, e, f, g) => a + b + c + d + e + f + g;");
+            Eval("func = (a, b, c, d, e, f, g) => a + b + c + d + e + f + g;");
 
-            Assert.AreEqual(7, result(1, 1, 1, 1, 1, 1, 1));
+            Assert.AreEqual(7, Eval("func(1, 1, 1, 1, 1, 1, 1);"));
         }
 
         [TestMethod]
         public void Function_With_Eight_Arguments()
         {
-            var result = Eval("(a, b, c, d, e, f, g, h) => a + b + c + d + e + f + g + h;");
+            Eval("func = (a, b, c, d, e, f, g, h) => a + b + c + d + e + f + g + h;");
 
-            Assert.AreEqual(8, result(1, 1, 1, 1, 1, 1, 1, 1));
+            Assert.AreEqual(8, Eval("func(1, 1, 1, 1, 1, 1, 1, 1);"));
         }
 
         [TestMethod]
         public void Function_With_Nine_Arguments()
         {
-            var result = Eval("(a, b, c, d, e, f, g, h, i) => a + b + c + d + e + f + g + h + i;");
+            Eval("func = (a, b, c, d, e, f, g, h, i) => a + b + c + d + e + f + g + h + i;");
 
-            Assert.AreEqual(9, result(1, 1, 1, 1, 1, 1, 1, 1, 1));            
+            Assert.AreEqual(9, Eval("func(1, 1, 1, 1, 1, 1, 1, 1, 1);"));            
         }
 
         [TestMethod]
         public void Function_With_Ten_Arguments()
         {
-            var result = Eval("(a, b, c, d, e, f, g, h, i, j) => a + b + c + d + e + f + g + h + i + j;");
+            Eval("func = (a, b, c, d, e, f, g, h, i, j) => a + b + c + d + e + f + g + h + i + j;");
 
-            Assert.AreEqual(10, result(1, 1, 1, 1, 1, 1, 1, 1, 1, 1));            
+            Assert.AreEqual(10, Eval("func(1, 1, 1, 1, 1, 1, 1, 1, 1, 1);"));            
         }
 
         [TestMethod]
         public void Function_With_Eleven_Arguments()
         {
-            var result = Eval("(a, b, c, d, e, f, g, h, i, j, k) => a + b + c + d + e + f + g + h + i + j + k;");
+            Eval("func = (a, b, c, d, e, f, g, h, i, j, k) => a + b + c + d + e + f + g + h + i + j + k;");
 
-            Assert.AreEqual(11, result(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1));            
+            Assert.AreEqual(11, Eval("func(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);"));            
         }
 
         [TestMethod]
         public void Function_With_Twelve_Arguments()
         {
-            var result = Eval("(a, b, c, d, e, f, g, h, i, j, k, l) => a + b + c + d + e + f + g + h + i + j + k + l;");
+            Eval("func = (a, b, c, d, e, f, g, h, i, j, k, l) => a + b + c + d + e + f + g + h + i + j + k + l;");
 
-            Assert.AreEqual(12, result(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1));            
+            Assert.AreEqual(12, Eval("func(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);"));            
         }
 
         [TestMethod]
         public void Function_With_Thirteen_Arguments()
         {
-            var result = Eval("(a, b, c, d, e, f, g, h, i, j, k, l, m) => a + b + c + d + e + f + g + h + i + j + k + l + m;");
+            Eval("func = (a, b, c, d, e, f, g, h, i, j, k, l, m) => a + b + c + d + e + f + g + h + i + j + k + l + m;");
 
-            Assert.AreEqual(13, result(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1));            
+            Assert.AreEqual(13, Eval("func(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);"));            
         }
 
         [TestMethod]
         public void Function_With_Fourteen_Arguments()
         {
-            var result = Eval("(a, b, c, d, e, f, g, h, i, j, k, l, m, n) => a + b + c + d + e + f + g + h + i + j + k + l + m + n;");
+            Eval("func = (a, b, c, d, e, f, g, h, i, j, k, l, m, n) => a + b + c + d + e + f + g + h + i + j + k + l + m + n;");
 
-            Assert.AreEqual(14, result(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1));            
+            Assert.AreEqual(14, Eval("func(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);"));            
         }
 
         [TestMethod]
         public void Function_With_Fifteen_Arguments()
         {
-            var result = Eval("(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) => a + b + c + d + e + f + g + h + i + j + k + l + m + n + o;");
+            Eval("func = (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) => a + b + c + d + e + f + g + h + i + j + k + l + m + n + o;");
 
-            Assert.AreEqual(15, result(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1));            
+            Assert.AreEqual(15, Eval("func(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);"));            
         }
 
         [TestMethod]
         public void Function_With_Sixteen_Arguments()
         {
-            var result = Eval("(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) => a + b + c + d + e + f + g + h + i + j + k + l + m + n + o + p;");
+            Eval("func = (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) => a + b + c + d + e + f + g + h + i + j + k + l + m + n + o + p;");
 
-            Assert.AreEqual(16, result(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1));            
+            Assert.AreEqual(16, Eval("func(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);"));            
+        }
+
+        [TestMethod]
+        public void Function_Params()
+        {
+            Eval("func = params => params[0] + params[1] + params[2];");
+
+            Assert.AreEqual(6, Eval("func(1,2,3);"));
+        }
+
+        [TestMethod]
+        public void Function_Invoke_Member()
+        {
+            Eval("this.func = () => \"test\";");
+
+            Assert.AreEqual("test", Eval("this.func();"));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void Return_Invalid_Context()
+        {
+            Eval("return;");
         }
     }
 }

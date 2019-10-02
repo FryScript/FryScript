@@ -53,58 +53,6 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void EvalFunctionParamsTest()
-        {
-            var obj = Eval("params=>{return params;};");
-
-            ScriptParams result = obj(10, 20, 30);
-
-            Assert.AreEqual(10, result[0]);
-            Assert.AreEqual(20, result[1]);
-            Assert.AreEqual(30, result[2]);
-        }
-
-        [TestMethod]
-        public void EvalFunctionParamsReturnTest()
-        {
-            var obj = Eval("((params) => params[0] + params[1])(10, 20);");
-
-            Assert.AreEqual(obj, 30);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(CompilerException))]
-        public void EvalReturnOutsideOfFunctionInvalidTest()
-        {
-            _scriptEngine.Eval("return 100;");
-        }
-
-        [TestMethod]
-        public void EvalNestedFunctionsReturnTest()
-        {
-            var obj = Eval(@"
-this.func = ()=> {
-    return {
-        childFunc: ()=>{
-            return 100;
-        }
-    };
-};
-this;   
-            ");
-
-            Assert.AreEqual(100, obj.func().childFunc());
-        }
-
-        [TestMethod]
-        public void EvalFunctionInvokeTest()
-        {
-            var obj = Eval("var f = (x) => x; f(100);");
-
-            Assert.AreEqual(100, obj);
-        }
-
-        [TestMethod]
         public void EvalMemberInvokeTest()
         {
             var obj = Eval("x = {func: () => 100}; x.func();");
