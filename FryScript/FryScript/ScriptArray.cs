@@ -11,6 +11,7 @@ namespace FryScript
     [ScriptableType("[array]")]
     public class ScriptArray : ScriptObject, IEnumerable<object>
     {
+        private static readonly ScriptObjectBuilder<ScriptArray> Builder = new ScriptObjectBuilder<ScriptArray>(o => o, new Uri("runtime://array.fry"));
         private static readonly string ScriptTypeName = TypeProvider.Current.GetTypeName(typeof(ScriptArray));
 
         private readonly List<object> _items;
@@ -48,6 +49,8 @@ namespace FryScript
         public ScriptArray(params object[] items)
             : base(scriptType: ScriptTypeName)
         {
+            ObjectCore.Builder = Builder;
+
             _items = items == null
                 ? new List<object>()
                 : new List<object>(items);
@@ -61,6 +64,15 @@ namespace FryScript
         public ScriptArray(int capacity)
         {
             _items = new List<object>(new object[capacity]);
+        }
+
+        [ScriptableMethod("ctor")]
+        public void Constructor(int capacity)
+        {
+            _items.Clear();
+
+            for (var i = 0; i < capacity; i++)
+                _items.Add(null);
         }
 
         [ScriptableMethod("add")]
@@ -139,7 +151,7 @@ namespace FryScript
 
         public static List<object> GetItems(ScriptArray scriptArray)
         {
-            if (scriptArray == null) 
+            if (scriptArray == null)
                 throw new ArgumentNullException("scriptArray");
 
             return scriptArray._items;
@@ -153,11 +165,6 @@ namespace FryScript
         public static explicit operator object[](ScriptArray array)
         {
             return array._items.ToArray();
-        }
-
-        public override DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
-        {
-            return new MetaScriptArray(parameter, BindingRestrictions.Empty, this);
         }
     }
 }
