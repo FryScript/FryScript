@@ -31,7 +31,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         }
 
         [TestMethod]
-        public void Set_Array_Tests()
+        public void Set_Array_Index()
         {
             var result = Eval("instance = [null, null];");
             Eval("instance[0] = true;");

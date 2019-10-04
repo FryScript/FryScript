@@ -53,51 +53,6 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void EvalArraySetIndexTest()
-        {
-            var obj = Eval("var test = [0]; test[0] = 100; test[0];");
-
-            Assert.AreEqual(100, obj);
-        }
-
-        [TestMethod]
-        public void EvalArrayMemberAccessTest()
-        {
-            var obj = Eval("var test = [1]; test.member = false; test.member;");
-
-            Assert.IsFalse(obj);
-        }
-
-        [TestMethod]
-        public void EvalArrayCountTest()
-        {
-            var obj = Eval("var test = [1,2,3,4,5]; test.count;");
-
-            Assert.AreEqual(5, obj);
-        }
-
-        [TestMethod]
-        public void EvalMathExpressionIntTest()
-        {
-            var obj = Eval("2+2/4*8-10+1;");
-            Assert.AreEqual(2 + 2 / 4 * 8 - 10 + 1, obj);
-        }
-
-        [TestMethod]
-        public void EvalMathExpressionFloatTest()
-        {
-            var obj = Eval("5.0+2.5/4.6*3.2-10.5-90.2;");
-            Assert.AreEqual(5.0f + 2.5f / 4.6f * 3.2f - 10.5f - 90.2f, obj);
-        }
-
-        [TestMethod]
-        public void EvalRelationalExpressionTest()
-        {
-            var obj = Eval("false && false || true && false || true && true;");
-            Assert.AreEqual(false && false || true && false || true && true, obj);
-        }
-
-        [TestMethod]
         public void EvalBlockStatementScopeTest()
         {
             var obj = Eval("{var test = 100;} test;");
