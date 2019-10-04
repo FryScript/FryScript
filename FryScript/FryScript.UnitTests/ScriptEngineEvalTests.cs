@@ -60,158 +60,6 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void EvalIfStatementTrueTest()
-        {
-            var obj = Eval("var x; if(true) x=true; x;");
-            Assert.AreEqual(true, obj);
-        }
-
-        [TestMethod]
-        public void EvalIfStatementFalseTest()
-        {
-            var obj = Eval("var x; if(true == false) x=true;");
-            Assert.AreEqual(null, obj);
-        }
-
-        [TestMethod]
-        public void EvalIfStatementScopeTest()
-        {
-            var obj = Eval("if(true) var x = true; x;");
-            Assert.IsNull(obj);
-        }
-
-        [TestMethod]
-        public void EvalIfElseStatementTest()
-        {
-            var obj = Eval("var x; if(true == false) x = true; else x = false; x;");
-            Assert.AreEqual(false, obj);
-        }
-
-        [TestMethod]
-        public void EvalIfElseStatementScopeTest()
-        {
-            var obj = Eval("if(true == false) var x = true; else var x = false; x;");
-            Assert.IsNull(obj);
-        }
-
-        [TestMethod]
-        public void EvalIfElseStatementTrueTest()
-        {
-            var obj = Eval("if(true == true) 100; else 200;");
-            Assert.AreEqual(100, obj);
-        }
-
-        [TestMethod]
-        public void EvalIfElseStatementFalseTest()
-        {
-            var obj = Eval("if(true == false) 100; else 200;");
-            Assert.AreEqual(200, obj);
-        }
-
-        [TestMethod]
-        public void EvalIfStatementAwaitConditionTrueTest()
-        {
-            var obj = Eval(@"
-
-var f1 = fibre() => true;
-var f2 = fibre() => true;
-
-var f3 = fibre() => {
-    if(await f1() && await f2())
-        yield return true;
-};
-");
-            Assert.IsTrue(obj().execute());
-        }
-
-        [TestMethod]
-        public void EvalIfStatementAwaitConditionFalseTest()
-        {
-            var obj = Eval(@"
-
-var f1 = fibre() => true;
-var f2 = fibre() => false;
-
-var f3 = fibre() => {
-    if(await f1() && await f2()) {
-    }
-    else {
-        yield return false;
-    }
-};
-");
-            Assert.IsFalse(obj().execute());
-        }
-
-        [TestMethod]
-        public void EvalElseIfStatementAwaitConditionTrueTest()
-        {
-            var obj = Eval(@"
-
-var f1 = fibre() => true;
-var f2 = fibre() => false;
-
-var f3 = fibre() => {
-    if(await f1() && await f2()) {
-    }
-    else if (await f1() && await f1()) {
-        yield return true;
-    }
-};
-");
-            Assert.IsTrue(obj().execute());
-        }
-
-        [TestMethod]
-        public void EvalElseIfStatementAwaitConditionFalseTest()
-        {
-            var obj = Eval(@"
-
-var f1 = fibre() => true;
-var f2 = fibre() => false;
-
-var f3 = fibre() => {
-    if(await f1() && await f2()) {
-    }
-    else if (await f1() && await f2()) {
-        yield return true;
-    } else {
-        yield return false;
-    }
-};
-");
-            Assert.IsFalse(obj().execute());
-        }
-
-        [TestMethod]
-        public void EvalNotBoolTest()
-        {
-            var obj = Eval("!false;");
-            Assert.IsTrue(obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPrePlusPlusTest()
-        {
-            var obj = Eval("var x = 0; ++x;");
-            Assert.AreEqual(1, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPrePlusPlusMemberTest()
-        {
-            var obj = Eval("this.x = 0; ++x;");
-            Assert.AreEqual(1, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPrePlusPlusIndexTest()
-        {
-            var obj = Eval("this.x = 0; ++this[\"x\"];");
-            Assert.AreEqual(1, obj);
-        }
-
-        [TestMethod]
         public void EvalIntPreMinusMinusTest()
         {
             var obj = Eval("var x = 0; --x;");
@@ -230,27 +78,6 @@ var f3 = fibre() => {
         {
             var obj = Eval("this.x = 0; --this[\"x\"];");
             Assert.AreEqual(-1, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPostPlusPlusTest()
-        {
-            var obj = Eval("var x = 0; x++;");
-            Assert.AreEqual(0, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPostPlusPlusMemberTest()
-        {
-            var obj = Eval("this.x = 0; x++;");
-            Assert.AreEqual(0, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPostPlusPlusIndexTest()
-        {
-            var obj = Eval("this.x = 0; this[\"x\"]++;");
-            Assert.AreEqual(0, obj);
         }
 
         [TestMethod]
@@ -1739,6 +1566,85 @@ var {x, y, z} = {""multiple"", ""tuple"", ""values""};
 
             Assert.IsNotNull(obj.GetScriptType());
             Assert.AreNotEqual(ScriptObject.ObjectName, obj.GetScriptType());
+        }
+
+                [Ignore]
+        [TestMethod]
+        public void EvalIfStatementAwaitConditionTrueTest()
+        {
+            var obj = Eval(@"
+
+var f1 = fibre() => true;
+var f2 = fibre() => true;
+
+var f3 = fibre() => {
+    if(await f1() && await f2())
+        yield return true;
+};
+");
+            Assert.IsTrue(obj().execute());
+        }
+
+        [Ignore]
+        [TestMethod]
+        public void EvalIfStatementAwaitConditionFalseTest()
+        {
+            var obj = Eval(@"
+
+var f1 = fibre() => true;
+var f2 = fibre() => false;
+
+var f3 = fibre() => {
+    if(await f1() && await f2()) {
+    }
+    else {
+        yield return false;
+    }
+};
+");
+            Assert.IsFalse(obj().execute());
+        }
+
+        [Ignore]
+        [TestMethod]
+        public void EvalElseIfStatementAwaitConditionTrueTest()
+        {
+            var obj = Eval(@"
+
+var f1 = fibre() => true;
+var f2 = fibre() => false;
+
+var f3 = fibre() => {
+    if(await f1() && await f2()) {
+    }
+    else if (await f1() && await f1()) {
+        yield return true;
+    }
+};
+");
+            Assert.IsTrue(obj().execute());
+        }
+
+        [Ignore]
+        [TestMethod]
+        public void EvalElseIfStatementAwaitConditionFalseTest()
+        {
+            var obj = Eval(@"
+
+var f1 = fibre() => true;
+var f2 = fibre() => false;
+
+var f3 = fibre() => {
+    if(await f1() && await f2()) {
+    }
+    else if (await f1() && await f2()) {
+        yield return true;
+    } else {
+        yield return false;
+    }
+};
+");
+            Assert.IsFalse(obj().execute());
         }
     }
 }
