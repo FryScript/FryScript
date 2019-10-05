@@ -60,69 +60,6 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void EvalIntPreMinusMinusTest()
-        {
-            var obj = Eval("var x = 0; --x;");
-            Assert.AreEqual(-1, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPreMinusMinusMemberTest()
-        {
-            var obj = Eval("this.x = 0; --x;");
-            Assert.AreEqual(-1, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPreMinusMinusIndexTest()
-        {
-            var obj = Eval("this.x = 0; --this[\"x\"];");
-            Assert.AreEqual(-1, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPostMinusMinusTest()
-        {
-            var obj = Eval("var x = 0; x--;");
-            Assert.AreEqual(0, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPostMinusMinusMemberTest()
-        {
-            var obj = Eval("this.x = 0; x--;");
-            Assert.AreEqual(0, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPostMinusMinusIndexTest()
-        {
-            var obj = Eval("this.x = 0; this[\"x\"]--;");
-            Assert.AreEqual(0, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntPlusEqualTest()
-        {
-            var obj = Eval("x = 100; x += 10; x;");
-            Assert.AreEqual(110, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntMinusEqualTest()
-        {
-            var obj = Eval("x = 100; x -= 10; x;");
-            Assert.AreEqual(90, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntMultiplyEqualTest()
-        {
-            var obj = Eval("x = 100; x *= 10; x;");
-            Assert.AreEqual(1000, obj);
-        }
-
-        [TestMethod]
         public void EvalIntDivideEqualTest()
         {
             var obj = Eval("x = 100; x /= 10; x;");
