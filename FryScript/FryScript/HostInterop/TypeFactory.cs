@@ -365,7 +365,7 @@ namespace FryScript.HostInterop
             var paramterlessCtor = context.TypeInfo.GetConstructor(Type.EmptyTypes);
 
             var il = ctor.GetILGenerator();
-            if (context.NewType.ImplementedInterfaces.Any(i => i == typeof(IScriptObject)))
+            if (context.NewType.GetTypeInfo().ImplementedInterfaces.Any(i => i == typeof(IScriptObject)))
             {
                 il.Emit(OpCodes.Ldarg_0);
                 il.Emit(OpCodes.Newobj, typeof(ObjectCore).GetTypeInfo().GetConstructor(new Type[0]));
