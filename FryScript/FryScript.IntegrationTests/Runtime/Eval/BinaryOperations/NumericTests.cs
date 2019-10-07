@@ -30,6 +30,12 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         }
 
         [TestMethod]
+        public void Modulo()
+        {
+            Assert.AreEqual(10 % 4, Eval("10 % 4;"));
+        }
+
+        [TestMethod]
         public void Operator_Precedence()
         {
             Assert.AreEqual(2 + 2 / 4 * 8 - 10 + 1, Eval("2 + 2 / 4 * 8 - 10 + 1;"));

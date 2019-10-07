@@ -60,34 +60,6 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void EvalIntDivideEqualTest()
-        {
-            var obj = Eval("x = 100; x /= 10; x;");
-            Assert.AreEqual(10, obj);
-        }
-
-        [TestMethod]
-        public void EvalIntModuloEqualTest()
-        {
-            var obj = Eval("x = 500; x %= 10; x;");
-            Assert.AreEqual(0, obj);
-        }
-
-        [TestMethod]
-        public void EvalConditionalAssignTrueTest()
-        {
-            var obj = Eval("x = 100; x ?= 200; x;");
-            Assert.AreEqual(100, obj);
-        }
-
-        [TestMethod]
-        public void EvalConditionalAssignFalseTest()
-        {
-            var obj = Eval("x = null; x ?= 200; x;");
-            Assert.AreEqual(200, obj);
-        }
-
-        [TestMethod]
         public void EvalConditionalAssignTrueAwaitNotCalledTest()
         {
             var obj = Eval(@"
