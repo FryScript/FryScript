@@ -41,7 +41,36 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Statements
         [TestMethod]
         public void While_Loop_Break()
         {
-            Assert.Fail();
+            Eval("counter = 0;");
+
+            Eval(@"
+            while(counter < 10) {
+                break;
+                counter++;
+            }
+            ");
+
+            var result = Eval("counter;");
+
+            Assert.AreEqual(0, result);
+        }
+
+        [TestMethod]
+        public void While_Loop_Continue()
+        {
+            Eval("counter = 0;");
+
+            Eval(@"
+            while(counter < 10) {
+                counter++;
+                continue;
+                counter++;
+            }
+            ");
+
+            var result = Eval("counter;");
+
+            Assert.AreEqual(10, result);
         }
     }
 }

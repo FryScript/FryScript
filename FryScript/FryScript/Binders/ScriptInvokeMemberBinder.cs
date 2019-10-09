@@ -25,7 +25,7 @@ namespace FryScript.Binders
             args = args ?? throw new ArgumentNullException(nameof(args));
 
             var getBinder = BinderCache.Current.GetMemberBinder(Name);
-            var metaobject = getBinder.Bind(target, args);
+            var metaobject = getBinder.Bind(target, null);
             var invokeExpr = ExpressionHelper.DynamicInvoke(metaobject.Expression, args.Select(a => a.Expression).ToArray());
 
             return new DynamicMetaObject(invokeExpr, metaobject.Restrictions);

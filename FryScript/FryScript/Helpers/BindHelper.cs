@@ -136,11 +136,13 @@ namespace FryScript.Helpers
             binder = binder ?? throw new ArgumentNullException(nameof(binder));
             target = target ?? throw new ArgumentNullException(nameof(target));
 
-            var hasMember = TypeProvider.Current.HasMember(target.LimitType, binder.Name);
+            var hasMember = target.Value != null
+                ? TypeProvider.Current.HasMember(target.LimitType, binder.Name):
+                false;
 
             return new DynamicMetaObject(
                     Expression.Constant(hasMember, typeof(object)),
-                    BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
+                    RestrictionsHelper.TypeOrNullRestriction(target)
                 );
         }
 

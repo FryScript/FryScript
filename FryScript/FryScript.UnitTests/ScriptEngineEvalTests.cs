@@ -59,230 +59,6 @@ namespace FryScript.UnitTests
             Assert.IsNull(obj);
         }
 
-        [TestMethod]
-        public void EvalWhileBreakTest()
-        {
-            var obj = Eval("var x = 0; while(x < 10) {if(x == 5) break; x++;} this.x = x; this;");
-
-            Assert.AreEqual(5, obj.x);
-        }
-
-        [TestMethod]
-        public void EvalWhileContinueTest()
-        {
-            var obj = Eval("var x = 0; this.x = 0; while(x < 10) {x++; if(x > 5) continue; this.x++;}  this;");
-
-            Assert.AreEqual(5, obj.x);
-        }
-
-        [TestMethod]
-        public void EvalForEachTest()
-        {
-            var obj = Eval("var items = [1,2,3,4]; var items2 = []; foreach(var i in items) items2.add(i); items2;");
-
-            Assert.AreEqual(1, obj[0]);
-            Assert.AreEqual(2, obj[1]);
-            Assert.AreEqual(3, obj[2]);
-            Assert.AreEqual(4, obj[3]);
-            Assert.AreEqual(4, obj.count);
-        }
-
-        [TestMethod]
-        public void EvalForEachNonCollectionTest()
-        {
-            var obj = Eval("var item = false; var items2 = []; foreach(var i in item) items2.add(i); items2;");
-
-            Assert.AreEqual(false, obj[0]);
-        }
-
-        [TestMethod]
-        public void EvalForEachBreakTest()
-        {
-            var obj = Eval("var items = [1,2,3,4]; var items2 = []; foreach(var i in items){ items2.add(i); if(i == 2) break;} items2;");
-
-            Assert.AreEqual(1, obj[0]);
-            Assert.AreEqual(2, obj[1]);
-            Assert.AreEqual(2, obj.count);
-        }
-
-        [TestMethod]
-        public void EvalForEachContinueTest()
-        {
-            var obj = Eval("var items = [1,2,3,4]; var items2 = []; foreach(var i in items){ if(i > 2) continue; items2.add(i); } items2;");
-
-            Assert.AreEqual(1, obj[0]);
-            Assert.AreEqual(2, obj[1]);
-            Assert.AreEqual(2, obj.count);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(CompilerException))]
-        public void EvalInvalidContinueContextTest()
-        {
-            Eval("var items = [1]; foreach(var i in items) { (() => { continue;} )(); }");
-        }
-
-        [TestMethod]
-        public void EvalFunctionExtendTest()
-        {
-            var obj = Eval("var f = () => {}; f extend () => {this.x = \"extended\"; this;}; f;");
-
-            var r = obj();
-
-            Assert.AreEqual("extended", r.x);
-        }
-
-        [TestMethod]
-        public void EvalFunctionExtendBaseTest()
-        {
-            var obj = Eval("var f = () => this.x = \"extended\"; f extend () => {base(); this.y = \"extended\"; this;}; f;");
-
-            var r = obj();
-
-            Assert.AreEqual("extended", r.x);
-            Assert.AreEqual("extended", r.y);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(FryScriptException))]
-        public void EvalFunctionExtendInvalidTest()
-        {
-            Eval("var o = {}; o extend () => {};");
-        }
-
-        [TestMethod]
-        public void EvalFibreExtendTest()
-        {
-            var obj = Eval(@"
- f1 = fibre() => {
-    yield 1;
-    yield 2;
-    yield return 3;
-};
-
-f1 extend fibre() => {
-    var baseFc = base();
-
-    while(!baseFc.completed)
-        yield baseFc.resume();
-
-    yield 4;
-    yield 5;
-    yield return 6;
-};
-
-fc = f1();
-values = [fc.resume(), fc.resume(), fc.resume(), fc.resume(), fc.resume(), fc.resume()];
-");
-            Assert.AreEqual(6, obj.count);
-            Assert.AreEqual(1, obj[0]);
-            Assert.AreEqual(2, obj[1]);
-            Assert.AreEqual(3, obj[2]);
-            Assert.AreEqual(4, obj[3]);
-            Assert.AreEqual(5, obj[4]);
-            Assert.AreEqual(6, obj[5]);
-        }
-
-        [TestMethod]
-        public void EvalFibreExtendDoesNotShareBaseBetweenFibresExtendedWithinaFibre()
-        {
-            var obj = Eval(@"
-
-var f = fibre() => {
-    var base1 = fibre() => ""base1"";
-    var base2 = fibre() => ""base2"";
-
-    base1 extend fibre() => await base();
-    base2 extend fibre() => await base();
-
-    yield return {
-        e1: base1,
-        e2: base2
-    };
-};
-
-f().resume();
-");
-
-            Assert.AreEqual("base1", obj.e1().execute());
-            Assert.AreEqual("base2", obj.e2().execute());
-        }
-
-        [TestMethod]
-        public void EvalIsObjectObjectTest()
-        {
-            var obj = Eval("var x = {}; var y = {}; x is y;");
-            Assert.IsTrue(obj);
-        }
-
-        [TestMethod]
-        public void EvalIsNullObjectTest()
-        {
-            var obj = Eval("var x = {}; null is x;");
-            Assert.IsFalse(obj);
-        }
-
-        [TestMethod]
-        public void EvalIsTypeObjectNullTest()
-        {
-            var obj = Eval("var x = {}; x is null;");
-            Assert.IsFalse(obj);
-        }
-
-        [TestMethod]
-        public void EvalIsIntTest()
-        {
-            var obj = Eval("0 is 100;");
-            Assert.IsTrue(obj);
-        }
-
-        [TestMethod]
-        public void EvalIsFloatTest()
-        {
-            var obj = Eval("0.0 is 100.0;");
-            Assert.IsTrue(obj);
-        }
-
-        [TestMethod]
-        public void EvalIsBoolTest()
-        {
-            var obj = Eval("true is false;");
-            Assert.IsTrue(obj);
-        }
-
-        [TestMethod]
-        public void EvalIsStringTest()
-        {
-            var obj = Eval("\"\" is \"\";");
-            Assert.IsTrue(obj);
-        }
-
-        [TestMethod]
-        public void EvalExtendsNullObjectTest()
-        {
-            var obj = Eval("var x = {}; null extends x;");
-            Assert.IsFalse(obj);
-        }
-
-        [TestMethod]
-        public void EvalExtendsObjectNullTest()
-        {
-            var obj = Eval("var x = {}; x extends null;");
-            Assert.IsFalse(obj);
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
         //[TestMethod]
         //[ExpectedException(typeof(CompilerException))]
         //public void EvalMultipleProtoTest()
@@ -297,41 +73,6 @@ f().resume();
         //    Assert.IsTrue(obj.protoMember);
         //}
 
-        [TestMethod]
-        public void EvalHasTrueTest()
-        {
-            var obj = Eval("this.x = 100; this has x;");
-            Assert.IsTrue(obj);
-        }
-
-        [TestMethod]
-        public void EvalIntHasTrueTest()
-        {
-            var obj = Eval("0 has toString;");
-
-            Assert.IsTrue(obj);
-        }
-
-        [TestMethod]
-        public void EvalHasFalseTest()
-        {
-            var obj = Eval("this has x;");
-            Assert.IsFalse(obj);
-        }
-
-        [TestMethod]
-        public void EvalPrimitiveHasTrueTest()
-        {
-            var obj = Eval("0 has toString;");
-            Assert.IsTrue(obj);
-        }
-
-        [TestMethod]
-        public void EvalPrimitiveHasFalseTest()
-        {
-            var obj = Eval("0 has invalid;");
-            Assert.IsFalse(obj);
-        }
 
         [TestMethod]
         public void EvalObjectEqualsTest()
@@ -1524,6 +1265,64 @@ this;
             obj.conditional().execute();
 
             Assert.IsTrue(obj.f1Called);
+        }
+
+                [TestMethod]
+        public void EvalFibreExtendTest()
+        {
+            var obj = Eval(@"
+ f1 = fibre() => {
+    yield 1;
+    yield 2;
+    yield return 3;
+};
+
+f1 extend fibre() => {
+    var baseFc = base();
+
+    while(!baseFc.completed)
+        yield baseFc.resume();
+
+    yield 4;
+    yield 5;
+    yield return 6;
+};
+
+fc = f1();
+values = [fc.resume(), fc.resume(), fc.resume(), fc.resume(), fc.resume(), fc.resume()];
+");
+            Assert.AreEqual(6, obj.count);
+            Assert.AreEqual(1, obj[0]);
+            Assert.AreEqual(2, obj[1]);
+            Assert.AreEqual(3, obj[2]);
+            Assert.AreEqual(4, obj[3]);
+            Assert.AreEqual(5, obj[4]);
+            Assert.AreEqual(6, obj[5]);
+        }
+
+        [TestMethod]
+        public void EvalFibreExtendDoesNotShareBaseBetweenFibresExtendedWithinaFibre()
+        {
+            var obj = Eval(@"
+
+var f = fibre() => {
+    var base1 = fibre() => ""base1"";
+    var base2 = fibre() => ""base2"";
+
+    base1 extend fibre() => await base();
+    base2 extend fibre() => await base();
+
+    yield return {
+        e1: base1,
+        e2: base2
+    };
+};
+
+f().resume();
+");
+
+            Assert.AreEqual("base1", obj.e1().execute());
+            Assert.AreEqual("base2", obj.e2().execute());
         }
     }
 }

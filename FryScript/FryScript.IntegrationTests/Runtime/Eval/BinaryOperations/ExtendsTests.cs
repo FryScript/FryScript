@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FryScript.IntegrationTests.Runtime.Eval
+namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
 {
     [TestClass]
     public class EvalExtendsTests : IntegrationTestBase
