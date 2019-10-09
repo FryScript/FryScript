@@ -60,76 +60,6 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void EvalConditionalAssignTrueAwaitNotCalledTest()
-        {
-            var obj = Eval(@"
-
-f1Called = false;
-
-f1 = fibre() => {
-    yield return f1Called = true;
-};
-
-conditional = fibre() => {
-    var x = 10;
-    yield return x ?= await f1(); 
-};
-
-this;
-");
-            obj.conditional().execute();
-
-            Assert.IsFalse(obj.f1Called);
-        }
-
-        [TestMethod]
-        public void EvalConditionalAssignFalseAwaitCalledTest()
-        {
-            var obj = Eval(@"
-
-f1Called = false;
-
-f1 = fibre() => {
-    yield return f1Called = true;
-};
-
-conditional = fibre() => {
-    var x = null;
-    yield return x ?= await f1(); 
-};
-
-this;
-");
-            obj.conditional().execute();
-
-            Assert.IsTrue(obj.f1Called);
-        }
-
-        [TestMethod]
-        public void EvalForLoopTest()
-        {
-            var obj = Eval("var x = 0; for(var i = 0; i < 10; i++) x += 1; x;");
-
-            Assert.AreEqual(10, obj);
-        }
-
-        [TestMethod]
-        public void EvalForLoopBreakTest()
-        {
-            var obj = Eval("var x = -1; for(var i = 0; i < 10; i++){ if(i >= 0)break; x = i;} x; for(var i = 0; i < 1; i++){}; x;");
-
-            Assert.AreEqual(-1, obj);
-        }
-
-        [TestMethod]
-        public void EvalForLoopContinueTest()
-        {
-            var obj = Eval("var x = -1; for(var i = 0; i < 10; i++){ if(i >= 0)continue; x = i;} x;");
-
-            Assert.AreEqual(-1, obj);
-        }
-
-        [TestMethod]
         public void EvalWhileTest()
         {
             var obj = Eval("var x = 0; while(x < 10) x++; this.x = x; this;");
@@ -1477,7 +1407,7 @@ var {x, y, z} = {""multiple"", ""tuple"", ""values""};
             Assert.AreNotEqual(ScriptObject.ObjectName, obj.GetScriptType());
         }
 
-                [Ignore]
+        [Ignore]
         [TestMethod]
         public void EvalIfStatementAwaitConditionTrueTest()
         {
@@ -1554,6 +1484,54 @@ var f3 = fibre() => {
 };
 ");
             Assert.IsFalse(obj().execute());
+        }
+
+        [Ignore]
+        [TestMethod]
+        public void EvalConditionalAssignTrueAwaitNotCalledTest()
+        {
+            var obj = Eval(@"
+
+f1Called = false;
+
+f1 = fibre() => {
+    yield return f1Called = true;
+};
+
+conditional = fibre() => {
+    var x = 10;
+    yield return x ?= await f1(); 
+};
+
+this;
+");
+            obj.conditional().execute();
+
+            Assert.IsFalse(obj.f1Called);
+        }
+
+        [Ignore]
+        [TestMethod]
+        public void EvalConditionalAssignFalseAwaitCalledTest()
+        {
+            var obj = Eval(@"
+
+f1Called = false;
+
+f1 = fibre() => {
+    yield return f1Called = true;
+};
+
+conditional = fibre() => {
+    var x = null;
+    yield return x ?= await f1(); 
+};
+
+this;
+");
+            obj.conditional().execute();
+
+            Assert.IsTrue(obj.f1Called);
         }
     }
 }
