@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FryScript.IntegrationTests.Runtime.Eval.Statements
@@ -89,49 +87,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Statements
             for (var i = 0; i < items.count; i++)
             {
                 var itemFunc = items[i];
-                Assert.AreEqual(i, itemFunc());
-            }
-        }
-
-        [TestMethod]
-        public void For_Loop_Closure_Scope_1()
-        {
-            Eval("source = [0,1,2,3,4];");
-            Eval("items = [];");
-
-            Eval(@"
-            foreach(var i in source){
-                items.add(() => i);
-            }");
-
-            var items = Eval("items;");
-
-            for (var i = 0; i < items.count; i++)
-            {
-                var itemFunc = items[i];
-                Assert.AreEqual(i, itemFunc());
-            }
-        }
-
-        [TestMethod]
-        public void For_C_Sharp()
-        {
-            var source = new []{
-                0,1,2,3,4
-            };
-
-            var items = new List<Func<int>>();
-
-            foreach (var i in source)
-            {
-                items.Add(() => i);
-            }
-
-            for (var i = 0; i < 5; i++)
-            {
-                var curItem = items[i];
-
-                Assert.AreEqual(i, curItem());
+                Assert.AreEqual(items.count, itemFunc());
             }
         }
     }
