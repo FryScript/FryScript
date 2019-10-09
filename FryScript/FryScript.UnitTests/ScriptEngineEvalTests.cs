@@ -60,14 +60,6 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void EvalWhileTest()
-        {
-            var obj = Eval("var x = 0; while(x < 10) x++; this.x = x; this;");
-
-            Assert.AreEqual(10, obj.x);
-        }
-
-        [TestMethod]
         public void EvalWhileBreakTest()
         {
             var obj = Eval("var x = 0; while(x < 10) {if(x == 5) break; x++;} this.x = x; this;");

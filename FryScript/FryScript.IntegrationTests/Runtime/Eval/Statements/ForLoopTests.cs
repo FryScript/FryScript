@@ -9,7 +9,10 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Statements
         public void For_Loop_Expression()
         {
             Eval("items = [];");
-            Eval("for(var i = 0; i < 10; i++) items.add(i);");
+            Eval(@"
+            for(var i = 0; i < 10; i++) 
+                items.add(i);
+            ");
 
             var items = Eval("items;");
 
