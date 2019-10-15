@@ -1,8 +1,17 @@
-﻿namespace FryScript
+﻿using System;
+
+namespace FryScript
 {
     [ScriptableType("error")]
     public class ScriptError : ScriptObject
     {
+        private static readonly ScriptObjectBuilder<ScriptError> Builder = new ScriptObjectBuilder<ScriptError>(o => o, new Uri("runtime://error.fry"));
+
+        public ScriptError()
+        {
+            ObjectCore.Builder = Builder;
+        }
+
         [ScriptableProperty("message")]
         public string Message { get; set; }
 

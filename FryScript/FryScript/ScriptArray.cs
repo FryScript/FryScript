@@ -12,6 +12,7 @@ namespace FryScript
     public class ScriptArray : ScriptObject, IEnumerable<object>
     {
         private static readonly ScriptObjectBuilder<ScriptArray> Builder = new ScriptObjectBuilder<ScriptArray>(o => o, new Uri("runtime://array.fry"));
+        
         private static readonly string ScriptTypeName = TypeProvider.Current.GetTypeName(typeof(ScriptArray));
 
         private readonly List<object> _items;

@@ -18,7 +18,7 @@ namespace FryScript.Ast
             var toThrowExpr = toThrow.GetExpression(scope);
 
             var callThrowExpr = Expression.Call(typeof(FryScriptException),
-                "Throw",
+                nameof(FryScriptException.Throw),
                 null,
                 toThrowExpr,
                 scope.TryGetData(ScopeData.CurrentException, out ParameterExpression currentException)
