@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FryScript.IntegrationTests.Runtime.Eval.Statements
+namespace FryScript.IntegrationTests.Runtime.Eval.BlockStatements
 {
     [TestClass]
     public class ForEachLoopTests : IntegrationTestBase

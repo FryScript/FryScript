@@ -75,27 +75,6 @@ namespace FryScript.UnitTests
 
 
         [TestMethod]
-        public void EvalFormatStringTest()
-        {
-            var obj = Eval("this.name=\"test\"; \"@{name}\";");
-            Assert.AreEqual("test", obj);
-        }
-
-        [TestMethod]
-        public void EvalFormatStringMultipleExpressionsTest()
-        {
-            var obj = Eval("this.name=\"test\"; \"@{name} has a name of @{name}\";");
-            Assert.AreEqual("test has a name of test", obj);
-        }
-
-        [TestMethod]
-        public void EvalFormatStringMultipleDifferentExpressionsTest()
-        {
-            var obj = Eval("this.name=\"test\"; this.age=2; \"@{name} has an age of @{age}\";");
-            Assert.AreEqual("test has an age of 2", obj);
-        }
-
-        [TestMethod]
         public void EvalBeginMemberReturnsFibreContextTest()
         {
             var obj = Eval("var x = {}; x.f = fibre() => {}; x.f();") as ScriptFibreContext;
