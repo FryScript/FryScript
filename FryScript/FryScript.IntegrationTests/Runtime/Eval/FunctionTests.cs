@@ -15,9 +15,17 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         }
 
         [TestMethod]
-        public void Function_With_One_Parameter()
+        public void Function_With_One_Parameter_No_Parens()
         {
             var result = Eval("p1 => {};");
+
+            Assert.IsInstanceOfType(result, typeof(ScriptFunction));
+        }
+
+        [TestMethod]
+        public void Function_With_One_Parameter()
+        {
+            var result = Eval("(p1) => {};");
 
             Assert.IsInstanceOfType(result, typeof(ScriptFunction));
         }
