@@ -75,13 +75,6 @@ namespace FryScript.UnitTests
 
 
         [TestMethod]
-        public void EvalBeginMemberReturnsFibreContextTest()
-        {
-            var obj = Eval("var x = {}; x.f = fibre() => {}; x.f();") as ScriptFibreContext;
-            Assert.IsNotNull(obj);
-        }
-
-        [TestMethod]
         public void EvalResumeYieldImplicitExpressionYieldReturnTest()
         {
             var obj = Eval(@"
