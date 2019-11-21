@@ -1,3 +1,4 @@
+using FryScript.Compilation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FryScript.IntegrationTests.Runtime.Eval
@@ -16,7 +17,30 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         }
 
         [TestMethod]
-        public void Yield()
+        public void Yield_Without_Result()
+        {
+            Eval(@"
+            var f = fibre () => {
+                yield;
+                yield;
+                yield;
+            };
+            ");
+
+            var fc = Eval("f();") as ScriptFibreContext;
+
+            Assert.IsFalse(fc.HasResult);
+            Assert.IsNull(fc.Result);
+
+            Assert.IsFalse(fc.HasResult);
+            Assert.IsNull(fc.Result);
+
+            Assert.IsFalse(fc.HasResult);
+            Assert.IsNull(fc.Result);
+        }
+
+        [TestMethod]
+        public void Yield_With_Result()
         {
             Eval(@"
             var f = fibre () => {
@@ -38,12 +62,120 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         }
 
         [TestMethod]
+        public void Yield_Implicit_Return_On_Last_Yield()
+        {
+            Eval(@"
+            var f = fibre () => {
+                yield 1;
+                yield 2;
+            };
+            ");
+
+            var context = Eval("f();") as ScriptFibreContext;
+
+            context.Resume();
+
+            var result = context.Resume();
+
+            Assert.AreEqual(2, result);
+            Assert.IsTrue(context.Completed);
+        }
+
+        [TestMethod]
         public void Yield_States()
         {
             Eval(@"
+            var f = fibre () => {
+                yield 1;
+                yield 2;
+            };
+
+            var fc = f();
             ");
 
-            Assert.Fail();
+            var context = Eval("fc;") as ScriptFibreContext;
+
+            Assert.IsTrue(context.Pending);
+            Assert.IsFalse(context.Running);
+            Assert.IsFalse(context.Completed);
+
+            context.Resume();
+
+            Assert.IsFalse(context.Pending);
+            Assert.IsTrue(context.Running);
+            Assert.IsFalse(context.Completed);
+
+            context.Resume();
+
+            Assert.IsFalse(context.Pending);
+            Assert.IsFalse(context.Running);
+            Assert.IsTrue(context.Completed);
+        }
+
+        [TestMethod]
+        public void Yield_Return_Without_Completes_Fibre_Context()
+        {
+            Eval(@"
+            var f = fibre () => {
+                yield return;
+                yield;
+            };
+            ");
+
+            var fc = Eval("f();") as ScriptFibreContext;
+
+            fc.Resume();
+            Assert.IsTrue(fc.Completed);
+        }
+
+        [TestMethod]
+        public void Yield_Return_With_Result_Complets_Fibre_Context()
+        {
+            Eval(@"
+            var f = fibre () => {
+                yield return ""complete"";
+                yield;
+            };
+            ");
+
+            var fc = Eval("f();") as ScriptFibreContext;
+
+            fc.Resume();
+
+            Assert.AreEqual("complete", fc.Result);
+            Assert.IsTrue(fc.Completed);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void Yield_Invalid_Context()
+        {
+            Eval("yield;");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void Yield_Return_Invalid_Context()
+        {
+            Eval("yield return;");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FryScriptException))]
+        public void Resume_Completed_Context()
+        {
+            Eval(@"
+            var f = fibre() => {yield;};
+            ");
+
+            var fc = Eval("f();") as ScriptFibreContext;
+
+            fc.Resume();
+            fc.Resume();
+
+            Assert.IsTrue(fc.Completed);
+
+            fc.Resume();
         }
     }
 }
