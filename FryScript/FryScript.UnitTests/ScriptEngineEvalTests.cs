@@ -74,198 +74,198 @@ namespace FryScript.UnitTests
         //}
 
 
-        [TestMethod]
-        public void EvalAwaitTest()
-        {
-            var obj = Eval(@"
+//         [TestMethod]
+//         public void EvalAwaitTest()
+//         {
+//             var obj = Eval(@"
 
-var f3 = fibre() => {
-    yield return 100;
-};
+// var f3 = fibre() => {
+//     yield return 100;
+// };
 
-var f2 = fibre() => {
-    yield return await f3();
-};
+// var f2 = fibre() => {
+//     yield return await f3();
+// };
 
-var f = fibre() => {
-    yield return await f2();
-};
+// var f = fibre() => {
+//     yield return await f2();
+// };
 
-var fc = f();
+// var fc = f();
 
-while(!fc.completed)
-    fc.resume();
+// while(!fc.completed)
+//     fc.resume();
 
-fc.result;
-            ");
+// fc.result;
+//             ");
 
-            Assert.AreEqual(100, obj);
-        }
+//             Assert.AreEqual(100, obj);
+//         }
 
-        [TestMethod]
-        public void EvalAwaitMemberTest()
-        {
-            var obj = Eval(@"
-var obj = {
-    f1: fibre() => {
-        yield return await obj.f2();
-    },
-    f2: fibre() => {
-        yield return 100;
-    }
-};
+//         [TestMethod]
+//         public void EvalAwaitMemberTest()
+//         {
+//             var obj = Eval(@"
+// var obj = {
+//     f1: fibre() => {
+//         yield return await obj.f2();
+//     },
+//     f2: fibre() => {
+//         yield return 100;
+//     }
+// };
 
-var fc = obj.f1();
-while(!fc.completed)
-    fc.resume();
-fc.result;
-");
-            Assert.AreEqual(100, obj);
-        }
+// var fc = obj.f1();
+// while(!fc.completed)
+//     fc.resume();
+// fc.result;
+// ");
+//             Assert.AreEqual(100, obj);
+//         }
 
-        [TestMethod]
-        public void EvalYieldAwaitTest()
-        {
-            var obj = Eval(@"
-var f1 = fibre() => 1; 
-var f2 = fibre() => {
-    yield await f1();
-};
+//         [TestMethod]
+//         public void EvalYieldAwaitTest()
+//         {
+//             var obj = Eval(@"
+// var f1 = fibre() => 1; 
+// var f2 = fibre() => {
+//     yield await f1();
+// };
 
-var fc = f2();
-fc.resume();
-");
+// var fc = f2();
+// fc.resume();
+// ");
 
-            Assert.AreEqual(null, obj);
-        }
+//             Assert.AreEqual(null, obj);
+//         }
 
-        [TestMethod]
-        public void EvalYieldAwaitMemberTest()
-        {
-            var obj = Eval(@"
-this.f1 = fibre() => 1; 
-this.f2 = fibre() => {
-    yield await this.f1();
-};
+//         [TestMethod]
+//         public void EvalYieldAwaitMemberTest()
+//         {
+//             var obj = Eval(@"
+// this.f1 = fibre() => 1; 
+// this.f2 = fibre() => {
+//     yield await this.f1();
+// };
 
-var fc = this.f2();
+// var fc = this.f2();
 
-while(!fc.completed)
-    fc.resume();
+// while(!fc.completed)
+//     fc.resume();
 
-fc.result;
-");
+// fc.result;
+// ");
 
-            Assert.AreEqual(1, obj);
-        }
+//             Assert.AreEqual(1, obj);
+//         }
 
-        [TestMethod]
-        public void EvalBooleanAndAwaitsF1AndF2Test()
-        {
-            var obj = Eval(@"
-this.f1Called = false;
-this.f2Called = false;
+//         [TestMethod]
+//         public void EvalBooleanAndAwaitsF1AndF2Test()
+//         {
+//             var obj = Eval(@"
+// this.f1Called = false;
+// this.f2Called = false;
 
-this.f1 = fibre() => {
-    f1Called = true;
-    yield return true;
-};  
+// this.f1 = fibre() => {
+//     f1Called = true;
+//     yield return true;
+// };  
 
-this.f2 = fibre() => {
-    f2Called = true;
-    yield return true;
-};
+// this.f2 = fibre() => {
+//     f2Called = true;
+//     yield return true;
+// };
 
-this.and = fibre() => await f1() && await f2();
+// this.and = fibre() => await f1() && await f2();
 
-this;
-");
-            obj.and().execute();
+// this;
+// ");
+//             obj.and().execute();
 
-            Assert.IsTrue(obj.f1Called);
-            Assert.IsTrue(obj.f2Called);
-        }
+//             Assert.IsTrue(obj.f1Called);
+//             Assert.IsTrue(obj.f2Called);
+//         }
 
-        [TestMethod]
-        public void EvalBooleanAndAwaitsF1OnlyTest()
-        {
-            var obj = Eval(@"
-this.f1Called = false;
-this.f2Called = false;
+//         [TestMethod]
+//         public void EvalBooleanAndAwaitsF1OnlyTest()
+//         {
+//             var obj = Eval(@"
+// this.f1Called = false;
+// this.f2Called = false;
 
-this.f1 = fibre() => {
-    f1Called = true;
-    yield return false;
-};  
+// this.f1 = fibre() => {
+//     f1Called = true;
+//     yield return false;
+// };  
 
-this.f2 = fibre() => {
-    f2Called = true;
-    yield return true;
-};
+// this.f2 = fibre() => {
+//     f2Called = true;
+//     yield return true;
+// };
 
-this.and = fibre() => await f1() && await f2();
+// this.and = fibre() => await f1() && await f2();
 
-this;
-");
-            obj.and().execute();
+// this;
+// ");
+//             obj.and().execute();
 
-            Assert.IsTrue(obj.f1Called);
-            Assert.IsFalse(obj.f2Called);
-        }
+//             Assert.IsTrue(obj.f1Called);
+//             Assert.IsFalse(obj.f2Called);
+//         }
 
-        [TestMethod]
-        public void EvalBooleanOrAwaitsF1AndF2Test()
-        {
-            var obj = Eval(@"
-this.f1Called = false;
-this.f2Called = false;
+//         [TestMethod]
+//         public void EvalBooleanOrAwaitsF1AndF2Test()
+//         {
+//             var obj = Eval(@"
+// this.f1Called = false;
+// this.f2Called = false;
 
-this.f1 = fibre() => {
-    f1Called = true;
-    yield return false;
-};  
+// this.f1 = fibre() => {
+//     f1Called = true;
+//     yield return false;
+// };  
 
-this.f2 = fibre() => {
-    f2Called = true;
-    yield return true;
-};
+// this.f2 = fibre() => {
+//     f2Called = true;
+//     yield return true;
+// };
 
-this.and = fibre() => await f1() || await f2();
+// this.and = fibre() => await f1() || await f2();
 
-this;
-");
-            obj.and().execute();
+// this;
+// ");
+//             obj.and().execute();
 
-            Assert.IsTrue(obj.f1Called);
-            Assert.IsTrue(obj.f2Called);
-        }
+//             Assert.IsTrue(obj.f1Called);
+//             Assert.IsTrue(obj.f2Called);
+//         }
 
-        [TestMethod]
-        public void EvalBooleanOrAwaitsF1OnlyTest()
-        {
-            var obj = Eval(@"
-this.f1Called = false;
-this.f2Called = false;
+//         [TestMethod]
+//         public void EvalBooleanOrAwaitsF1OnlyTest()
+//         {
+//             var obj = Eval(@"
+// this.f1Called = false;
+// this.f2Called = false;
 
-this.f1 = fibre() => {
-    f1Called = true;
-    yield return true;
-};  
+// this.f1 = fibre() => {
+//     f1Called = true;
+//     yield return true;
+// };  
 
-this.f2 = fibre() => {
-    f2Called = true;
-    yield return true;
-};
+// this.f2 = fibre() => {
+//     f2Called = true;
+//     yield return true;
+// };
 
-this.and = fibre() => await f1() || await f2();
+// this.and = fibre() => await f1() || await f2();
 
-this;
-");
-            obj.and().execute();
+// this;
+// ");
+//             obj.and().execute();
 
-            Assert.IsTrue(obj.f1Called);
-            Assert.IsFalse(obj.f2Called);
-        }
+//             Assert.IsTrue(obj.f1Called);
+//             Assert.IsFalse(obj.f2Called);
+//         }
 
         [TestMethod]
         public void EvalBooleanAndNestedAndAwaitsF1AndF2AndF3Test()
