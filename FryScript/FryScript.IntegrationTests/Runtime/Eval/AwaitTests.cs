@@ -128,6 +128,84 @@ namespace FryScript.IntegrationTests.Runtime.Eval
             Assert.IsTrue(Eval("f1Called;"));
             Assert.IsTrue(Eval("f2Called;"));
         }
-            
+
+        [TestMethod]
+        public void Short_Form_Ternary_Does_Not_Await_Right()
+        {
+            Eval(@"
+            var f1Called = false;
+
+            var f1 = fibre() => f1Called = true;
+
+            var ternary = fibre() => true ?: await f1();
+            ");
+
+            var ternary = Eval("ternary();") as ScriptFibreContext;
+
+            ternary.Resume();
+
+            Assert.IsTrue(ternary.Completed);
+            Assert.IsFalse(Eval("f1Called;"));
+        }
+
+        [TestMethod]
+        public void Short_Form_Ternary_Does_Await_Right()
+        {
+            Eval(@"
+            var f1Called = false;
+
+            var f1 = fibre() => f1Called = true;
+
+            var ternary = fibre() => false ?: await f1();
+            ");
+
+            var ternary = Eval("ternary();") as ScriptFibreContext;
+
+            ternary.Resume();
+            ternary.Resume();
+
+            Assert.IsTrue(ternary.Completed);
+            Assert.IsTrue(Eval("f1Called;"));
+        }
+
+        [TestMethod]
+        public void Long_Form_Ternary_Does_Not_Await_Right()
+        {
+            Eval(@"
+            var f1Called = false;
+
+            var f1 = fibre() => f1Called = true;
+
+            var ternary = fibre() => true ? true : await f1();
+            ");
+
+            var ternary = Eval("ternary();") as ScriptFibreContext;
+
+            ternary.Resume();
+
+            Assert.IsTrue(ternary.Completed);
+            Assert.IsFalse(Eval("f1Called;"));
+        }
+
+
+        [TestMethod]
+        public void Long_Form_Ternary_Does_Await_Right()
+        {
+            Eval(@"
+            var f1Called = false;
+
+            var f1 = fibre() => f1Called = true;
+
+            var ternary = fibre() => false ? true : await f1();
+            ");
+
+            var ternary = Eval("ternary();") as ScriptFibreContext;
+
+            ternary.Resume();
+            ternary.Resume();
+
+            Assert.IsTrue(ternary.Completed);
+            Assert.IsTrue(Eval("f1Called;"));
+        }
     }
 }
