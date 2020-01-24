@@ -18,5 +18,19 @@ namespace FryScript.IntegrationTests.Runtime.Eval
             // Will use the false (right hand) return value
             Assert.IsTrue(Eval("false ?: true;"));
         }
+
+        [TestMethod]
+        public void Long_Form_Ternary_Condition_True()
+        {
+            var result = Eval("true ? \"It was true\" : false;");
+            Assert.AreEqual("It was true", result);
+        }
+
+         [TestMethod]
+        public void Long_Form_Ternary_Condition_False()
+        {
+            var result = Eval("false ? true : \"It was false\";");
+            Assert.AreEqual("It was false", result);
+        }
     }
 }

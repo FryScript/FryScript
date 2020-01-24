@@ -35,7 +35,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
         public void Cast_Int_To_Float()
         {
             Eval("@import \"single\" as float;");
-            
+
             var result = Eval("float(500);");
 
             Assert.AreEqual(500.0f, result);
@@ -49,6 +49,22 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
             var result = Eval("float(\"99.9\");");
 
             Assert.AreEqual(99.9f, result);
+        }
+
+        [TestMethod]
+        public void Zero_Float_Evaluates_To_False()
+        {
+            var result = Eval("0.0 && true;");
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void Non_Zero_Float_Evaluates_To_False()
+        {
+            var result = Eval("45.5 && true;");
+
+            Assert.IsTrue(result);
         }
     }
 }

@@ -51,5 +51,22 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
 
             Assert.AreEqual(23, result);
         }
+
+
+        [TestMethod]
+        public void Zero_Int_Evaluates_To_False()
+        {
+            var result = Eval("0 && true;");
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void Non_Zero_Float_Evaluates_To_False()
+        {
+            var result = Eval("500 && true;");
+
+            Assert.IsTrue(result);
+        }
     }
 }

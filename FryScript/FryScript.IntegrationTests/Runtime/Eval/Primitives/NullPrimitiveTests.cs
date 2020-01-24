@@ -9,5 +9,13 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
         public void Null(){
             Assert.IsNull(Eval("null;"));
         }
+
+        [TestMethod]
+        public void Null_Evaluates_To_False()
+        {
+            var result = Eval("null && true;");
+
+            Assert.IsFalse(result);
+        }
     }
 }

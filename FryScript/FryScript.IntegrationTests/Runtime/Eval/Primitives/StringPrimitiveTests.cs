@@ -50,5 +50,13 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
 
             Assert.AreEqual("42", result);
         }
+
+        [TestMethod]
+        public void Empty_String_Evaluates_To_False()
+        {
+            var result = Eval("\"\" && true;");
+
+            Assert.IsFalse(result);
+        }
     }
 }

@@ -130,6 +130,26 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         }
 
         [TestMethod]
+        public void Short_Form_Ternary_Does_Await_Left()
+        {
+            Eval(@"
+            var f1Called = false;
+
+            var f1 = fibre() => f1Called = true;
+
+            var ternary = fibre() => await f1() ?: false;
+            ");
+
+            var ternary = Eval("ternary();") as ScriptFibreContext;
+
+            ternary.Resume();
+            ternary.Resume();
+
+            Assert.IsTrue(ternary.Completed);
+            Assert.IsTrue(Eval("f1Called;"));
+        }
+
+        [TestMethod]
         public void Short_Form_Ternary_Does_Not_Await_Right()
         {
             Eval(@"
@@ -165,6 +185,27 @@ namespace FryScript.IntegrationTests.Runtime.Eval
             ternary.Resume();
 
             Assert.IsTrue(ternary.Completed);
+            Assert.IsTrue(Eval("f1Called;"));
+        }
+
+        [TestMethod]
+        public void Long_Form_Ternary_Does_Await_Condition()
+        {
+            Eval(@"
+            var f1Called = false;
+
+            var f1 = fibre() => f1Called = true;
+
+            var ternary = fibre() => await f1() ? ""Awaited!"" : false;
+            ");
+
+            var ternary = Eval("ternary();") as ScriptFibreContext;
+
+            ternary.Resume();
+            ternary.Resume();
+
+            Assert.IsTrue(ternary.Completed);
+            Assert.AreEqual("Awaited!", ternary.Result);
             Assert.IsTrue(Eval("f1Called;"));
         }
 
