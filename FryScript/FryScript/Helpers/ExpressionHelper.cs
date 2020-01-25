@@ -315,24 +315,24 @@ namespace FryScript.Helpers
             return yieldBlock;
         }
 
-        private static Expression GetExtensionCtor(Expression targetExpr, Type extensionType, MethodInfo methodInfo)
-        {
-            var paramExpr = Expression.Parameter(extensionType);
-            var newExtensionExpr = Expression.New(extensionType.GetConstructor(new Type[0]));
-            var assignParamExpr = Expression.Assign(paramExpr, newExtensionExpr);
-            var getTargetExpr = Expression.PropertyOrField(paramExpr, "Target");
-            var setTargetExpr = Expression.Assign(getTargetExpr, Expression.Convert(targetExpr, typeof(object)));
+        // private static Expression GetExtensionCtor(Expression targetExpr, Type extensionType, MethodInfo methodInfo)
+        // {
+        //     var paramExpr = Expression.Parameter(extensionType);
+        //     var newExtensionExpr = Expression.New(extensionType.GetConstructor(new Type[0]));
+        //     var assignParamExpr = Expression.Assign(paramExpr, newExtensionExpr);
+        //     var getTargetExpr = Expression.PropertyOrField(paramExpr, "Target");
+        //     var setTargetExpr = Expression.Assign(getTargetExpr, Expression.Convert(targetExpr, typeof(object)));
 
-            var newFuncExpr = ScriptableMethodHelper.CreateMethod(paramExpr, methodInfo);
+        //     var newFuncExpr = ScriptableMethodHelper.CreateMethod(paramExpr, methodInfo);
 
-            var blockExpr = Expression.Block(
-                typeof(object),
-                new[] { paramExpr },
-                assignParamExpr,
-                setTargetExpr,
-                newFuncExpr);
+        //     var blockExpr = Expression.Block(
+        //         typeof(object),
+        //         new[] { paramExpr },
+        //         assignParamExpr,
+        //         setTargetExpr,
+        //         newFuncExpr);
 
-            return blockExpr;
-        }
+        //     return blockExpr;
+        // }
     }
 }
