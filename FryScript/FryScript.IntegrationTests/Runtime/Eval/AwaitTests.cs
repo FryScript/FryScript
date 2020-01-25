@@ -248,5 +248,44 @@ namespace FryScript.IntegrationTests.Runtime.Eval
             Assert.IsTrue(ternary.Completed);
             Assert.IsTrue(Eval("f1Called;"));
         }
+
+        [TestMethod]
+        public void Conditional_Assign_Does_Not_Await_Right()
+        {
+            Eval(@"
+            var f1Called = false;
+
+            var f1 = fibre() => f1Called = true;
+
+            var conditionalAssign = fibre o => o ?= await f1();
+            ");
+
+            var conditionalAssign = Eval("conditionalAssign(100);") as ScriptFibreContext;
+
+            conditionalAssign.Resume();
+
+            Assert.IsTrue(conditionalAssign.Completed);
+            Assert.IsFalse(Eval("f1Called;"));
+        }
+
+        [TestMethod]
+        public void Conditional_Assign_Does_Await_Right()
+        {
+            Eval(@"
+            var f1Called = false;
+
+            var f1 = fibre() => f1Called = true;
+
+            var conditionalAssign = fibre o => o ?= await f1();
+            ");
+
+            var conditionalAssign = Eval("conditionalAssign(null);") as ScriptFibreContext;
+
+            conditionalAssign.Resume();
+            conditionalAssign.Resume();
+
+            Assert.IsTrue(conditionalAssign.Completed);
+            Assert.IsTrue(Eval("f1Called;"));
+        }
     }
 }
