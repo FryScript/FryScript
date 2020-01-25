@@ -610,5 +610,256 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         {
             Eval("{1,2} = {3, 4};");
         }
+
+        [TestMethod]
+        public void Unpack_Two_As_Declaration()
+        {
+            Eval("{1, 2} as {t1, t2};");
+
+            Assert.AreEqual(1, Eval("t1;"));
+            Assert.AreEqual(2, Eval("t2;"));
+        }
+
+        [TestMethod]
+        public void Unpack_Three_As_Declaration()
+        {
+            Eval("{1, 2, 3} as {t1, t2, t3};");
+
+            Assert.AreEqual(1, Eval("t1;"));
+            Assert.AreEqual(2, Eval("t2;"));
+            Assert.AreEqual(3, Eval("t3;"));
+        }
+
+        [TestMethod]
+        public void Unpack_Four_As_Declaration()
+        {
+            Eval("{1, 2, 3, 4} as {t1, t2, t3, t4};");
+
+            Assert.AreEqual(1, Eval("t1;"));
+            Assert.AreEqual(2, Eval("t2;"));
+            Assert.AreEqual(3, Eval("t3;"));
+            Assert.AreEqual(4, Eval("t4;"));
+        }
+
+        [TestMethod]
+        public void Unpack_Five_As_Declaration()
+        {
+            Eval("{1, 2, 3, 4, 5} as {t1, t2, t3, t4, t5};");
+
+            Assert.AreEqual(1, Eval("t1;"));
+            Assert.AreEqual(2, Eval("t2;"));
+            Assert.AreEqual(3, Eval("t3;"));
+            Assert.AreEqual(4, Eval("t4;"));
+            Assert.AreEqual(5, Eval("t5;"));
+        }
+
+        [TestMethod]
+        public void Unpack_Six_As_Declaration()
+        {
+            Eval("{1, 2, 3, 4, 5, 6} as {t1, t2, t3, t4, t5, t6};");
+
+            Assert.AreEqual(1, Eval("t1;"));
+            Assert.AreEqual(2, Eval("t2;"));
+            Assert.AreEqual(3, Eval("t3;"));
+            Assert.AreEqual(4, Eval("t4;"));
+            Assert.AreEqual(5, Eval("t5;"));
+            Assert.AreEqual(6, Eval("t6;"));
+        }
+
+        [TestMethod]
+        public void Unpack_Seven_As_Declaration()
+        {
+            Eval("{1, 2, 3, 4, 5, 6, 7} as {t1, t2, t3, t4, t5, t6, t7};");
+
+            Assert.AreEqual(1, Eval("t1;"));
+            Assert.AreEqual(2, Eval("t2;"));
+            Assert.AreEqual(3, Eval("t3;"));
+            Assert.AreEqual(4, Eval("t4;"));
+            Assert.AreEqual(5, Eval("t5;"));
+            Assert.AreEqual(6, Eval("t6;"));
+            Assert.AreEqual(7, Eval("t7;"));
+        }
+
+        [TestMethod]
+        public void Unpack_Eight_As_Declaration()
+        {
+            Eval("{1, 2, 3, 4, 5, 6, 7, 8} as {t1, t2, t3, t4, t5, t6, t7, t8};");
+
+            Assert.AreEqual(1, Eval("t1;"));
+            Assert.AreEqual(2, Eval("t2;"));
+            Assert.AreEqual(3, Eval("t3;"));
+            Assert.AreEqual(4, Eval("t4;"));
+            Assert.AreEqual(5, Eval("t5;"));
+            Assert.AreEqual(6, Eval("t6;"));
+            Assert.AreEqual(7, Eval("t7;"));
+            Assert.AreEqual(8, Eval("t8;"));
+        }
+
+        [TestMethod]
+        public void Unpack_Nine_As_Declaration()
+        {
+            Eval("{1, 2, 3, 4, 5, 6, 7, 8, 9} as {t1, t2, t3, t4, t5, t6, t7, t8, t9};");
+
+            Assert.AreEqual(1, Eval("t1;"));
+            Assert.AreEqual(2, Eval("t2;"));
+            Assert.AreEqual(3, Eval("t3;"));
+            Assert.AreEqual(4, Eval("t4;"));
+            Assert.AreEqual(5, Eval("t5;"));
+            Assert.AreEqual(6, Eval("t6;"));
+            Assert.AreEqual(7, Eval("t7;"));
+            Assert.AreEqual(8, Eval("t8;"));
+            Assert.AreEqual(9, Eval("t9;"));
+        }
+
+        [TestMethod]
+        public void Unpack_Ten_As_Declaration()
+        {
+            Eval("{1, 2, 3, 4, 5, 6, 7, 8, 9, 10} as {t1, t2, t3, t4, t5, t6, t7, t8, t9, t10};");
+
+            Assert.AreEqual(1, Eval("t1;"));
+            Assert.AreEqual(2, Eval("t2;"));
+            Assert.AreEqual(3, Eval("t3;"));
+            Assert.AreEqual(4, Eval("t4;"));
+            Assert.AreEqual(5, Eval("t5;"));
+            Assert.AreEqual(6, Eval("t6;"));
+            Assert.AreEqual(7, Eval("t7;"));
+            Assert.AreEqual(8, Eval("t8;"));
+            Assert.AreEqual(9, Eval("t9;"));
+            Assert.AreEqual(10, Eval("t10;"));
+        }
+
+        [TestMethod]
+        public void Unpack_Out_Position_One()
+        {
+            var result = Eval(@"
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} 
+            as 
+            {out, t2, t3, t4, t5, t6, t7, t8, t9, t10};
+            ");
+
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public void Unpack_Out_Position_Two()
+        {
+            var result = Eval(@"
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} 
+            as 
+            {t1, out, t3, t4, t5, t6, t7, t8, t9, t10};
+            ");
+
+            Assert.AreEqual(2, result);
+        }
+
+        [TestMethod]
+        public void Unpack_Out_Position_Three()
+        {
+            var result = Eval(@"
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} 
+            as 
+            {t1, t2, out, t4, t5, t6, t7, t8, t9, t10};
+            ");
+
+            Assert.AreEqual(3, result);
+        }
+
+        [TestMethod]
+        public void Unpack_Out_Position_Four()
+        {
+            var result = Eval(@"
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} 
+            as 
+            {t1, t2, t3, out, t5, t6, t7, t8, t9, t10};
+            ");
+
+            Assert.AreEqual(4, result);
+        }
+
+        [TestMethod]
+        public void Unpack_Out_Position_Five()
+        {
+            var result = Eval(@"
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} 
+            as 
+            {t1, t2, t3, t4, out, t6, t7, t8, t9, t10};
+            ");
+
+            Assert.AreEqual(5, result);
+        }
+
+        [TestMethod]
+        public void Unpack_Out_Position_Six()
+        {
+            var result = Eval(@"
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} 
+            as 
+            {t1, t2, t3, t4, t5, out, t7, t8, t9, t10};
+            ");
+
+            Assert.AreEqual(6, result);
+        }
+
+        [TestMethod]
+        public void Unpack_Out_Position_Seven()
+        {
+            var result = Eval(@"
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} 
+            as 
+            {t1, t2, t3, t4, t5, t6, out, t8, t9, t10};
+            ");
+
+            Assert.AreEqual(7, result);
+        }
+
+        [TestMethod]
+        public void Unpack_Out_Position_Eight()
+        {
+            var result = Eval(@"
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} 
+            as 
+            {t1, t2, t3, t4, t5, t6, t7, out, t9, t10};
+            ");
+
+            Assert.AreEqual(8, result);
+        }
+
+        [TestMethod]
+        public void Unpack_Out_Position_Nine()
+        {
+            var result = Eval(@"
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} 
+            as 
+            {t1, t2, t3, t4, t5, t6, t7, t8, out, t10};
+            ");
+
+            Assert.AreEqual(9, result);
+        }
+
+        [TestMethod]
+        public void Unpack_Out_Position_Ten()
+        {
+            var result = Eval(@"
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} 
+            as 
+            {t1, t2, t3, t4, t5, t6, t7, t8, t9, out};
+            ");
+
+            Assert.AreEqual(10, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void Upack_Mutiple_Out_Params()
+        {
+            Eval("{1, 2} as {out, out};");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void Tuple_Out_With_No_As_Context()
+        {
+            Eval("{out, 1};");
+        }
     }
 }
