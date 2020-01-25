@@ -83,10 +83,10 @@ namespace FryScript
             var func = _compiler.Compile(script, name, compilerContext);
 
             var scriptObject = new ScriptObject(
-                scriptType: name,
+                scriptType: name
                 //extends: compilerContext.Extends,
-                ctor: func,
-                autoConstruct: false
+                //ctor: func,
+                //autoConstruct: false
                 );
 
             //CreateProto(scriptObject, compilerContext);
@@ -117,7 +117,7 @@ namespace FryScript
 
             var func = _compiler.Compile(script, keyName, compilerContext);
 
-            scriptObject = new ScriptObject(keyName, func);
+            scriptObject = new ScriptObject(keyName);//, func);
 
             //CreateProto(scriptObject, compilerContext);
 

@@ -10,16 +10,6 @@ using System.Linq.Expressions;
 
 namespace FryScript.UnitTests
 {
-    [ScriptableType("actor")]
-    public class PlatformActor
-    {
-        [ScriptableMethod("sayHello")]
-        public virtual string SayHello(string name)
-        {
-            return $"Hello {name}";
-        }
-    }
-
     [TestClass]
     public class ScriptRuntimeTests
     {
@@ -111,6 +101,7 @@ namespace FryScript.UnitTests
             _registry.Received().Import("error", Arg.Is<IScriptObject>(a => a is ScriptError));
             _registry.Received().Import("array", Arg.Is<IScriptObject>(a => a is ScriptArray));
             _registry.Received().Import("function", Arg.Is<IScriptObject>(a => a is ScriptFunction));
+            _registry.Received().Import("object", Arg.Is<IScriptObject>(a => a is ScriptObject));
         }
 
         [DataTestMethod]

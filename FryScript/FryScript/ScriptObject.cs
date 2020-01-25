@@ -11,16 +11,18 @@ namespace FryScript
     using CallSites;
     using HostInterop;
 
-    [ScriptableType("[object]")]
+    [ScriptableType("object")]
     public class ScriptObject : IScriptType, IDynamicMetaObjectProvider, IEnumerable<object>, IScriptObject
     {
+        private static readonly ScriptObjectBuilder<ScriptObject> Builder = new ScriptObjectBuilder<ScriptObject>(o => o, new Uri("runtime://object.fry"));
+
         private readonly object _lock = new object();
-        public const string ObjectName = "[object]";
+        public const string ObjectName = "object";
 
         internal string ScriptType;
         //internal HashSet<string> Extends;
 
-        internal Func<ScriptObject, object> Ctor;
+        //internal Func<ScriptObject, object> Ctor;
 
         public ObjectCore ObjectCore { get; } = new ObjectCore();
 
@@ -36,17 +38,20 @@ namespace FryScript
         }
 
         public ScriptObject(
-            string scriptType = null,
-            Func<ScriptObject, object> ctor = null,
+            string scriptType = null
+            //Func<ScriptObject, object> ctor = null,
             //HashSet<string> extends = null, 
-            bool autoConstruct = true)
+            //bool autoConstruct = true)
+        )
         {
+            ObjectCore.Builder = Builder;
+
             ScriptType = scriptType ?? ObjectName;
-            Ctor = ctor;
+            //Ctor = ctor;
             //Extends = extends;
 
-            if (Ctor != null && autoConstruct)
-                Ctor(this);
+            //if (Ctor != null && autoConstruct)
+                //Ctor(this);
         }
          
         //public bool IsScript(ScriptObject scriptObject)

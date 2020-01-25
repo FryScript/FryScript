@@ -11,6 +11,7 @@ using System.Reflection;
 namespace FryScript
 {
     public class ScriptRuntime : IScriptRuntime
+
     {
         private readonly ScriptObject _evalContext = new ScriptObject();
         private readonly IScriptProvider _scriptProvider;
@@ -57,6 +58,7 @@ namespace FryScript
             _registry.Import("error", new ScriptError());
             _registry.Import("array", new ScriptArray());
             _registry.Import("function", new ScriptFunction(new Action(() => {})));
+            _registry.Import("object", new ScriptObject());
 
             foreach(var type in _typeProvider.GetPrimitives())
             {

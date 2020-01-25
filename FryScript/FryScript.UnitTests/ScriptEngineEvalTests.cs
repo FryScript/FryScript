@@ -73,51 +73,10 @@ namespace FryScript.UnitTests
            Assert.IsTrue(obj.protoMember);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(CompilerException))]
-        public void TupleOutParameterInvalidContext()
-        {
-            Eval(@"{out, 10};");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(CompilerException))]
-        public void TupleOutParameterInvalidThreeValuesContext()
-        {
-            Eval(@"{10, 20, out};");
-        }
-
         private dynamic Eval(string script)
         {
             var curMethod = new StackTrace().GetFrames().Skip(1).First().GetMethod().Name;
             return _scriptEngine.Eval(curMethod, script);
-        }
-
-        [Ignore]
-        [TestMethod]
-        public void EvalObjectLiteralIsAssignedScriptTypeTest()
-        {
-            ScriptObject obj = Eval("{test: 100};");
-            Assert.AreEqual(ScriptObject.ObjectName, obj.GetScriptType());
-        }
-
-        [Ignore]
-        [TestMethod]
-        public void EvalObjectScriptTypeIsAssignedTest()
-        {
-            ScriptObject obj = Eval("this;");
-
-            Assert.AreNotEqual(ScriptObject.ObjectName, obj.GetScriptType());
-        }
-
-        [Ignore]
-        [TestMethod]
-        public void EvalScriptTypeIsAssignedTest()
-        {
-            ScriptObject obj = Eval("this;");
-
-            Assert.IsNotNull(obj.GetScriptType());
-            Assert.AreNotEqual(ScriptObject.ObjectName, obj.GetScriptType());
         }
 
         [Ignore]
