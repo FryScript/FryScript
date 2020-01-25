@@ -78,4 +78,5 @@ namespace FryScript.UnitTests
             var curMethod = new StackTrace().GetFrames().Skip(1).First().GetMethod().Name;
             return _scriptEngine.Eval(curMethod, script);
         }
+    }
 }
