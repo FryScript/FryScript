@@ -1,4 +1,5 @@
 ﻿using FryScript.Compilation;
+using FryScript.Debugging;
 using FryScript.Helpers;
 using FryScript.HostInterop;
 using FryScript.ScriptProviders;
@@ -23,6 +24,8 @@ namespace FryScript
         private readonly Queue<string> _compileQueue = new Queue<string>();
 
         public bool DetailedExceptions { get; set; }
+
+        public DebugHook DebugHook { get; set; }
 
 #if NETSTANDARD2_0
         public ScriptRuntime()

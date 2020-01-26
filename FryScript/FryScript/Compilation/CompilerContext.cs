@@ -27,9 +27,9 @@ namespace FryScript.Compilation
 
         public IScriptParser ExpressionParser { get; set; }
 
-        public bool HasDebugHook => false;
+        public bool HasDebugHook => DebugHook != null;
 
-        public DebugHook DebugHook => null;
+        public DebugHook DebugHook => ScriptRuntime.DebugHook;
 
         public bool IsEvalMode { get; }
 
