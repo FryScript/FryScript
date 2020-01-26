@@ -63,7 +63,7 @@ namespace FryScript.Helpers
         private static Expression GetDebugContextExpression(DebugEvent debugEvent, Scope scope, string name, int line, int length, int column)
         {
             var debugEventExpr = Expression.Constant(debugEvent);
-            var nameExpr = Expression.Constant(name);
+            var nameExpr = Expression.Constant(name, typeof(string));
             var lineExpr = Expression.Constant(line);
             var columnExpr = Expression.Constant(column);
             var lengthExpr = Expression.Constant(length);
