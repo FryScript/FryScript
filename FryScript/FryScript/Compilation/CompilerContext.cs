@@ -10,19 +10,16 @@ namespace FryScript.Compilation
 {
     public class CompilerContext : AstContext
     {
-        private readonly ScriptEngine _scriptEngine;
         private readonly string _name;
 
         internal HashSet<string> Extends = new HashSet<string>();
         //internal Func<ScriptObject, object> ProtoCtor;
         //internal ScriptObjectReference ProtoReference;
-        internal List<ImportInfo> ImportInfos = new List<ImportInfo>(); 
-        
+        internal List<ImportInfo> ImportInfos = new List<ImportInfo>();
+
         public string Name { get { return _name; } }
 
         public Uri Uri { get; }
-
-        public ScriptEngine ScriptEngine { get { return _scriptEngine; } }
 
         public IScriptRuntime ScriptRuntime { get; }
 
@@ -30,25 +27,13 @@ namespace FryScript.Compilation
 
         public IScriptParser ExpressionParser { get; set; }
 
-        public bool HasDebugHook => _scriptEngine?.DebugHook != null;
+        public bool HasDebugHook => false;
 
-        public DebugHook DebugHook => _scriptEngine?.DebugHook;
+        public DebugHook DebugHook => null;
 
         public bool IsEvalMode { get; }
 
-        public CompilerContext(ScriptEngine scriptEngine, string name)
-            : base(FryScriptLanguageData.LanguageData)
-        {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
-
-            _scriptEngine = scriptEngine ?? throw new ArgumentNullException(nameof(scriptEngine));
-            _name = name;
-
-            DefaultNodeType = typeof(DefaultNode);
-            DefaultLiteralNodeType = typeof(LiteralNode);
-            DefaultIdentifierNodeType = typeof(IdentifierNode);
-        }
+        public bool DetailedExceptions { get; }
 
         public CompilerContext(IScriptRuntime scriptRuntime, Uri uri, bool evalMode = false)
             : base(FryScriptLanguageData.LanguageData)
@@ -62,17 +47,5 @@ namespace FryScript.Compilation
             DefaultIdentifierNodeType = typeof(IdentifierNode);
             ScriptType = typeof(ScriptObject);
         }
-
-        //public void Extend(ScriptObject scriptObject)
-        //{
-        //    scriptObject = scriptObject ?? throw new ArgumentNullException(nameof(scriptObject));
-
-        //    Extends.Add(scriptObject.ScriptType);
-
-        //    foreach (var extend in scriptObject.Extends)
-        //    {
-        //        Extends.Add(extend);
-        //    }
-        //}
     }
 }

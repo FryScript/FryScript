@@ -4,6 +4,8 @@ namespace FryScript
 {
     public interface IScriptRuntime
     {
+        bool DetailedExceptions { get; set; }
+
         IScriptObject Get(string name, Uri relativeTo = null);
 
         IScriptObject Import(Type type);

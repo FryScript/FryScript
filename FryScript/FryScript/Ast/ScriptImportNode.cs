@@ -18,11 +18,7 @@ namespace FryScript.Ast
             var alias = ChildNodes.Skip(3).Take(1).First();
 
             var importScript = new ScriptObjectReference();
-            var scriptEngine = CompilerContext.ScriptEngine;
-            if (scriptEngine != null)
-                importScript.SetResolver(() => scriptEngine.Get(nameStr, CompilerContext.Name));
-            else
-                importScript.SetResolver(() => CompilerContext?.ScriptRuntime?.Get(nameStr, CompilerContext.Uri));
+            importScript.SetResolver(() => CompilerContext?.ScriptRuntime?.Get(nameStr, CompilerContext.Uri));
 
             var importScriptExpr = Expression.Constant(importScript);
             alias.CreateIdentifier(scope);

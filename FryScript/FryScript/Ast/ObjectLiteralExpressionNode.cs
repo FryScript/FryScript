@@ -1,5 +1,4 @@
 ﻿using FryScript.Compilation;
-using FryScript.Helpers;
 using System;
 using System.Linq.Expressions;
 
@@ -32,12 +31,6 @@ namespace FryScript.Ast
             var initObjExpr = scope.ScopeBlock(assignParamExpr, bodyExpr, paramExpr);
 
             return initObjExpr;
-
-            // var lambdaExpr = Expression.Lambda<Func<ScriptObject, object>>(bodyExpr, paramExpr);
-
-            // var newObjExpr = ExpressionHelper.NewScriptObject(ctor: lambdaExpr);
-
-            // return newObjExpr;
         }
     }
 }

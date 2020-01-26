@@ -16,7 +16,7 @@ namespace FryScript.Ast
             if (CompilerContext.HasDebugHook)
                 return WrapDebugExpression(DebugEvent.Expression, scope, s => GetChildExpression(s));
 
-            Expression expr = CompilerContext?.ScriptEngine?.DetailedExceptions == true
+            Expression expr = CompilerContext.DetailedExceptions == true
                 ? ExpressionHelper.WrapNativeCall(GetChildExpression(scope), this, scope)
                 : GetChildExpression(scope);
 

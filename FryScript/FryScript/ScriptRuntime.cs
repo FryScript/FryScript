@@ -22,6 +22,8 @@ namespace FryScript
 
         private readonly Queue<string> _compileQueue = new Queue<string>();
 
+        public bool DetailedExceptions { get; set; }
+
 #if NETSTANDARD2_0
         public ScriptRuntime()
             : this(new DirectoryScriptProvider(Environment.CurrentDirectory),
@@ -57,10 +59,10 @@ namespace FryScript
 
             _registry.Import("error", new ScriptError());
             _registry.Import("array", new ScriptArray());
-            _registry.Import("function", new ScriptFunction(new Action(() => {})));
+            _registry.Import("function", new ScriptFunction(new Action(() => { })));
             _registry.Import("object", new ScriptObject());
 
-            foreach(var type in _typeProvider.GetPrimitives())
+            foreach (var type in _typeProvider.GetPrimitives())
             {
                 var primitive = _objectFactory.CreatePrimitive(type);
                 _registry.Import(type.Name, primitive);

@@ -18,16 +18,10 @@ namespace FryScript.Ast
                 ExceptionHelper.ExtendUnavailable(this);
 
             var name = ChildNodes.Skip(1).First();
-            //var nameStr = ScriptTypeHelper.NormalizeTypeName(name.ValueString);
+
             var nameStr = name.ValueString;
 
-            //try
-            //{
-            var extendScript = CompilerContext.ScriptEngine != null
-                ? CompilerContext.ScriptEngine.Get(nameStr, CompilerContext.Name)
-                : CompilerContext.ScriptRuntime.Get(nameStr, CompilerContext.Uri);
-
-            //CompilerContext.Extend(extendScript);
+            var extendScript = CompilerContext.ScriptRuntime.Get(nameStr, CompilerContext.Uri);
 
             var builder = extendScript.ObjectCore.Builder;
             var builderExpr = Expression.Constant(builder);
@@ -37,16 +31,6 @@ namespace FryScript.Ast
             CompilerContext.ScriptType = extendScript.GetType();
 
             return extendExpr;
-            //var extendScriptExpr = Expression.Constant(extendScript);
-            //var thisExpr = scope.GetMemberExpression(Keywords.This);
-            //var inheritExpr = Expression.Call(thisExpr, ScriptObject_Extend, extendScriptExpr);
-
-            //return inheritExpr;
-            //}
-            //catch (CircularDependencyException ex)
-            //{
-            //throw ExceptionHelper.CircularDependency(ex, name);
-            //}
         }
     }
 }
