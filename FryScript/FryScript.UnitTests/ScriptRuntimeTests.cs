@@ -209,7 +209,7 @@ namespace FryScript.UnitTests
                 return true;
             });
 
-            _compiler.Compile2("source", "test:///name.fry", Arg.Is<CompilerContext>(c =>
+            _compiler.Compile("source", "test:///name.fry", Arg.Is<CompilerContext>(c =>
                 c.Name == expectedScriptInfo.Uri.AbsoluteUri
                 && c.ScriptRuntime == _runtime
             )).Returns(new Func<IScriptObject, object>(o => "Constructed!"));
@@ -337,7 +337,7 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Eval_Expression_Success()
         {
-            _compiler.Compile2("true;",
+            _compiler.Compile("true;",
                 Arg.Any<string>(),
                 Arg.Is<CompilerContext>(c => c.IsEvalMode == true))
                 .Returns(o => true);

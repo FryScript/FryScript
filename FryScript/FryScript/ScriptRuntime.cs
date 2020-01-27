@@ -76,7 +76,7 @@ namespace FryScript
             if (string.IsNullOrWhiteSpace(script))
                 throw new ArgumentNullException(nameof(script));
 
-            var func = _compiler.Compile2(script, "eval", new CompilerContext(this, null, true));
+            var func = _compiler.Compile(script, "eval", new CompilerContext(this, null, true));
 
             return func(_evalContext);
         }
@@ -114,7 +114,7 @@ namespace FryScript
             _compileQueue.Enqueue(resolvedName);
 
             var context = new CompilerContext(this, scriptInfo.Uri);
-            var ctor = _compiler.Compile2(scriptInfo.Source, resolvedName, context);
+            var ctor = _compiler.Compile(scriptInfo.Source, resolvedName, context);
             var instance = _objectFactory.Create(context.ScriptType, ctor, scriptInfo.Uri);
 
             _registry.Import(resolvedName, instance);

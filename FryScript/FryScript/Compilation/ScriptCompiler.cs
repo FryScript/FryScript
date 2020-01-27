@@ -1,5 +1,4 @@
-﻿using FryScript.Ast;
-using FryScript.Parsing;
+﻿using FryScript.Parsing;
 using System;
 using System.Linq;
 
@@ -27,21 +26,7 @@ namespace FryScript.Compilation
             _expressionParser = expressionParser ?? throw new ArgumentNullException(nameof(expressionParser));
         }
 
-        public Func<ScriptObject, object> Compile(string script, string fileName, CompilerContext compilerContext)
-        {
-            compilerContext = compilerContext ?? throw new ArgumentNullException(nameof(compilerContext));
-      
-            if (string.IsNullOrWhiteSpace(script))
-                throw new ArgumentNullException(nameof(script));
-
-            var rootNode = (ScriptNode)_parser.Parse(script, fileName, compilerContext);
-
-            var func = rootNode.Compile(new Scope());
-
-            return func;
-        }
-
-        public Func<IScriptObject, object> Compile2(string source, string name, CompilerContext compilerContext)
+        public Func<IScriptObject, object> Compile(string source, string name, CompilerContext compilerContext)
         {
             if (string.IsNullOrWhiteSpace(source))
                 throw new ArgumentNullException(nameof(source));
@@ -52,9 +37,9 @@ namespace FryScript.Compilation
             compilerContext = compilerContext ?? throw new ArgumentNullException(nameof(compilerContext));
             compilerContext.ExpressionParser = _expressionParser;
 
-            var rootNode = _parser.Parse2(source, name, compilerContext);
+            var rootNode = _parser.Parse(source, name, compilerContext);
 
-            var func = rootNode.Compile2(new Scope());
+            var func = rootNode.Compile(new Scope());
 
             return func;
         }

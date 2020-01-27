@@ -52,7 +52,7 @@ namespace FryScript.UnitTests.Compilation
         [ExpectedException(typeof(ArgumentNullException))]
         public void Compile_Invalid_Source(string source)
         {
-            _compiler.Compile2(source, "name", _context);
+            _compiler.Compile(source, "name", _context);
         }
 
         [DataTestMethod]
@@ -62,25 +62,25 @@ namespace FryScript.UnitTests.Compilation
         [ExpectedException(typeof(ArgumentNullException))]
         public void Compile_Invalid_Name(string name)
         {
-            _compiler.Compile2("source", name, _context);
+            _compiler.Compile("source", name, _context);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Compile_Null_Context()
         {
-            _compiler.Compile2("source", "name", null);
+            _compiler.Compile("source", "name", null);
         }
 
         [TestMethod]
         public void Compile_Success()
         {
-            _parser.Parse2("source", "name", _context).Returns(_rootNode);
+            _parser.Parse("source", "name", _context).Returns(_rootNode);
 
             var expectedFunc = new Func<IScriptObject, object>(o => o);
-            _rootNode.Compile2(Arg.Any<Scope>()).Returns((CallInfo c) => expectedFunc);
+            _rootNode.Compile(Arg.Any<Scope>()).Returns((CallInfo c) => expectedFunc);
 
-            var result = _compiler.Compile2("source", "name", _context);
+            var result = _compiler.Compile("source", "name", _context);
 
             Assert.AreEqual(expectedFunc, result);
             Assert.AreEqual(_expressionParser, _context.ExpressionParser);
