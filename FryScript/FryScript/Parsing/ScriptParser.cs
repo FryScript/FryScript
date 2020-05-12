@@ -35,7 +35,9 @@ namespace FryScript.Parsing
             if (parseTree.HasErrors())
             {
                 var parseError = parseTree.ParserMessages.First();
-                throw ParserException.SyntaxError(parseError.Message, compilerContext.Name, parseError.Location.Line, parseError.Location.Column);
+                var errorMessage = $"Unexpected symbol {parseTree.Tokens.Last().Text}";
+
+                throw ParserException.SyntaxError(errorMessage, compilerContext.Name, parseError.Location.Line, parseError.Location.Column);
             }
 
             var astBuilder = new AstBuilder(compilerContext);
