@@ -35,9 +35,10 @@ namespace FryScript.Parsing
             if (parseTree.HasErrors())
             {
                 var parseError = parseTree.ParserMessages.First();
-                var errorMessage = $"Unexpected symbol {parseTree.Tokens.Last().Text}";
+                var token = parseTree.Tokens.Last();
+                var errorMessage = $"Unexpected {token.ValueString}";
 
-                throw ParserException.SyntaxError(errorMessage, compilerContext.Name, parseError.Location.Line, parseError.Location.Column);
+                throw ParserException.SyntaxError(errorMessage, compilerContext.Name, parseError.Location.Line, parseError.Location.Column, token.Length);
             }
 
             var astBuilder = new AstBuilder(compilerContext);
@@ -62,7 +63,7 @@ namespace FryScript.Parsing
             if (parseTree.HasErrors())
             {
                 var parseError = parseTree.ParserMessages.First();
-                throw ParserException.SyntaxError(parseError.Message, compilerContext.Name, parseError.Location.Line, parseError.Location.Column);
+                throw ParserException.SyntaxError(parseError.Message, compilerContext.Name, parseError.Location.Line, parseError.Location.Column, 0);
             }
 
             var astBuilder = new AstBuilder(compilerContext);

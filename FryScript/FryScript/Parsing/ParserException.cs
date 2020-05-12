@@ -8,14 +8,17 @@ namespace FryScript.Parsing
 {
     public class ParserException : FryScriptException
     {
-        public ParserException(string message, string name, int line, int column) 
+        public int TokenLength { get; }
+
+        public ParserException(string message, string name, int line, int column, int tokenLength) 
             : base(message, null, name, line, column)
         {
+            TokenLength = tokenLength;
         }
 
-        public static ParserException SyntaxError(string parserMessage, string name, int line, int column)
+        public static ParserException SyntaxError(string parserMessage, string name, int line, int column, int tokenLength)
         {
-            throw new ParserException(parserMessage, name, line, column);
+            throw new ParserException(parserMessage, name, line, column, tokenLength);
         }
     }
 }
