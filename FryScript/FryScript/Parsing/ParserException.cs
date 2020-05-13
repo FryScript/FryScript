@@ -10,15 +10,13 @@ namespace FryScript.Parsing
     {
         public int TokenLength { get; }
 
-        public ParserException(string message, string name, int line, int column, int tokenLength) 
+        public object InternalData {get;}
+
+        public ParserException(string message, string name, int line, int column, int tokenLength, object internalData = null) 
             : base(message, null, name, line, column)
         {
             TokenLength = tokenLength;
-        }
-
-        public static ParserException SyntaxError(string parserMessage, string name, int line, int column, int tokenLength)
-        {
-            throw new ParserException(parserMessage, name, line, column, tokenLength);
+            InternalData = internalData;
         }
     }
 }
