@@ -78,7 +78,7 @@ namespace FryScript.UnitTests.Compilation
             _parser.Parse("source", "name", _context).Returns(_rootNode);
 
             var expectedFunc = new Func<IScriptObject, object>(o => o);
-            _rootNode.Compile(Arg.Any<Scope>()).Returns((CallInfo c) => expectedFunc);
+            _rootNode.Compile(_context.Scope).Returns((CallInfo c) => expectedFunc);
 
             var result = _compiler.Compile("source", "name", _context);
 

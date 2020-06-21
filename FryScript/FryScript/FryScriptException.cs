@@ -14,13 +14,12 @@ namespace FryScript
 
         public object ScriptData { get; set; }
 
+        public int? TokenLength { get; set; }
+
+        public object InternalData { get; set; }
+
         public FryScriptException(string message)
             : base(message)
-        {
-        }
-
-        public FryScriptException(string message, Exception innerException)
-            : base(message, innerException)
         {
         }
 
@@ -72,7 +71,7 @@ namespace FryScript
         {
             var fryEx = ex as FryScriptException;
 
-            if(fryEx == null || fryEx.ScriptData == null)
+            if (fryEx == null || fryEx.ScriptData == null)
                 return ex.Message ?? string.Empty;
 
             return fryEx.ScriptData;

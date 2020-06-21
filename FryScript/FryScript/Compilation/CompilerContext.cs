@@ -35,6 +35,8 @@ namespace FryScript.Compilation
 
         public bool DetailedExceptions { get; }
 
+        public Scope Scope {get;}
+
         public CompilerContext(IScriptRuntime scriptRuntime, Uri uri, bool evalMode = false)
             : base(FryScriptLanguageData.LanguageData)
         {
@@ -46,6 +48,7 @@ namespace FryScript.Compilation
             DefaultLiteralNodeType = typeof(LiteralNode);
             DefaultIdentifierNodeType = typeof(IdentifierNode);
             ScriptType = typeof(ScriptObject);
+            Scope = new Scope();
         }
     }
 }
