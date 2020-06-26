@@ -31,7 +31,7 @@ namespace FryScript.Parsing
                 throw new ArgumentNullException("conpilerContext");
 
             var parseTree = _parser.Parse(source, name);
-
+            
             if (parseTree.HasErrors())
             {
                 var parseError = parseTree.ParserMessages.First();

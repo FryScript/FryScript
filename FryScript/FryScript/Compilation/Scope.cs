@@ -1,32 +1,48 @@
 ﻿using FryScript.Ast;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace FryScript.Compilation
 {
     public class Scope
     {
-        private readonly Dictionary<string, ParameterExpression> _members;
+        private struct MemberInfo
+        {
+            public readonly string Name;
+
+            public readonly ParameterExpression Parameter;
+
+            public readonly AstNode AstNode;
+
+            public MemberInfo(string name, ParameterExpression parameterExpression, AstNode astNode)
+                => (Name, Parameter, AstNode) = (name, parameterExpression, astNode);
+        }
+
+        private readonly Dictionary<string, MemberInfo> _members;
         private readonly HashSet<string> _localMembers = new HashSet<string>();
         private readonly HashSet<string> _hoistedMembers = new HashSet<string>();
+        private readonly List<Scope> Children = new List<Scope>();
         private readonly Dictionary<string, object> _dataBag;
         private readonly Dictionary<string, int> _tempNames;
 
         public bool Hoisted { get; }
         public Scope Parent { get; }
+        public AstNode DeclaringNode { get; }
         public bool IsRoot => Parent != null && Parent.Parent == null;
         public Scope()
-            : this(new Dictionary<string, ParameterExpression>(), 
+            : this(null,
+                  new Dictionary<string, MemberInfo>(),
                   new Dictionary<string, object>(),
                   new Dictionary<string, int>(),
-                  null, 
+                  null,
                   false)
         {
         }
 
-        private Scope(Dictionary<string, ParameterExpression> members, 
-            Dictionary<string, object> dataBag, 
+        private Scope(AstNode declaringNode, Dictionary<string, MemberInfo> members,
+            Dictionary<string, object> dataBag,
             Dictionary<string, int> tempNames,
             Scope parent, bool hoisted)
         {
@@ -35,21 +51,28 @@ namespace FryScript.Compilation
             _tempNames = tempNames;
             Parent = parent;
             Hoisted = hoisted;
+            DeclaringNode = declaringNode;
         }
 
-        public Scope New(bool resetDataBag = false, bool? hoisted = null)
+        public Scope New(AstNode declaringNode, bool resetDataBag = false, bool? hoisted = null)
         {
-            return new Scope(
-                new Dictionary<string, ParameterExpression>(_members), 
+            var scope = new Scope(
+                declaringNode,
+                new Dictionary<string, MemberInfo>(_members),
                 resetDataBag ? new Dictionary<string, object>() : new Dictionary<string, object>(_dataBag),
                 _tempNames,
-                this, 
+                this,
                 hoisted ?? Hoisted);
+
+            Children.Add(scope);
+
+            return scope;
         }
 
         public Scope Clone(bool resetDataBag = false, bool? hoisted = null)
         {
             return new Scope(
+                DeclaringNode,
                 _members,
                 resetDataBag ? new Dictionary<string, object>() : new Dictionary<string, object>(_dataBag),
                 _tempNames,
@@ -62,7 +85,7 @@ namespace FryScript.Compilation
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
-            if(_members.ContainsKey(name))
+            if (_members.ContainsKey(name))
                 throw CompilerException.FromAst(string.Format("Identifier {0} has already been defined in the current scope", name), astNode);
 
             type = type ?? typeof(object);
@@ -71,19 +94,20 @@ namespace FryScript.Compilation
                 _localMembers.Add(name);
 
             var parameter = Expression.Parameter(type, name);
+            var memberInfo = new MemberInfo(name, parameter, astNode);
 
             if (Hoisted)
             {
                 var hoistedScope = GetHoistedScope(this);
 
                 if (hoistedScope._hoistedMembers.Contains(name))
-                    return hoistedScope._members[name];
+                    return hoistedScope._members[name].Parameter;
 
                 hoistedScope._hoistedMembers.Add(name);
-                hoistedScope._members[name] = parameter;
+                hoistedScope._members[name] = memberInfo;
             }
 
-            return _members[name] = parameter;
+            return (_members[name] = memberInfo).Parameter;
         }
 
         public ParameterExpression AddTempMember(string prefix, AstNode astNode, Type type = null)
@@ -96,7 +120,7 @@ namespace FryScript.Compilation
             if (!_localMembers.Contains(name))
                 _localMembers.Add(name);
 
-            return _members[name] = Expression.Parameter(typeof(T), name);
+            return (_members[name] = new MemberInfo(name, Expression.Parameter(typeof(T), name), astNode)).Parameter;
         }
 
         public bool HasLocalMember(string name)
@@ -112,7 +136,7 @@ namespace FryScript.Compilation
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
-            if(Hoisted)
+            if (Hoisted)
             {
                 var hoistedScope = GetHoistedScope(this);
                 return hoistedScope._members.ContainsKey(name);
@@ -129,10 +153,10 @@ namespace FryScript.Compilation
             if (Hoisted)
             {
                 var hoistedScope = GetHoistedScope(this);
-                return hoistedScope._members[name];
+                return hoistedScope._members[name].Parameter;
             }
 
-            return _members[name];
+            return _members[name].Parameter;
         }
 
         public IEnumerable<ParameterExpression> GetLocalExpressions()
@@ -144,12 +168,12 @@ namespace FryScript.Compilation
                 if (this != rootHoist)
                     yield break;
 
-                foreach(var parameter in _members)
+                foreach (var memberInfo in _members)
                 {
-                    if (!_hoistedMembers.Contains(parameter.Key))
+                    if (!_hoistedMembers.Contains(memberInfo.Key))
                         continue;
 
-                    yield return parameter.Value;
+                    yield return memberInfo.Value.Parameter;
                 }
             }
             else
@@ -159,20 +183,20 @@ namespace FryScript.Compilation
                     if (!_localMembers.Contains(parameter.Key))
                         continue;
 
-                    yield return parameter.Value;
+                    yield return parameter.Value.Parameter;
                 }
             }
         }
 
         public IEnumerable<ParameterExpression> GetExpressions()
         {
-            return _members.Values;
+            return _members.Values.Select(m => m.Parameter);
         }
 
         public Expression ScopeBlock(params Expression[] expressions)
         {
             return Expression.Block(
-                typeof (object),
+                typeof(object),
                 GetLocalExpressions(),
                 expressions
                 );
@@ -201,7 +225,7 @@ namespace FryScript.Compilation
                 return false;
             }
 
-            data = (T) dataObj;
+            data = (T)dataObj;
             return true;
         }
 
@@ -223,9 +247,28 @@ namespace FryScript.Compilation
             return $"<>{name}_{_tempNames[name]++}";
         }
 
+        public IEnumerable<string> GetMembersRelativeTo(int line, int column)
+        {
+            foreach (var memberInfo in _members.Values)
+            {
+                var location = memberInfo.AstNode.ParseNode.Span.Location;
+                if (location.Line <= line
+                && location.Column <= column)
+                    yield return memberInfo.Name;
+
+                foreach(var child in Children)
+                {
+                    foreach(var memberName in child.GetMembersRelativeTo(line, column))
+                    {
+                        yield return memberName;
+                    }
+                }
+            }
+        }
+
         private Scope GetHoistedScope(Scope scope)
         {
-            while(scope != null && scope.Parent != null)
+            while (scope != null && scope.Parent != null)
             {
                 if (!scope.Parent.Hoisted)
                     return scope;

@@ -13,7 +13,7 @@ namespace FryScript.Ast
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             var identifierExpression = (IdentifierExpressionNode)ChildNodes.First();
             var op = ChildNodes.Skip(1).First().ValueString;

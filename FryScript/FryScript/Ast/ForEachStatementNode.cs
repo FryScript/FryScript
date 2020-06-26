@@ -17,9 +17,9 @@ namespace FryScript.Ast
             var obj = ChildNodes.Skip(4).First();
             var statement = ChildNodes.Skip(5).First();
 
-            var enumeratorScope = scope.New();
-            var loopScope = enumeratorScope.New();
-            var statementScope = loopScope.New();
+            var enumeratorScope = scope.New(this);
+            var loopScope = enumeratorScope.New(this);
+            var statementScope = loopScope.New(this);
 
             var breakTarget = statementScope.SetData(ScopeData.BreakTarget,
                 Expression.Label(typeof (object), TempPrefix.BreakTarget));

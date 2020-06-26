@@ -15,7 +15,7 @@ namespace FryScript.Ast
             if (ChildNodes.Length == 0)
                 return newObjExpr;
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             //var paramExpr = Expression.Parameter(typeof(ScriptObject), scope.GetTempName(TempPrefix.ObjectLiteral));
             var paramExpr = scope.AddMember(scope.GetTempName(TempPrefix.ObjectLiteral), this, typeof(ScriptObject));

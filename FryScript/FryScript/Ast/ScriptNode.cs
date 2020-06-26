@@ -14,7 +14,7 @@ namespace FryScript.Ast
 
             var paramExpr = scope.AddKeywordMember<IScriptObject>(Keywords.This, this);
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             var bodyExpr = scope.ScopeBlock(GetChildExpression(scope));
 

@@ -19,7 +19,7 @@ namespace FryScript.Ast
             var parameters = ChildNodes.First() as FunctionParametersNode;
             var block = ChildNodes.Skip(1).First();
 
-            scope = scope.New(resetDataBag: true);
+            scope = scope.New(parameters, resetDataBag: true);
 
             parameters.DeclareParameters(scope);
 
@@ -28,7 +28,7 @@ namespace FryScript.Ast
             if(parameterExprs.Length > 16)
                 throw CompilerException.FromAst("A function cannot declare more than 16 parameters", parameters);
 
-            scope = scope.New();
+            scope = scope.New(block);
             var returnTarget = scope.SetData(ScopeData.ReturnTarget, Expression.Label(typeof (object), scope.GetTempName(TempPrefix.ReturnTarget)));
 
             var blockExpr = block.ChildNodes.Length == 0

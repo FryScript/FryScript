@@ -19,7 +19,7 @@ namespace FryScript.Ast
             if (scope.Hoisted)
                 return TryMakeAwaitable(scope);
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             var left = (IdentifierExpressionNode)ChildNodes.First();
             var op = ChildNodes.Skip(1).First().ValueString;
@@ -40,7 +40,7 @@ namespace FryScript.Ast
 
         private Expression TryMakeAwaitable(Scope scope)
         {
-            scope = scope.New();
+            scope = scope.New(this);
 
             var rightScope = scope.Clone();
             var rightAwaitContexts = rightScope.SetData(ScopeData.AwaitContexts, new List<Expression>());

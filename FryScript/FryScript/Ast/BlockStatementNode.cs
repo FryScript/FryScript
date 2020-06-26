@@ -16,7 +16,7 @@ namespace FryScript.Ast
             if (ChildNodes.Length == 0)
                 return ExpressionHelper.Null();
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             return scope.ScopeBlock(GetChildExpression(scope));
         }

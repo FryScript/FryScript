@@ -15,7 +15,7 @@ namespace FryScript.Ast
             var condition = ChildNodes.Skip(1).First();
             var statement = ChildNodes.Skip(2).First();
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             var breakTarget = scope.SetData(ScopeData.BreakTarget, Expression.Label(typeof(object), scope.GetTempName(TempPrefix.BreakTarget)));
             var continueTarget = scope.SetData(ScopeData.ContinueTarget, Expression.Label(typeof(object), scope.GetTempName(TempPrefix.ContinueTarget)));

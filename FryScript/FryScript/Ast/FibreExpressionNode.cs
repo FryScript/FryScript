@@ -18,12 +18,12 @@ namespace FryScript.Ast
             var body = functionNode.ChildNodes.Skip(1).First();
             body = Transform<FibreBlockNode>(body.ChildNodes);
 
-            var paramametersScope = scope.New(true, false);
+            var paramametersScope = scope.New(parameters, true, false);
 
             parameters.DeclareParameters(paramametersScope);
 
             
-            var fibreScope = paramametersScope.New(true, true);
+            var fibreScope = paramametersScope.New(body, true, true);
 
             var parameterExprs = paramametersScope.GetLocalExpressions().ToArray();
 
@@ -45,7 +45,7 @@ namespace FryScript.Ast
 
         private Expression GetFibreContextExpression(Scope scope, AstNode body)
         {
-            var contextScope = scope.New();
+            var contextScope = scope.New(this);
 
             var contextParam = contextScope.SetData(ScopeData.FibreContext, Expression.Parameter(typeof(ScriptFibreContext), scope.GetTempName(TempPrefix.FibreContext)));
             var yieldLabels = contextScope.SetData(ScopeData.YieldLabels, new List<LabelTarget>());

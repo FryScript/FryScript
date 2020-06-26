@@ -13,7 +13,7 @@ namespace FryScript.Ast
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             if (ChildNodes.Length == 1)
                 return GetChildExpression(scope);

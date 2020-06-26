@@ -35,7 +35,9 @@ namespace FryScript.Compilation
 
         public bool DetailedExceptions { get; }
 
-        public Scope Scope {get;}
+        public Scope Scope { get; }
+
+        public IRootNode RootNode { get; set; }
 
         public CompilerContext(IScriptRuntime scriptRuntime, Uri uri, bool evalMode = false)
             : base(FryScriptLanguageData.LanguageData)

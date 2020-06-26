@@ -16,7 +16,7 @@ namespace FryScript.Ast
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             var identifier = ChildNodes.Skip(1).First() as IdentifierNode;
             var block = ChildNodes.Skip(2).First();
@@ -32,7 +32,7 @@ namespace FryScript.Ast
 
             var assignIdentifierExpr = identifier.SetIdentifier(scope, exMessageExpr);
 
-            var newScope = scope.New();
+            var newScope = scope.New(this);
             var blockExpr = block.GetExpression(newScope);
 
             var catchBlockExpr = scope.ScopeBlock(

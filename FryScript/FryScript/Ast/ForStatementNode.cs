@@ -17,7 +17,7 @@ namespace FryScript.Ast
             var action = ChildNodes.Skip(3).First();
             var statement = ChildNodes.Skip(4).First();
 
-            var loopScope = scope.New();
+            var loopScope = scope.New(this);
 
             var breakTarget = loopScope.SetData(ScopeData.BreakTarget, Expression.Label(typeof(object), scope.GetTempName(TempPrefix.BreakTarget)));
             var continueTarget = loopScope.SetData(ScopeData.ContinueTarget, Expression.Label(typeof(object), scope.GetTempName(TempPrefix.ContinueTarget)));
@@ -26,7 +26,7 @@ namespace FryScript.Ast
             var conditionExpr = ExpressionHelper.DynamicConvert(condition.GetExpression(loopScope), typeof(bool));
             var actionExpr = action.GetExpression(loopScope);
 
-            var statementScope = loopScope.New();
+            var statementScope = loopScope.New(this);
             var statementExpr = statement.GetExpression(statementScope);
 
             var ifBreakExpr = Expression.IfThenElse(
