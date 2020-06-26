@@ -6,21 +6,10 @@ using System.Linq.Expressions;
 
 namespace FryScript.Compilation
 {
+
     public class Scope
     {
-        private struct MemberInfo
-        {
-            public readonly string Name;
-
-            public readonly ParameterExpression Parameter;
-
-            public readonly AstNode AstNode;
-
-            public MemberInfo(string name, ParameterExpression parameterExpression, AstNode astNode)
-                => (Name, Parameter, AstNode) = (name, parameterExpression, astNode);
-        }
-
-        private readonly Dictionary<string, MemberInfo> _members;
+        private readonly Dictionary<string, ScopeMemberInfo> _members;
         private readonly HashSet<string> _localMembers = new HashSet<string>();
         private readonly HashSet<string> _hoistedMembers = new HashSet<string>();
         private readonly Dictionary<string, object> _dataBag;
@@ -33,7 +22,7 @@ namespace FryScript.Compilation
         public bool IsRoot => Parent != null && Parent.Parent == null;
         public Scope()
             : this(null,
-                  new Dictionary<string, MemberInfo>(),
+                  new Dictionary<string, ScopeMemberInfo>(),
                   new Dictionary<string, object>(),
                   new Dictionary<string, int>(),
                   null,
@@ -41,7 +30,7 @@ namespace FryScript.Compilation
         {
         }
 
-        private Scope(AstNode declaringNode, Dictionary<string, MemberInfo> members,
+        private Scope(AstNode declaringNode, Dictionary<string, ScopeMemberInfo> members,
             Dictionary<string, object> dataBag,
             Dictionary<string, int> tempNames,
             Scope parent, bool hoisted)
@@ -58,7 +47,7 @@ namespace FryScript.Compilation
         {
             var scope = new Scope(
                 declaringNode,
-                new Dictionary<string, MemberInfo>(_members),
+                new Dictionary<string, ScopeMemberInfo>(_members),
                 resetDataBag ? new Dictionary<string, object>() : new Dictionary<string, object>(_dataBag),
                 _tempNames,
                 this,
@@ -94,7 +83,7 @@ namespace FryScript.Compilation
                 _localMembers.Add(name);
 
             var parameter = Expression.Parameter(type, name);
-            var memberInfo = new MemberInfo(name, parameter, astNode);
+            var memberInfo = new ScopeMemberInfo(name, parameter, astNode);
 
             if (Hoisted)
             {
@@ -120,7 +109,7 @@ namespace FryScript.Compilation
             if (!_localMembers.Contains(name))
                 _localMembers.Add(name);
 
-            return (_members[name] = new MemberInfo(name, Expression.Parameter(typeof(T), name), astNode)).Parameter;
+            return (_members[name] = new ScopeMemberInfo(name, Expression.Parameter(typeof(T), name), astNode)).Parameter;
         }
 
         public bool HasLocalMember(string name)
@@ -247,23 +236,9 @@ namespace FryScript.Compilation
             return $"<>{name}_{_tempNames[name]++}";
         }
 
-        public IEnumerable<string> GetMembersRelativeTo(int line, int column)
+        public IEnumerable<ScopeMemberInfo> GetAllowedMembers()
         {
-            foreach (var memberInfo in _members.Values)
-            {
-                var location = memberInfo.AstNode.ParseNode.Span.Location;
-                if (location.Line <= line
-                && location.Column <= column)
-                    yield return memberInfo.Name;
-
-                foreach(var child in Children)
-                {
-                    foreach(var memberName in child.GetMembersRelativeTo(line, column))
-                    {
-                        yield return memberName;
-                    }
-                }
-            }
+            return _members.Values;
         }
 
         private Scope GetHoistedScope(Scope scope)
