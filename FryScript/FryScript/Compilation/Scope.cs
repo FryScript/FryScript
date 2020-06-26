@@ -23,9 +23,9 @@ namespace FryScript.Compilation
         private readonly Dictionary<string, MemberInfo> _members;
         private readonly HashSet<string> _localMembers = new HashSet<string>();
         private readonly HashSet<string> _hoistedMembers = new HashSet<string>();
-        private readonly List<Scope> Children = new List<Scope>();
         private readonly Dictionary<string, object> _dataBag;
         private readonly Dictionary<string, int> _tempNames;
+        public readonly List<Scope> Children = new List<Scope>();
 
         public bool Hoisted { get; }
         public Scope Parent { get; }
