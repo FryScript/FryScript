@@ -39,6 +39,8 @@ namespace FryScript.Compilation
 
             var rootNode = _parser.Parse(source, name, compilerContext);
 
+            compilerContext.RootNode = rootNode;
+
             var func = rootNode.Compile(compilerContext.Scope);
 
             return func;
