@@ -18,12 +18,12 @@ namespace FryScript.Ast
             var body = functionNode.ChildNodes.Skip(1).First();
             body = Transform<FibreBlockNode>(body.ChildNodes);
 
-            var paramametersScope = scope.New(parameters, true, false);
+            var paramametersScope = scope.New(this, true, false);
 
             parameters.DeclareParameters(paramametersScope);
 
             
-            var fibreScope = paramametersScope.New(body, true, true);
+            var fibreScope = paramametersScope.New(this, true, true);
 
             var parameterExprs = paramametersScope.GetLocalExpressions().ToArray();
 
