@@ -9,6 +9,7 @@ namespace FryScript.Compilation
 
     public class Scope
     {
+        private const string TempPrefix = "<>";
         private readonly Dictionary<string, ScopeMemberInfo> _members;
         private readonly HashSet<string> _localMembers = new HashSet<string>();
         private readonly HashSet<string> _hoistedMembers = new HashSet<string>();
@@ -233,12 +234,12 @@ namespace FryScript.Compilation
             if (!_tempNames.TryGetValue(name, out int count))
                 _tempNames[name] = 0;
 
-            return $"<>{name}_{_tempNames[name]++}";
+            return $"{TempPrefix}{name}_{_tempNames[name]++}";
         }
 
         public IEnumerable<ScopeMemberInfo> GetAllowedMembers()
         {
-            return _members.Values;
+            return _members.Values.Where(v => !v.Name.StartsWith(TempPrefix));
         }
 
         private Scope GetHoistedScope(Scope scope)
