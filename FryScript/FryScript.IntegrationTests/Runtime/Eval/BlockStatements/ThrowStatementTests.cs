@@ -1,3 +1,4 @@
+using FryScript.Compilation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FryScript.IntegrationTests.Runtime.Eval.BlockStatements
@@ -12,7 +13,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BlockStatements
             {
                 Eval("throw \"error message\";");
             }
-            catch(FryScriptException ex)
+            catch (FryScriptException ex)
             {
                 Assert.AreEqual("error message", ex.Message);
             }
@@ -27,7 +28,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BlockStatements
             {
                 Eval("new error(\"boom\", { });");
             }
-            catch(FryScriptException ex)
+            catch (FryScriptException ex)
             {
                 Assert.AreEqual("boom", ex.Message);
                 Assert.IsInstanceOfType(ex.ScriptData, typeof(ScriptError));
@@ -43,7 +44,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BlockStatements
                 Eval("var error = {message: \"error\"};");
                 Eval("throw error;");
             }
-            catch(FryScriptException ex)
+            catch (FryScriptException ex)
             {
                 Assert.AreEqual("error", ex.Message);
             }
@@ -57,7 +58,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BlockStatements
                 Eval("var error = {};");
                 Eval("throw error;");
             }
-            catch(FryScriptException ex)
+            catch (FryScriptException ex)
             {
                 var expected = Eval("error;");
                 Assert.AreEqual(expected, ex.ScriptData);
@@ -71,6 +72,48 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BlockStatements
             Eval(@"
                 var x = 0;
                 x += throw ""can't add here!"";
+            ");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void Throw_Rethrow_Outside_Catch()
+        {
+            Eval(@"
+                throw;
+            ");
+        }
+
+        [TestMethod]
+
+        public void Throw_Rethrow_Inside_Catch()
+        {
+
+            try
+            {
+                Eval(@"
+                    try
+                    {
+                        throw ""boom!"";
+                    }
+                    catch ex
+                    {
+                        throw;
+                    }
+                ");
+            }
+            catch (FryScriptException ex)
+            {
+                Assert.AreEqual("boom!", ex.Message);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void Throw_Null()
+        {
+            Eval(@"
+                throw null;
             ");
         }
     }

@@ -50,11 +50,12 @@ namespace FryScript
             return fryEx;
         }
 
-        public static object Throw(object data, Exception ex, string name, int line, int column)
+        public static object Throw(object data, Exception ex, string name, int line, int column, bool rethrow)
         {
-            var stringData = data as string;
+            if (rethrow)
+                return ex;
 
-            if (stringData != null)
+            if (data is string stringData)
                 return new FryScriptException(stringData, ex, name, line, column);
 
             string message = data != null && CallSiteCache.Current.HasMember("message", data)

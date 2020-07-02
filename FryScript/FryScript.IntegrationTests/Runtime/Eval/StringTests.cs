@@ -1,3 +1,4 @@
+using FryScript.Compilation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FryScript.IntegrationTests.Runtime.Eval.Expressions
@@ -24,6 +25,13 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Expressions
             var result = Eval("\"@{greeting} @{name}\";");
 
             Assert.AreEqual("Hello Leela", result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CompilerException))]
+        public void Interpolation_No_Expressions()
+        {
+            Eval("\"@{}\";");
         }
     }
 }

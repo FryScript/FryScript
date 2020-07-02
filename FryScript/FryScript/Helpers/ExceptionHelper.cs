@@ -268,5 +268,10 @@ namespace FryScript.Helpers
         {
             throw CompilerException.FromAst("@extend is unavailable", astNode);
         }
+
+        public static CompilerException EmptyInterpolation(AstNode astNode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

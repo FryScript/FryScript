@@ -93,22 +93,5 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BlockStatements
 
             Assert.IsInstanceOfType(Eval("this.caughtError;"), typeof(ScriptObject));
         }
-
-        [TestMethod]
-        public void Try_catch_Thrown_Null()
-        {
-            Eval(@"
-            try
-            {
-                throw null;
-            }
-            catch error
-            {
-                this.caughtError = error;
-            }
-            ");
-
-            Assert.AreEqual(string.Empty, Eval("this.caughtError;"));
-        }
     }
 }
