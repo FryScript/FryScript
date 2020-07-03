@@ -3,6 +3,7 @@ using FryScript.Helpers;
 using FryScript.Parsing;
 using Irony.Parsing;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
@@ -11,7 +12,17 @@ namespace FryScript.Ast
 {
     public class StringLiteralNode : AstNode
     {
-        private static readonly Regex FormatRegex = new Regex("@{(.+?)}", RegexOptions.Compiled);
+        private struct Interpolation
+        {
+            public readonly int
+                Start,
+                Length;
+
+            public readonly string Value;
+
+            public Interpolation(int start, int length, string value) 
+                => (Start, Length, Value) = (start, length, value);
+        }
 
         public override Expression GetExpression(Scope scope)
         {
@@ -25,16 +36,19 @@ namespace FryScript.Ast
 
         private Expression GetFormatExpression(Scope scope)
         {
-            var matches = FormatRegex.Matches(ValueString).Cast<Match>().Select(m => m).ToArray();
+            var interpolations = GetInterpolations(ValueString).ToArray();
 
-            var subExprs = matches.Select(m => GetMatchExpression(m, scope));
+            if (interpolations.Length == 0)
+                return Expression.Constant(ValueString);
+
+            var subExprs = interpolations.Select(m => GetExpression(m, scope));
 
             var formatStr = ValueString;
 
-            for(var i = 0; i < matches.Length; i++)
+            for (var i = 0; i < interpolations.Length; i++)
             {
-                var firstIndex = formatStr.IndexOf(matches[i].Value);
-                formatStr = formatStr.Remove(firstIndex, matches[i].Length);
+                var firstIndex = formatStr.IndexOf(interpolations[i].Value);
+                formatStr = formatStr.Remove(firstIndex, interpolations[i].Length);
                 formatStr = formatStr.Insert(firstIndex, string.Format("{{{0}}}", i));
             }
 
@@ -51,29 +65,90 @@ namespace FryScript.Ast
             return formatExpr;
         }
 
-        private Expression GetMatchExpression(Match match, Scope scope)
+        private IEnumerable<Interpolation> GetInterpolations(string str)
         {
-            var subString = match.Value;
+            var curPos = 0;
+            var endPos = str.Length;
 
-            subString = subString.Trim('@', '{', '}');
-            var expressionNode = CompilerContext.ExpressionParser.ParseExpression(
-                    subString, 
-                    CompilerContext.Uri?.AbsoluteUri ?? nameof(StringLiteralNode), 
-                    CompilerContext);
+            var braces = 0;
+            var capturing = false;
+            var capturePos = 0;
 
-            AdjustNode(expressionNode, match.Length, match.Index);
+            while(curPos < endPos)
+            {
+                var curChar = str[curPos];
 
-            var subExpr = expressionNode.GetExpression(scope);
+                if(capturing && curPos - 1 == capturePos && curChar != '{')
+                {
+                    capturing = false;
+                }
 
-            return subExpr;
+                if(capturing)
+                {
+                    if (curChar == '{')
+                        braces++;
+
+                    if (curChar == '}')
+                        braces--;
+
+                    if(braces == 0)
+                    {
+                        var length = curPos - capturePos + 1;
+                        var exprString = str.Substring(capturePos, length);
+                        yield return new Interpolation(capturePos, length, exprString);
+
+                        capturing = false;
+                    }
+                }
+
+                if (curChar == '@' && !capturing)
+                {
+                    capturePos = curPos;
+                    braces = 0;
+                    capturing = true;
+                }
+
+                curPos++;
+            }
         }
+
+        private Expression GetExpression(Interpolation interpolation, Scope scope)
+        {
+            var subString = interpolation.Value;
+
+            subString = subString.Substring(2, subString.Length - 3);
+
+            if (string.IsNullOrWhiteSpace(subString))
+                throw ExceptionHelper.EmptyInterpolation(this, interpolation.Start, interpolation.Length);
+
+            AstNode expressionNode;
+            try
+            {
+                expressionNode = CompilerContext.ExpressionParser.ParseExpression(
+                         subString,
+                         CompilerContext.Uri?.AbsoluteUri ?? nameof(StringLiteralNode),
+                         CompilerContext);
+
+                AdjustNode(expressionNode, interpolation.Length, interpolation.Start);
+
+                var subExpr = expressionNode.GetExpression(scope);
+
+                return subExpr;
+            }
+            catch (FryScriptException ex)
+            {
+                var location = ParseNode.Token.Location;
+                ex.Line = location.Line;
+                ex.Column = location.Column + ex.Column + interpolation.Start + Operators.Format.Length + 1;
+                throw ex;
+            }
+        } 
 
         private void AdjustNode(AstNode node, int length, int startIndex)
         {
             var parentLocation = ParseNode.Span.Location;
             var location = new SourceLocation(parentLocation.Position + startIndex + 3, parentLocation.Line, parentLocation.Column);
 
-            var parentSpan = ParseNode.Span;
             var span = new SourceSpan(location, length - 3);
 
             node.ParseNode.Span = span;

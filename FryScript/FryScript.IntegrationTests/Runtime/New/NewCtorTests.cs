@@ -45,5 +45,11 @@ namespace FryScript.IntegrationTests.Runtime.New
             Assert.AreEqual("a", script.member1);
             Assert.AreEqual(1, script.member2);
         }
+
+        [TestMethod]
+        public void New_Operator_Script_Instance()
+        {
+            Assert.Fail();
+        }
     }
 }

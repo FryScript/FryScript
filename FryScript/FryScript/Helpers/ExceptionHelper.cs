@@ -269,9 +269,17 @@ namespace FryScript.Helpers
             throw CompilerException.FromAst("@extend is unavailable", astNode);
         }
 
-        public static CompilerException EmptyInterpolation(AstNode astNode)
+        public static CompilerException EmptyInterpolation(AstNode astNode, int position, int length)
         {
-            throw new NotImplementedException();
+            var location = astNode.ParseNode.Span.Location;
+            throw new CompilerException(
+                "Empty interpolation group",
+                astNode.CompilerContext.Name,
+                location.Line,
+                location.Column + position + 1)
+            {
+                TokenLength = length
+            };
         }
     }
 }

@@ -23,7 +23,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Expressions
             Eval("var name=\"Leela\";");
 
             var result = Eval("\"@{greeting} @{name}\";");
-
+        
             Assert.AreEqual("Hello Leela", result);
         }
 

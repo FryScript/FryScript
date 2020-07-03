@@ -32,7 +32,7 @@ namespace FryScript.Parsing
 
             var parseTree = _parser.Parse(source, name);
             
-            if (parseTree.HasErrors())
+            if (parseTree.HasErrors()) 
             {
                 var parseError = parseTree.ParserMessages.First();
                 var token = parseTree.Tokens.Last();
@@ -63,7 +63,10 @@ namespace FryScript.Parsing
             if (parseTree.HasErrors())
             {
                 var parseError = parseTree.ParserMessages.First();
-                throw new ParserException(parseError.Message, compilerContext.Name, parseError.Location.Line, parseError.Location.Column, 0);
+                var token = parseTree.Tokens.Last();
+                var errorMessage = $"Unexpected {token.ValueString}";
+
+                throw new ParserException(errorMessage, compilerContext.Name, parseError.Location.Line, parseError.Location.Column, token.Length, parseTree.Tokens);
             }
 
             var astBuilder = new AstBuilder(compilerContext);
