@@ -18,6 +18,17 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         }
 
         [TestMethod]
+        public void Script_B_Is_Not_Script_A()
+        {
+            Eval("@import \"Scripts/extendingScript\" as a;");
+            Eval("@import \"Scripts/baseScript\" as b;");
+
+            var result = Eval("b is a;");
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
         public void Null_Is_Other()
         {
             var result = Eval("null is 100;");

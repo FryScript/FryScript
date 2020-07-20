@@ -63,8 +63,6 @@
             var invokeExpr = Expression.Call(ctorInfo, argExprs);
 
             return GetMetaObject(invokeExpr);
-
-            throw new NotImplementedException();
         }
 
         public override DynamicMetaObject BindConvert(ConvertBinder binder)
