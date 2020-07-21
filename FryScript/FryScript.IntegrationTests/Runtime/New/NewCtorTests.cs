@@ -8,7 +8,7 @@ namespace FryScript.IntegrationTests.Runtime.New
         [TestMethod]
         public void New_Script()
         {
-            dynamic script = New("Scripts/newInstance");
+            var script = New("Scripts/newInstance");
 
             Assert.AreEqual("member1", script.member1);
         }
@@ -49,7 +49,35 @@ namespace FryScript.IntegrationTests.Runtime.New
         [TestMethod]
         public void New_Operator_Script_Instance()
         {
-            Assert.Fail();
+            Eval("@import \"Scripts/newInstance\" as newInstance;");
+
+            var script = Eval("new newInstance();");
+
+            Assert.AreEqual("member1", script.member1);
+        }
+
+        [TestMethod]
+        public void New_Operator_Script_Instance_With_Ctor_Params()
+        {
+            Eval("@import \"Scripts/newInstanceCtorParams\" as newInstanceCtorParams;");
+
+            var script = Eval("new newInstanceCtorParams(100);");
+
+            Assert.AreEqual(100, script.member1);
+        }
+
+        [TestMethod]
+        public void New_Script_Instance_With_Extending_Ctor_Params()
+        {
+            IScriptObject newExtendCtorParams = Get("Scripts/newExtendCtorParams");
+            Eval("@import \"Scripts/newExtendCtorParams\" as newExtendCtorParams;");
+            var script = Eval("new newExtendCtorParams(\"a\", 1);");
+
+            Assert.IsFalse(newExtendCtorParams.HasMember("member1"));
+            Assert.IsFalse(newExtendCtorParams.HasMember("member2"));
+
+            Assert.AreEqual("a", script.member1);
+            Assert.AreEqual(1, script.member2);
         }
     }
 }
