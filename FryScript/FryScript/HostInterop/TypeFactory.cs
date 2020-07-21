@@ -58,6 +58,9 @@ namespace FryScript.HostInterop
             if (scriptableTypeAttribute == null)
                 throw new ArgumentException($"Type {type.FullName} must be decorated with a {typeof(ScriptableTypeAttribute).FullName}", nameof(type));
 
+            if (scriptableTypeAttribute.IgnoreTypeFactory)
+                return type;
+
             var context = new TypeContext
             {
                 ScriptName = scriptableTypeAttribute.Name,
