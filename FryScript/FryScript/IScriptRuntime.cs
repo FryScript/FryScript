@@ -13,6 +13,8 @@ namespace FryScript
 
         IScriptObject Import(Type type);
 
+        IScriptObject Import(string name, IScriptObject instance);
+
         IScriptObject New(string name, params object[] args);
 
         object Eval(string script);

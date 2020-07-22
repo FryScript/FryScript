@@ -144,6 +144,21 @@ namespace FryScript
             return obj;
         }
 
+        public IScriptObject Import(string name, IScriptObject instance)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentNullException(nameof(name));
+
+            instance = instance ?? throw new ArgumentNullException(nameof(instance));
+
+            if (_registry.TryGetObject(name, out IScriptObject obj))
+                throw new ArgumentException($"A script named '{name}' already exists", nameof(name));
+
+            _registry.Import(name, instance);
+
+            return instance;
+        }
+
         public IScriptObject New(string name, params object[] args)
         {
             if (string.IsNullOrWhiteSpace(name))

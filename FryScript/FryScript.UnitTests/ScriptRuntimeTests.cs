@@ -42,6 +42,7 @@ namespace FryScript.UnitTests
         private IScriptProvider _scriptProvider;
         private IScriptObjectBuilder _objBuilder;
         private ITypeProvider _typeProvider;
+        private string _name;
 
         [TestInitialize]
         public void TestInitialize()
@@ -55,6 +56,8 @@ namespace FryScript.UnitTests
 
             _obj = Substitute.For<IScriptObject>();
             _objBuilder = Substitute.For<IScriptObjectBuilder>();
+
+            _name = "test";
         }
 
         [TestMethod]
@@ -265,6 +268,43 @@ namespace FryScript.UnitTests
 
             Assert.AreEqual(_obj, result);
             _registry.Received().Import("extendedScriptObject", _obj);
+        }
+
+        [DataTestMethod]
+        [DataRow(null)]
+        [DataRow("")]
+        [DataRow("  ")]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Import_Invalid_Name(string name)
+        {
+            _runtime.Import(name, _obj);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Import_Null_Instance()
+        {
+            _runtime.Import(_name, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Import_Name_Already_Imported()
+        {
+            _registry.TryGetObject(_name, out IScriptObject obj).Returns(true);
+
+            _runtime.Import(_name, _obj);
+        }
+
+        [TestMethod]
+        public void Import_Instance_Imported_Successfully()
+        {
+            _registry.TryGetObject(_name, out IScriptObject obj).Returns(false);
+
+            var result = _runtime.Import(_name, _obj);
+
+            Assert.AreEqual(_obj, result);
+            _registry.Received().Import(_name, _obj);
         }
 
         [DataTestMethod]
