@@ -8,11 +8,9 @@ namespace FryScript
     using Helpers;
     using HostInterop;
 
-    [ScriptableType("[array]")]
+    [ScriptableType("array")]
     public class ScriptArray : ScriptObject, IEnumerable<object>
     {
-        private static readonly ScriptObjectBuilder<ScriptArray> Builder = new ScriptObjectBuilder<ScriptArray>(o => o, new Uri("runtime://array.fry"));
-        
         private static readonly string ScriptTypeName = TypeProvider.Current.GetTypeName(typeof(ScriptArray));
 
         private readonly List<object> _items;
@@ -50,7 +48,7 @@ namespace FryScript
         public ScriptArray(params object[] items)
             : base(scriptType: ScriptTypeName)
         {
-            ObjectCore.Builder = Builder;
+            ObjectCore.Builder = Builder.ScriptArrayBuilder;
 
             _items = items == null
                 ? new List<object>()

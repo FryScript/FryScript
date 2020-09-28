@@ -9,7 +9,7 @@ namespace FryScript
         private readonly ITypeFactory _typeFactory;
 
         public ScriptObjectFactory()
-            : this((t,c,u) => Activator.CreateInstance(t, c, u) as IScriptObjectBuilder,
+            : this((t, c, u) => Activator.CreateInstance(t, c, u) as IScriptObjectBuilder,
                   TypeFactory.Current)
         {
         }
@@ -26,7 +26,6 @@ namespace FryScript
             ctor = ctor ?? throw new ArgumentNullException(nameof(ctor));
             uri = uri ?? throw new ArgumentNullException(nameof(uri));
 
-
             var scriptableType = _typeFactory.CreateScriptableType(type);
             var builderType = typeof(ScriptObjectBuilder<>).MakeGenericType(scriptableType);
             var builder = _factory(builderType, ctor, uri);
@@ -38,12 +37,12 @@ namespace FryScript
         public IScriptObject CreatePrimitive(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
-            
+
             var scriptPrimitiveType = typeof(ScriptPrimitive<>).MakeGenericType(type);
 
             var obj = Activator.CreateInstance(scriptPrimitiveType);
 
-            return obj  as IScriptObject;
+            return obj as IScriptObject;
         }
     }
 }

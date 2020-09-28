@@ -5,11 +5,9 @@ namespace FryScript
     [ScriptableType("error")]
     public class ScriptError : ScriptObject
     {
-        private static readonly ScriptObjectBuilder<ScriptError> Builder = new ScriptObjectBuilder<ScriptError>(o => o, new Uri("runtime://error.fry"));
-
         public ScriptError()
         {
-            ObjectCore.Builder = Builder;
+            ObjectCore.Builder = Builder.ScriptErrorBuilder;
         }
 
         [ScriptableProperty("message")]

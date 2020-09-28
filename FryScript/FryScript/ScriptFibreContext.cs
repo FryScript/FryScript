@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 
 namespace FryScript
 {
+    [ScriptableType("fibre-context")]
     public class ScriptFibreContext : ScriptObject
     {
         public const int PendingState = -1;
@@ -41,6 +42,12 @@ namespace FryScript
 
         public Func<ScriptFibreContext, object> Target { get; set; }
 
+        public ScriptFibreContext()
+            : this(new Func<ScriptFibreContext, object>(o => o))
+        {
+            ObjectCore.Builder = Builder.ScriptFibreContextBuilder;
+        }
+
         public ScriptFibreContext(Func<ScriptFibreContext, object> target)
         {
             Target = target ?? throw new ArgumentNullException(nameof(target));
@@ -65,7 +72,7 @@ namespace FryScript
         [ScriptableMethod("execute")]
         public object Execute()
         {
-            while(!Completed)
+            while (!Completed)
             {
                 Resume();
             }

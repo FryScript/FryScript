@@ -6,13 +6,19 @@ using System.Linq.Expressions;
 
 namespace FryScript
 {
+    [ScriptableType("fibre")]
     public class ScriptFibre : ScriptFunction
     {
-        new public const string DefaultScriptType = "[fibre]";
+        public ScriptFibre()
+            : base(new Action(() => {}))
+        {
+            ObjectCore.Builder = Builder.ScriptFibreBuilder;
+        }
 
         public ScriptFibre(Delegate target)
-            : base(target, DefaultScriptType)
+            : base(target)
         {
+            ObjectCore.Builder = Builder.ScriptFibreBuilder;
         }
 
         internal static ScriptFibre New(Delegate target)

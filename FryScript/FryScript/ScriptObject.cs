@@ -3,20 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq.Expressions;
+using System.Collections;
+using FryScript.CallSites;
 
 namespace FryScript
 {
-    using System.Collections;
-    using System.Linq;
-    using CallSites;
-    using HostInterop;
+
 
     [ScriptableType("object")]
     public class ScriptObject : IScriptType, IDynamicMetaObjectProvider, IEnumerable<object>, IScriptObject
     {
-        private static readonly ScriptObjectBuilder<ScriptObject> Builder = new ScriptObjectBuilder<ScriptObject>(o => o, new Uri("runtime://object.fry"));
-
         private readonly object _lock = new object();
+        
         public const string ObjectName = "object";
 
         internal string ScriptType;
@@ -44,7 +42,7 @@ namespace FryScript
             //bool autoConstruct = true)
         )
         {
-            ObjectCore.Builder = Builder;
+            ObjectCore.Builder = Builder.ScriptObjectBuilder;
 
             ScriptType = scriptType ?? ObjectName;
             //Ctor = ctor;
