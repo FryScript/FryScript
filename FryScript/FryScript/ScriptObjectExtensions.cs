@@ -2,7 +2,9 @@
 using FryScript.HostInterop;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace FryScript
 {
@@ -89,5 +91,10 @@ namespace FryScript
 
             return member?.Invoke<object>(args);
         }
+
+        public static MetaScriptObject GetMetaScriptObject(this IScriptObject source, Expression expression)
+        {
+            return new MetaScriptObject(expression, BindingRestrictions.Empty, source);
+        } 
     }
 }

@@ -261,7 +261,7 @@ namespace FryScript.UnitTests
         {
             _registry.TryGetObject("extendedScriptObject", out IScriptObject obj).Returns(false);
 
-            _objectFactory.Create(typeof(ExtendedScriptObject), Arg.Any<Func<IScriptObject, object>>(), new Uri("runtime://extendedScriptObject"))
+            _objectFactory.Create(typeof(ExtendedScriptObject), Arg.Any<Func<IScriptObject, object>>(), new Uri("runtime://extendedScriptObject.fry"))
                 .Returns(_obj);
 
             var result = _runtime.Import(typeof(ExtendedScriptObject));

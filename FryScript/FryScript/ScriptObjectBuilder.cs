@@ -1,7 +1,35 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
+using FryScript.Helpers;
 
 namespace FryScript
 {
+    public static class ScriptObjectBuilder
+    {
+        public static IScriptObjectBuilder GetInstanceBuilder(string name, IScriptObject instance)
+        {
+            var method = (from m in typeof(ScriptObjectBuilder).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+                         where m.IsGenericMethod && m.Name == nameof(ScriptObjectBuilder.InternalGetInstanceBuilder)
+                         select m)
+                         .Single();
+
+            method = method.MakeGenericMethod(instance.GetType());
+
+            var builder = method.Invoke(null, new object[] { name, instance }) as IScriptObjectBuilder;
+
+            return builder;
+        }
+
+        private static ScriptObjectBuilder<T> InternalGetInstanceBuilder<T>(string name, T instance)
+            where T : IScriptObject, new()
+        {
+            var uri = RuntimeUri.GetRuntimeUri(name);
+
+            return new ScriptObjectBuilder<T>(o => ExceptionHelper.InvalidCreateInstance(uri.AbsoluteUri), uri);
+        }
+    }
+
     public class ScriptObjectBuilder<T> : IScriptObjectBuilder
         where T : IScriptObject, new()
     {
@@ -30,7 +58,7 @@ namespace FryScript
 
             _ctor(instance);
 
-            if(instance.ObjectCore != null)
+            if (instance.ObjectCore != null)
                 instance.ObjectCore.Builder = this;
 
             return instance;

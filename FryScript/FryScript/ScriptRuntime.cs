@@ -132,12 +132,12 @@ namespace FryScript
             var scriptableType = type.GetTypeInfo().GetCustomAttribute<ScriptableTypeAttribute>();
 
             if (scriptableType == null)
-                throw new ArgumentException($"Type {type.FullName} is not decorated with {typeof(ScriptableTypeAttribute).FullName}", nameof(type));
+                throw ExceptionHelper.TypeNotScriptable(type, nameof(type));
 
             if (_registry.TryGetObject(scriptableType.Name, out IScriptObject obj))
                 return obj;
 
-            obj = _objectFactory.Create(type, o => o, new Uri(RuntimeUri.GetRuntimeUri(type)));
+            obj = _objectFactory.Create(type, o => o, RuntimeUri.GetRuntimeUri(type));
 
             _registry.Import(scriptableType.Name, obj);
 
@@ -153,6 +153,8 @@ namespace FryScript
 
             if (_registry.TryGetObject(name, out IScriptObject obj))
                 throw new ArgumentException($"A script named '{name}' already exists", nameof(name));
+
+            instance.ObjectCore.Builder = ScriptObjectBuilder.GetInstanceBuilder(name, instance);
 
             _registry.Import(name, instance);
 

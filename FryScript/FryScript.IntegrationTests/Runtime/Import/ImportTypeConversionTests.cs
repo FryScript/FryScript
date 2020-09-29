@@ -35,6 +35,7 @@ namespace FryScript.IntegrationTests.Runtime.Import
 
             Assert.IsTrue(typeof(Importable).IsAssignableFrom(importable.GetType()));
             Assert.AreNotEqual(importable.GetType(), typeof(Importable));
+            Assert.AreEqual(new Uri("runtime://importable.fry"), importable.ObjectCore.Builder.Uri);
         }
 
         [TestMethod]
@@ -45,6 +46,19 @@ namespace FryScript.IntegrationTests.Runtime.Import
             IScriptObject importable = ScriptRuntime.Get("no-sub-class");
 
             Assert.AreEqual(importable.GetType(), typeof(ImportableNoSubClass));
+            Assert.AreEqual(new Uri("runtime://no-sub-class.fry"), importable.ObjectCore.Builder.Uri);
+        }
+
+        [TestMethod]
+        public void Import_Instance_Is_Unmodified()
+        {
+            var instance = new ScriptObject();
+
+            var imported = ScriptRuntime.Import("instance", instance);
+
+            Assert.AreEqual(instance, imported);
+
+            Assert.AreEqual(new Uri("runtime://instance.fry"), imported.ObjectCore.Builder.Uri);
         }
     }
 }

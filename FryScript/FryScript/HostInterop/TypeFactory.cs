@@ -1,4 +1,5 @@
 ﻿using FryScript.Binders;
+using FryScript.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -56,7 +57,7 @@ namespace FryScript.HostInterop
             var scriptableTypeAttribute = typeInfo.GetCustomAttributes<ScriptableTypeAttribute>().SingleOrDefault();
 
             if (scriptableTypeAttribute == null)
-                throw new ArgumentException($"Type {type.FullName} must be decorated with a {typeof(ScriptableTypeAttribute).FullName}", nameof(type));
+                throw ExceptionHelper.TypeNotScriptable(type, nameof(type));
 
             if (scriptableTypeAttribute.IgnoreTypeFactory)
                 return type;

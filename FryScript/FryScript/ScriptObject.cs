@@ -131,7 +131,7 @@ namespace FryScript
 
         public virtual DynamicMetaObject GetMetaObject(Expression parameter)
         {
-            return new MetaScriptObject(parameter, BindingRestrictions.Empty, this);
+            return this.GetMetaScriptObject(parameter);
         }
 
         public virtual IEnumerator<object> GetEnumerator()
