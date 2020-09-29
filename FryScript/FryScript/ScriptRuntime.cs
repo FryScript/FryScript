@@ -115,7 +115,7 @@ namespace FryScript
 
             var context = new CompilerContext(this, scriptInfo.Uri);
             var ctor = _compiler.Compile(scriptInfo.Source, resolvedName, context);
-            var instance = _objectFactory.Create(context.ScriptType, ctor, scriptInfo.Uri);
+            var instance = _objectFactory.Create(context.ScriptType, ctor, scriptInfo.Uri, context.ScriptObjectBuilder);
 
             _registry.Import(resolvedName, instance);
             _registry.Import(key, instance);
@@ -137,7 +137,7 @@ namespace FryScript
             if (_registry.TryGetObject(scriptableType.Name, out IScriptObject obj))
                 return obj;
 
-            obj = _objectFactory.Create(type, o => o, RuntimeUri.GetRuntimeUri(type));
+            obj = _objectFactory.Create(type, o => o, RuntimeUri.GetRuntimeUri(type), Builder.ScriptObjectBuilder);
 
             _registry.Import(scriptableType.Name, obj);
 

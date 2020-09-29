@@ -12,17 +12,19 @@ namespace FryScript.UnitTests
         private ITypeFactory _typeFactory;
         private IScriptObject _obj;
         private IScriptObjectBuilder _builder;
-        private Func<Type, Func<IScriptObject, object>, Uri, IScriptObjectBuilder> _factoryFunc;
+        private Func<Type, Func<IScriptObject, object>, Uri, IScriptObjectBuilder, IScriptObjectBuilder> _factoryFunc;
+        private IScriptObjectBuilder _parent;
 
         [TestInitialize]
         public void TestIntialize()
         {
             _builder = Substitute.For<IScriptObjectBuilder>();
             _obj = Substitute.For<IScriptObject>();
-            _factoryFunc = Substitute.For<Func<Type, Func<IScriptObject, object>, Uri, IScriptObjectBuilder>>();
-            _factoryFunc.Invoke(Arg.Any<Type>(), Arg.Any<Func<IScriptObject, object>>(), Arg.Any<Uri>());
+            _factoryFunc = Substitute.For<Func<Type, Func<IScriptObject, object>, Uri, IScriptObjectBuilder, IScriptObjectBuilder>>();
+            _factoryFunc.Invoke(Arg.Any<Type>(), Arg.Any<Func<IScriptObject, object>>(), Arg.Any<Uri>(), Arg.Any<IScriptObjectBuilder>());
             _typeFactory = Substitute.For<ITypeFactory>();
             _factory = new ScriptObjectFactory(_factoryFunc, _typeFactory);
+            _parent = Substitute.For<IScriptObjectBuilder>();
         }
 
         [TestMethod]
@@ -43,21 +45,21 @@ namespace FryScript.UnitTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Create_Null_Type()
         {
-            _factory.Create(null, o => o, new Uri("test:///name"));
+            _factory.Create(null, o => o, new Uri("test:///name"), _parent);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Create_Null_Ctor()
         {
-            _factory.Create(typeof(object), null, new Uri("test:///name"));
+            _factory.Create(typeof(object), null, new Uri("test:///name"), _parent);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Create_Null_Uri()
         {
-            _factory.Create(typeof(object), o => o, null);
+            _factory.Create(typeof(object), o => o, null, _parent);
         }
 
         [TestMethod]
@@ -72,11 +74,12 @@ namespace FryScript.UnitTests
             _factoryFunc.Invoke(
                 typeof(ScriptObjectBuilder<>).MakeGenericType(scriptableType),
                 ctor,
-                uri).Returns(_builder);
+                uri, 
+                _parent).Returns(_builder);
 
             _builder.Build().Returns(_obj);
 
-            var result = _factory.Create(type, ctor, uri);
+            var result = _factory.Create(type, ctor, uri, _parent);
 
             Assert.AreEqual(_obj, result);
         }

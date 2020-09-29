@@ -10,23 +10,25 @@ namespace FryScript
         public static IScriptObjectBuilder GetInstanceBuilder(string name, IScriptObject instance)
         {
             var method = (from m in typeof(ScriptObjectBuilder).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
-                         where m.IsGenericMethod && m.Name == nameof(ScriptObjectBuilder.InternalGetInstanceBuilder)
-                         select m)
+                          where m.IsGenericMethod && m.Name == nameof(ScriptObjectBuilder.InternalGetInstanceBuilder)
+                          select m)
                          .Single();
 
             method = method.MakeGenericMethod(instance.GetType());
 
-            var builder = method.Invoke(null, new object[] { name, instance }) as IScriptObjectBuilder;
+            var parent = instance?.ObjectCore?.Builder?.Parent;
+
+            var builder = method.Invoke(null, new object[] { name, instance, parent }) as IScriptObjectBuilder;
 
             return builder;
         }
 
-        private static ScriptObjectBuilder<T> InternalGetInstanceBuilder<T>(string name, T instance)
+        private static ScriptObjectBuilder<T> InternalGetInstanceBuilder<T>(string name, T instance, IScriptObjectBuilder parent)
             where T : IScriptObject, new()
         {
             var uri = RuntimeUri.GetRuntimeUri(name);
 
-            return new ScriptObjectBuilder<T>(o => ExceptionHelper.InvalidCreateInstance(uri.AbsoluteUri), uri);
+            return new ScriptObjectBuilder<T>(o => ExceptionHelper.InvalidCreateInstance(uri.AbsoluteUri), uri, parent);
         }
     }
 
@@ -38,18 +40,22 @@ namespace FryScript
 
         public Uri Uri { get; }
 
-        public ScriptObjectBuilder(Func<IScriptObject, object> ctor, Uri uri)
+        public IScriptObjectBuilder Parent { get; }
+
+        public ScriptObjectBuilder(Func<IScriptObject, object> ctor, Uri uri, IScriptObjectBuilder parent)
             : this(() => new T(),
                   ctor,
-                  uri)
+                  uri,
+                  parent)
         {
         }
 
-        public ScriptObjectBuilder(Func<T> factory, Func<IScriptObject, object> ctor, Uri uri)
+        public ScriptObjectBuilder(Func<T> factory, Func<IScriptObject, object> ctor, Uri uri, IScriptObjectBuilder parent)
         {
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
             _ctor = ctor ?? throw new ArgumentNullException(nameof(ctor));
             Uri = uri ?? throw new ArgumentNullException(nameof(uri));
+            Parent = parent;
         }
 
         public IScriptObject Build()

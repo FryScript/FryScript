@@ -6,6 +6,8 @@ namespace FryScript
     {
         Uri Uri { get; }
 
+        IScriptObjectBuilder Parent { get; }
+
         IScriptObject Build();
 
         IScriptObject Extend(IScriptObject obj);

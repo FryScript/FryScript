@@ -29,6 +29,7 @@ namespace FryScript.Ast
             var extendExpr = Expression.Call(builderExpr, nameof(builder.Extend), null, thisExpr);
 
             CompilerContext.ScriptType = extendScript.GetType();
+            CompilerContext.ScriptObjectBuilder = builder;
 
             return extendExpr;
         }

@@ -39,6 +39,8 @@ namespace FryScript.Compilation
 
         public IRootNode RootNode { get; set; }
 
+        public IScriptObjectBuilder ScriptObjectBuilder { get; set; }
+
         public CompilerContext(IScriptRuntime scriptRuntime, Uri uri, bool evalMode = false)
             : base(FryScriptLanguageData.LanguageData)
         {
@@ -50,6 +52,7 @@ namespace FryScript.Compilation
             DefaultLiteralNodeType = typeof(LiteralNode);
             DefaultIdentifierNodeType = typeof(IdentifierNode);
             ScriptType = typeof(ScriptObject);
+            ScriptObjectBuilder = Builder.ScriptObjectBuilder;
             Scope = new Scope();
         }
     }

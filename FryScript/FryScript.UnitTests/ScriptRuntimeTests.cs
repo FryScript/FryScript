@@ -211,13 +211,13 @@ namespace FryScript.UnitTests
 
                 return true;
             });
-
+            
             _compiler.Compile("source", "test:///name.fry", Arg.Is<CompilerContext>(c =>
                 c.Name == expectedScriptInfo.Uri.AbsoluteUri
                 && c.ScriptRuntime == _runtime
             )).Returns(new Func<IScriptObject, object>(o => "Constructed!"));
 
-            _objectFactory.Create(typeof(ScriptObject), Arg.Any<Func<IScriptObject, object>>(), new Uri("test:///name.fry"))
+            _objectFactory.Create(typeof(ScriptObject), Arg.Any<Func<IScriptObject, object>>(), new Uri("test:///name.fry"), Arg.Any<IScriptObjectBuilder>())
                 .Returns(_obj);
 
             var result = _runtime.Get("name");
@@ -261,7 +261,7 @@ namespace FryScript.UnitTests
         {
             _registry.TryGetObject("extendedScriptObject", out IScriptObject obj).Returns(false);
 
-            _objectFactory.Create(typeof(ExtendedScriptObject), Arg.Any<Func<IScriptObject, object>>(), new Uri("runtime://extendedScriptObject.fry"))
+            _objectFactory.Create(typeof(ExtendedScriptObject), Arg.Any<Func<IScriptObject, object>>(), new Uri("runtime://extendedScriptObject.fry"), Builder.ScriptObjectBuilder)
                 .Returns(_obj);
 
             var result = _runtime.Import(typeof(ExtendedScriptObject));
