@@ -18,7 +18,7 @@ namespace FryScript.IntegrationTests.Runtime.Import
         [ScriptableType("no-sub-class", IgnoreTypeFactory = true)]
         public class ImportableNoSubClass : IScriptObject
         {
-            public ObjectCore ObjectCore => new ObjectCore();
+            public ObjectCore ObjectCore { get; } = new ObjectCore();
 
             public DynamicMetaObject GetMetaObject(Expression parameter)
             {

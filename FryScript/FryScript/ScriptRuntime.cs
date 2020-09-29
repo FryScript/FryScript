@@ -137,7 +137,7 @@ namespace FryScript
             if (_registry.TryGetObject(scriptableType.Name, out IScriptObject obj))
                 return obj;
 
-            obj = _objectFactory.Create(type, o => o, new Uri($"runtime://{scriptableType.Name}"));
+            obj = _objectFactory.Create(type, o => o, new Uri(RuntimeUri.GetRuntimeUri(type)));
 
             _registry.Import(scriptableType.Name, obj);
 

@@ -17,7 +17,7 @@ namespace FryScript
 
         public static Uri ScriptFunctionUri = new Uri(GetRuntimeUri(typeof(ScriptFunction)));
 
-        private static string GetRuntimeUri(Type type)
+        public static string GetRuntimeUri(Type type)
         {
             var scriptableType = type.GetTypeInfo().GetCustomAttribute<ScriptableTypeAttribute>();
 
