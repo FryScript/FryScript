@@ -20,6 +20,7 @@ namespace FryScript.UnitTests
             _ctor = Substitute.For<Func<IScriptObject, object>>();
             _uri = new Uri("test:///file");
             _factory = Substitute.For<Func<ScriptObject>>();
+            _parent = new ScriptObjectBuilder<ScriptObject>(_factory, _ctor, _uri, _parent);
             _builder = new ScriptObjectBuilder<ScriptObject>(_factory, _ctor, _uri, _parent);
             _instance = new ScriptObject();
         }
@@ -35,7 +36,7 @@ namespace FryScript.UnitTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_Null_Ctor_Func()
         {
-            new ScriptObjectBuilder<ScriptObject>(_factory, null,  _uri, _parent);
+            new ScriptObjectBuilder<ScriptObject>(_factory, null, _uri, _parent);
         }
 
         [TestMethod]
@@ -88,6 +89,48 @@ namespace FryScript.UnitTests
 
             Assert.AreEqual(_instance, result);
             _ctor.Received().Invoke(_instance);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Extends_Null_Parent()
+        {
+            _builder.Extends(null);
+        }
+
+        [TestMethod]
+        public void Extends_Builder_Extends_Direct_Parent()
+        {
+            Assert.IsTrue(_builder.Extends(_parent));
+        }
+
+        [TestMethod]
+        public void Extends_Builder_Extends_Ancestor()
+        {
+            var superBuilder = new ScriptObjectBuilder<ScriptObject>(_ctor, new Uri("test://super"), null);
+            var subBuilder = new ScriptObjectBuilder<ScriptObject>(_ctor, new Uri("test://sub"), superBuilder);
+
+            _builder = new ScriptObjectBuilder<ScriptObject>(_ctor, _uri, subBuilder);
+
+            Assert.IsTrue(_builder.Extends(superBuilder));
+        }
+
+        [TestMethod]
+        public void Extends_Builder_Does_Not_Extend_Self()
+        {
+            _builder = new ScriptObjectBuilder<ScriptObject>(_ctor, _uri, null);
+
+            Assert.IsFalse(_builder.Extends(_builder));
+        }
+
+        [TestMethod]
+        public void Extends_Builder_Does_Not_Extend_Target()
+        {
+            var unrelatedBuilder = new ScriptObjectBuilder<ScriptObject>(_ctor, new Uri("test://unrelated"), null);
+
+            _builder = new ScriptObjectBuilder<ScriptObject>(_ctor, _uri, null);
+
+            Assert.IsFalse(_builder.Extends(unrelatedBuilder));
         }
     }
 }

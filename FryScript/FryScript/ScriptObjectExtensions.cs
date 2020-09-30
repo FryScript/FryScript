@@ -95,6 +95,17 @@ namespace FryScript
         public static MetaScriptObject GetMetaScriptObject(this IScriptObject source, Expression expression)
         {
             return new MetaScriptObject(expression, BindingRestrictions.Empty, source);
-        } 
+        }
+
+        public static bool Extends(this IScriptObject source, IScriptObject target)
+        {
+            var sourceBuilder = source?.ObjectCore?.Builder;
+            var targetBuilder = target.ObjectCore.Builder;
+
+            if(sourceBuilder == null || targetBuilder == null)
+                return false;
+
+            throw new NotImplementedException();
+        }
     }
 }

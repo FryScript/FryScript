@@ -37,10 +37,11 @@ namespace FryScript
     {
         private readonly Func<T> _factory;
         private readonly Func<IScriptObject, object> _ctor;
+        private readonly IScriptObjectBuilder _parent;
 
         public Uri Uri { get; }
 
-        public IScriptObjectBuilder Parent { get; }
+        public IScriptObjectBuilder Parent => _parent;
 
         public ScriptObjectBuilder(Func<IScriptObject, object> ctor, Uri uri, IScriptObjectBuilder parent)
             : this(() => new T(),
@@ -55,7 +56,7 @@ namespace FryScript
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
             _ctor = ctor ?? throw new ArgumentNullException(nameof(ctor));
             Uri = uri ?? throw new ArgumentNullException(nameof(uri));
-            Parent = parent;
+            _parent = parent;
         }
 
         public IScriptObject Build()
@@ -77,6 +78,26 @@ namespace FryScript
             _ctor(obj);
 
             return obj;
+        }
+
+        public bool Extends(IScriptObjectBuilder target)
+        {
+            target = target ?? throw new ArgumentNullException(nameof(target));
+
+            if(this == target)
+                return false;
+
+            var curParent = _parent;
+
+            while(curParent != null)
+            {
+                if(curParent == target)
+                    return true;
+
+                curParent = curParent.Parent;
+            }
+
+            return false;
         }
     }
 }

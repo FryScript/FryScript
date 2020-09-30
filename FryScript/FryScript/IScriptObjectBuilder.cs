@@ -11,5 +11,7 @@ namespace FryScript
         IScriptObject Build();
 
         IScriptObject Extend(IScriptObject obj);
+
+        bool Extends(IScriptObjectBuilder target);
     }
 }
