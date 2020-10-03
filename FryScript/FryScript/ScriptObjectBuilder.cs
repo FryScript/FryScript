@@ -16,7 +16,7 @@ namespace FryScript
 
             method = method.MakeGenericMethod(instance.GetType());
 
-            var parent = instance?.ObjectCore?.Builder?.Parent;
+            var parent = instance?.ObjectCore?.Builder;
 
             var builder = method.Invoke(null, new object[] { name, instance, parent }) as IScriptObjectBuilder;
 
