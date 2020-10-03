@@ -47,6 +47,12 @@ namespace FryScript
             return GetReferenceMetaObject(metaObject);
         }
 
+        public override DynamicMetaObject BindInvoke(InvokeBinder binder, DynamicMetaObject[] args)
+        {
+            var metaObject = Reference.Target.GetMetaObject(TargetExpr).BindInvoke(binder, args);
+            return GetReferenceMetaObject(metaObject);
+        }
+
         public override DynamicMetaObject BindBinaryOperation(BinaryOperationBinder binder, DynamicMetaObject arg)
         {
             var metaObject = Reference.Target.GetMetaObject(TargetExpr).BindBinaryOperation(binder, arg);
