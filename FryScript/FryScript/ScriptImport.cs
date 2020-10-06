@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace FryScript
 {
-    public sealed class ScriptObjectReference : IDynamicMetaObjectProvider
+    public sealed class ScriptImport : IDynamicMetaObjectProvider
     {
         readonly private Lazy<IScriptObject> _resolver;
 
@@ -13,14 +13,14 @@ namespace FryScript
             get { return _resolver.Value; }
         }
 
-        public ScriptObjectReference(Func<IScriptObject> func)
+        public ScriptImport(Func<IScriptObject> func)
         {
             _resolver = new Lazy<IScriptObject>(func, false);
         }
 
         public DynamicMetaObject GetMetaObject(Expression parameter)
         {
-            return new MetaScriptObjectReference(parameter, BindingRestrictions.Empty, this);
+            return new MetaScriptImport(parameter, BindingRestrictions.Empty, this);
         }
     }
 }

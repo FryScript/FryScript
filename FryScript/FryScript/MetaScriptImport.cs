@@ -4,15 +4,15 @@ using System.Linq.Expressions;
 
 namespace FryScript
 {
-    public class MetaScriptObjectReference : MetaScriptObjectBase
+    public class MetaScriptImport : MetaScriptObjectBase
     {
-        public ScriptObjectReference Reference { get { return (ScriptObjectReference)Value; } }
+        public ScriptImport Reference { get { return (ScriptImport)Value; } }
 
-        public Expression ReferenceExpr { get { return Expression.Convert(Expression, typeof(ScriptObjectReference)); } }
+        public Expression ReferenceExpr { get { return Expression.Convert(Expression, typeof(ScriptImport)); } }
 
         public Expression TargetExpr { get { return Expression.Property(ReferenceExpr, "Target"); } }
 
-        public MetaScriptObjectReference(Expression expression, BindingRestrictions restrictions, object value)
+        public MetaScriptImport(Expression expression, BindingRestrictions restrictions, object value)
             : base(expression, restrictions, value)
         {
         }

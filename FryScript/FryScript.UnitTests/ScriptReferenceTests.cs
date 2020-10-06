@@ -11,25 +11,25 @@ namespace FryScript.UnitTests
     [TestClass]
     public class ScriptReferenceTests
     {
-        private dynamic _reference;
-        private IScriptObject _referencedObject;
-        private MetaScriptObjectBase _metaReferencedObject;
+        private dynamic _import;
+        private IScriptObject _importedObject;
+        private MetaScriptObjectBase metaImportedObject;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            _referencedObject = Substitute.For<IScriptObject>();
-            _metaReferencedObject = Substitute.For<MetaScriptObjectBase>(Expression.Constant(true), BindingRestrictions.Empty, new object());
-            _referencedObject.GetMetaObject(Arg.Any<Expression>()).Returns(_metaReferencedObject);
-            _reference = new ScriptObjectReference(() => _referencedObject);
+            _importedObject = Substitute.For<IScriptObject>();
+            metaImportedObject = Substitute.For<MetaScriptObjectBase>(Expression.Constant(true), BindingRestrictions.Empty, new object());
+            _importedObject.GetMetaObject(Arg.Any<Expression>()).Returns(metaImportedObject);
+            _import = new ScriptImport(() => _importedObject);
         }
 
         [TestMethod]
         public void Forwards_Get_Member()
         {
-            _metaReferencedObject.BindGetMember(Arg.Any<GetMemberBinder>()).Returns(GetMetaObject("get member"));
+            metaImportedObject.BindGetMember(Arg.Any<GetMemberBinder>()).Returns(GetMetaObject("get member"));
             
-            var result = _reference.test;
+            var result = _import.test;
 
             Assert.AreEqual("get member", result);
         }
@@ -37,10 +37,10 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Forwards_Set_Member()
         {
-            _metaReferencedObject.BindSetMember(Arg.Any<SetMemberBinder>(), Arg.Any<DynamicMetaObject>())
-                .Returns(GetMetaObject("set value"));
+            metaImportedObject.BindSetMember(Arg.Any<SetMemberBinder>(), Arg.Any<DynamicMetaObject>())
+                .Returns(GetMetaObject("set member"));
 
-            var result = _reference.test = "set member";
+            var result = _import.test = "set member";
 
             Assert.AreEqual("set member", result);
         }
@@ -48,10 +48,10 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Forwards_Get_Index()
         {
-            _metaReferencedObject.BindGetIndex(Arg.Any<GetIndexBinder>(), Arg.Any<DynamicMetaObject[]>())
+            metaImportedObject.BindGetIndex(Arg.Any<GetIndexBinder>(), Arg.Any<DynamicMetaObject[]>())
                 .Returns(GetMetaObject("get index"));
 
-            var result = _reference["test"];
+            var result = _import["test"];
 
             Assert.AreEqual("get index", result);
         }
@@ -59,10 +59,10 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Forwards_Set_Index()
         {
-            _metaReferencedObject.BindSetIndex(Arg.Any<SetIndexBinder>(), Arg.Any<DynamicMetaObject[]>(), Arg.Any<DynamicMetaObject>())
+            metaImportedObject.BindSetIndex(Arg.Any<SetIndexBinder>(), Arg.Any<DynamicMetaObject[]>(), Arg.Any<DynamicMetaObject>())
                 .Returns(GetMetaObject("set index"));
 
-            var result = _reference["test"] = "set index";
+            var result = _import["test"] = "set index";
 
             Assert.AreEqual("set index", result);
         }
@@ -70,10 +70,10 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Forwards_Invoke_Member()
         {
-            _metaReferencedObject.BindInvokeMember(Arg.Any<InvokeMemberBinder>(), Arg.Any<DynamicMetaObject[]>())
+            metaImportedObject.BindInvokeMember(Arg.Any<InvokeMemberBinder>(), Arg.Any<DynamicMetaObject[]>())
                 .Returns(GetMetaObject("invoke member"));
 
-            var result = _reference.test();
+            var result = _import.test();
 
             Assert.AreEqual("invoke member", result);
         }
@@ -81,10 +81,10 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Forwards_Invoke()
         {
-            _metaReferencedObject.BindInvoke(Arg.Any<InvokeBinder>(), Arg.Any<DynamicMetaObject[]>())
+            metaImportedObject.BindInvoke(Arg.Any<InvokeBinder>(), Arg.Any<DynamicMetaObject[]>())
                 .Returns(GetMetaObject("invoke"));
 
-            var result = _reference();
+            var result = _import();
 
             Assert.AreEqual("invoke", result);
         }
@@ -92,10 +92,10 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Forwards_Binary_Operation()
         {
-            _metaReferencedObject.BindBinaryOperation(Arg.Any<BinaryOperationBinder>(), Arg.Any<DynamicMetaObject>())
+            metaImportedObject.BindBinaryOperation(Arg.Any<BinaryOperationBinder>(), Arg.Any<DynamicMetaObject>())
                 .Returns(GetMetaObject("binary operation"));
 
-            var result = _reference + 1;
+            var result = _import + 1;
 
             Assert.AreEqual("binary operation", result);
         }
@@ -103,10 +103,10 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Forwards_Convert()
         {
-            _metaReferencedObject.BindConvert(Arg.Any<ConvertBinder>())
+            metaImportedObject.BindConvert(Arg.Any<ConvertBinder>())
                 .Returns(GetMetaObject("convert"));
 
-            var result = (string)_reference;
+            var result = (string)_import;
 
             Assert.AreEqual("convert", result);
         }
@@ -114,13 +114,13 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Forwards_Create_Instance()
         {
-            _metaReferencedObject.BindCreateInstance(Arg.Any<CreateInstanceBinder>(), Arg.Any<DynamicMetaObject[]>())
+            metaImportedObject.BindCreateInstance(Arg.Any<CreateInstanceBinder>(), Arg.Any<DynamicMetaObject[]>())
                 .Returns(GetMetaObject("create instance"));
 
             var binder = new ScriptCreateInstanceBinder(0);
             var callsite = CallSite.Create(typeof(Func<CallSite, object, object>), binder) as CallSite<Func<CallSite, object, object>>;
 
-            var result = callsite.Target(callsite, _reference);
+            var result = callsite.Target(callsite, _import);
 
             Assert.AreEqual("create instance", result);
         }
@@ -128,13 +128,13 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Forwards_Is_Operation()
         {
-            _metaReferencedObject.BindIsOperation(Arg.Any<ScriptIsOperationBinder>(), Arg.Any<DynamicMetaObject>())
+            metaImportedObject.BindIsOperation(Arg.Any<ScriptIsOperationBinder>(), Arg.Any<DynamicMetaObject>())
                 .Returns(GetMetaObject("is operation"));
 
             var binder = new ScriptIsOperationBinder();
             var callSite = CallSite.Create(typeof(Func<CallSite, object, object, object>), binder) as CallSite<Func<CallSite, object, object, object>>;
 
-            var result = callSite.Target(callSite, _reference, new object());
+            var result = callSite.Target(callSite, _import, new object());
 
             Assert.AreEqual("is operation", result);
         }
@@ -142,13 +142,13 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Forwards_Has_Operation()
         {
-            _metaReferencedObject.BindHasOperation(Arg.Any<ScriptHasOperationBinder>())
+            metaImportedObject.BindHasOperation(Arg.Any<ScriptHasOperationBinder>())
                 .Returns(GetMetaObject("has operation"));
 
             var binder = new ScriptHasOperationBinder("test");
             var callSite = CallSite.Create(typeof(Func<CallSite, object, object>), binder) as CallSite<Func<CallSite, object, object>>;
 
-            var result = callSite.Target(callSite, _reference);
+            var result = callSite.Target(callSite, _import);
 
             Assert.AreEqual("has operation", result);
         }
@@ -156,13 +156,13 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Forwards_Extends_Operation()
         {
-            _metaReferencedObject.BindExtendsOperation(Arg.Any<ScriptExtendsOperationBinder>(), Arg.Any<DynamicMetaObject>())
+            metaImportedObject.BindExtendsOperation(Arg.Any<ScriptExtendsOperationBinder>(), Arg.Any<DynamicMetaObject>())
                 .Returns(GetMetaObject("extends operation"));
             
             var binder = new ScriptExtendsOperationBinder();
             var callSite = CallSite.Create(typeof(Func<CallSite, object, object, object>), binder) as CallSite<Func<CallSite, object, object, object>>;
 
-            var result = callSite.Target(callSite, _reference, new object());
+            var result = callSite.Target(callSite, _import, new object());
 
             Assert.AreEqual("extends operation", result);
         }
