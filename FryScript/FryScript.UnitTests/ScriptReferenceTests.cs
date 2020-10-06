@@ -132,11 +132,39 @@ namespace FryScript.UnitTests
                 .Returns(GetMetaObject("is operation"));
 
             var binder = new ScriptIsOperationBinder();
-            var callsite = CallSite.Create(typeof(Func<CallSite, object, object>), binder) as CallSite<Func<CallSite, object, object>>;
+            var callSite = CallSite.Create(typeof(Func<CallSite, object, object, object>), binder) as CallSite<Func<CallSite, object, object, object>>;
 
-            var result = callsite.Target(callsite, _reference);
+            var result = callSite.Target(callSite, _reference, new object());
 
             Assert.AreEqual("is operation", result);
+        }
+
+        [TestMethod]
+        public void Forwards_Has_Operation()
+        {
+            _metaReferencedObject.BindHasOperation(Arg.Any<ScriptHasOperationBinder>())
+                .Returns(GetMetaObject("has operation"));
+
+            var binder = new ScriptHasOperationBinder("test");
+            var callSite = CallSite.Create(typeof(Func<CallSite, object, object>), binder) as CallSite<Func<CallSite, object, object>>;
+
+            var result = callSite.Target(callSite, _reference);
+
+            Assert.AreEqual("has operation", result);
+        }
+
+        [TestMethod]
+        public void Forwards_Extends_Operation()
+        {
+            _metaReferencedObject.BindExtendsOperation(Arg.Any<ScriptExtendsOperationBinder>(), Arg.Any<DynamicMetaObject>())
+                .Returns(GetMetaObject("extends operation"));
+            
+            var binder = new ScriptExtendsOperationBinder();
+            var callSite = CallSite.Create(typeof(Func<CallSite, object, object, object>), binder) as CallSite<Func<CallSite, object, object, object>>;
+
+            var result = callSite.Target(callSite, _reference, new object());
+
+            Assert.AreEqual("extends operation", result);
         }
         
         private static DynamicMetaObject GetMetaObject(object value)
