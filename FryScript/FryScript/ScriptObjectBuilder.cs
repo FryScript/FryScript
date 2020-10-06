@@ -99,5 +99,12 @@ namespace FryScript
 
             return false;
         }
+
+        public bool Is(IScriptObjectBuilder target)
+        {
+            target = target ?? throw new ArgumentNullException(nameof(target));
+
+            return Uri == target.Uri;
+        }
     }
 }

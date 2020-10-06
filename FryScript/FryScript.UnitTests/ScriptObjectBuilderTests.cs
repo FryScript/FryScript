@@ -132,5 +132,27 @@ namespace FryScript.UnitTests
 
             Assert.IsFalse(_builder.Extends(unrelatedBuilder));
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Is_Null_Target()
+        {
+            _builder.Is(null);
+        }
+
+        [TestMethod]
+        public void Is_Target_Has_Same_Uri()
+        {
+            Assert.IsTrue(_builder.Is(_builder));
+        }
+
+
+        [TestMethod]
+        public void Is_Target_Has_Different_Uri()
+        {
+            var otherBuilder = new ScriptObjectBuilder<ScriptObject>(_ctor, new Uri("test://other"), null);
+
+            Assert.IsFalse(_builder.Is(otherBuilder));
+        }
     }
 }

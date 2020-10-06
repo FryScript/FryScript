@@ -64,6 +64,8 @@ namespace FryScript
             _registry.Import("array", new ScriptArray());
             _registry.Import("function", new ScriptFunction());
             _registry.Import("object", new ScriptObject());
+            _registry.Import("fibre", new ScriptFibre());
+            _registry.Import("fibre-context", new ScriptFibreContext());
 
             foreach (var type in _typeProvider.GetPrimitives())
             {
