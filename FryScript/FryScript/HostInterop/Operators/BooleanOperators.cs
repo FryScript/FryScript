@@ -4,7 +4,7 @@ namespace FryScript.HostInterop.Operators
 {
     public static class BooleanOperators
     {
-        public const string BooleanName = "[bool]";
+        public const string BooleanName = "boolean";
 
         [ScriptableTypeOperation(ScriptableTypeOperator.TypeOf)]
         public static object GetScriptType(this bool value)

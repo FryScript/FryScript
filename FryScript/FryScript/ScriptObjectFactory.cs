@@ -41,9 +41,11 @@ namespace FryScript
 
             var scriptPrimitiveType = typeof(ScriptPrimitive<>).MakeGenericType(type);
 
-            var obj = Activator.CreateInstance(scriptPrimitiveType);
+            var obj = Activator.CreateInstance(scriptPrimitiveType) as IScriptObject;
 
-            return obj as IScriptObject;
+            obj.ObjectCore.Builder = ScriptObjectBuilder.GetInstanceBuilder(type.Name, obj);
+
+            return obj;
         }
     }
 }

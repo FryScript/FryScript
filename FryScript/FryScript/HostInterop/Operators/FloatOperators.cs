@@ -4,7 +4,7 @@ namespace FryScript.HostInterop.Operators
 {
     public static class FloatOperators
     {
-        public const string FloatName = "[float]";
+        public const string FloatName = "single";
 
         [ScriptableTypeOperation(ScriptableTypeOperator.TypeOf)]
         public static object GetScriptType(this float value)

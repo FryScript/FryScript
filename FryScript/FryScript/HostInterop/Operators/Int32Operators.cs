@@ -4,7 +4,7 @@ namespace FryScript.HostInterop.Operators
 {
     public static class Int32Operators
     {
-        public const string IntName = "[int]";
+        public const string IntName = "int32";
 
         [ScriptableTypeOperation(ScriptableTypeOperator.TypeOf)]
         public static object GetScriptType(this int value)

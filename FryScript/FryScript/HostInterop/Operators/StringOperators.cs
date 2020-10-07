@@ -5,7 +5,7 @@ namespace FryScript.HostInterop.Operators
 
     public static class StringOperators
     {
-        public const string StringName = "[string]";
+        public const string StringName = "string";
 
         [ScriptableBinaryOperation(ScriptableBinaryOperater.Add)]
         public static object Add(this string value1, string value2)
