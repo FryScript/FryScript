@@ -143,8 +143,16 @@ namespace FryScript.Helpers
 
                 return new DynamicMetaObject(resultExpr, restrictions);
             }
+            else
+            {
+                var isType = target.LimitType == arg.LimitType;
+                var isTypeExpr = Expression.Constant(isType, typeof(object));
 
-            throw new NotImplementedException();
+                var restrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
+                    .Merge(BindingRestrictions.GetTypeRestriction(arg.Expression, arg.LimitType));
+
+                return new DynamicMetaObject(isTypeExpr, restrictions);
+            }
             // binder = binder ?? throw new ArgumentNullException(nameof(binder));
             // target = target ?? throw new ArgumentNullException(nameof(target));
             // arg = arg ?? throw new ArgumentNullException(nameof(arg));
