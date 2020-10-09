@@ -17,7 +17,7 @@ namespace FryScript.Compilation
         //internal ScriptObjectReference ProtoReference;
         internal List<ImportInfo> ImportInfos = new List<ImportInfo>();
 
-        public string Name { get; }
+        public string Name { get { return _name; } }
 
         public Uri Uri { get; }
 
@@ -47,8 +47,6 @@ namespace FryScript.Compilation
             ScriptRuntime = scriptRuntime ?? throw new ArgumentNullException(nameof(scriptRuntime));
             Uri = uri;
             IsEvalMode = evalMode;
-            DetailedExceptions = scriptRuntime.DetailedExceptions;
-            Name = Uri?.AbsoluteUri ?? "eval://global-context.fry";
 
             DefaultNodeType = typeof(DefaultNode);
             DefaultLiteralNodeType = typeof(LiteralNode);

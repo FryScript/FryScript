@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
 {
@@ -116,26 +115,6 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
             var result = Eval("this extends this;");
 
             Assert.IsFalse(result);
-        }
-
-        [TestMethod]
-        public void ex_test()
-        {
-            ScriptRuntime.DetailedExceptions = true;
-            ScriptRuntime.Import<TheExploder>();
-
-            Eval("@import \"Scripts/errorScript\" as s;");
-            Eval("s.boom();");
-        }
-    }
-
-    [ScriptableType("the-exploder")]
-    public class TheExploder
-    {
-        [ScriptableMethod("bang")]
-        public void Bang()
-        {
-            throw new Exception("Bang!");
         }
     }
 }

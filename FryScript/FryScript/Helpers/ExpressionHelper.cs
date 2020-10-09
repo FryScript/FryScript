@@ -202,7 +202,7 @@ namespace FryScript.Helpers
                 "FormatException",
                 null,
                 exceptionExpr,
-                Expression.Constant(astNode.CompilerContext.Name ?? "Booya"),
+                Expression.Constant(astNode.CompilerContext.Name),
                 Expression.Constant(location.Line),
                 Expression.Constant(location.Column));
 
