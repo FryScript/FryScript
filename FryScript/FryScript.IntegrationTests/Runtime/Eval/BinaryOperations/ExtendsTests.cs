@@ -74,7 +74,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         {
             var result = Eval("true extends false;");
 
-            Assert.IsTrue(result);
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
@@ -82,7 +82,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         {
             var result = Eval("0.0 extends 0.0;");
 
-            Assert.IsTrue(result);
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
@@ -90,7 +90,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         {
             var result = Eval("0 extends 0;");
 
-            Assert.IsTrue(result);
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
@@ -98,7 +98,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         {
             var result = Eval("\"\" extends \"\";");
 
-            Assert.IsTrue(result);
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         {
             var Result = Eval("this extends ({});");
 
-            Assert.IsTrue(Result);
+            Assert.IsFalse(Result);
         }
 
         [TestMethod]
@@ -114,7 +114,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         {
             var result = Eval("this extends this;");
 
-            Assert.IsTrue(result);
+            Assert.IsFalse(result);
         }
     }
 }

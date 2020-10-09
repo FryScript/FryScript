@@ -116,7 +116,7 @@ namespace FryScript.Helpers
 
                 var targetObjectBuilderExpr = Expression.Field(targetObjectCoreExpr, nameof(ObjectCore.Builder));
                 var targetBuilderNotNullExpr = Expression.NotEqual(targetObjectBuilderExpr, ExpressionHelper.Null());
-                
+
                 var convertArgExpr = Expression.Convert(arg.Expression, typeof(IScriptObject));
                 var argObjectCoreExpr = Expression.Property(convertArgExpr, nameof(IScriptObject.ObjectCore));
                 var argObjectCoreNotNullExpr = Expression.NotEqual(argObjectCoreExpr, ExpressionHelper.Null());
@@ -138,7 +138,7 @@ namespace FryScript.Helpers
                     .Merge(BindingRestrictions.GetExpressionRestriction(argBuilderNotNullExpr))
                     .Merge(BindingRestrictions.GetExpressionRestriction(targetUriEqualExpr))
                     .Merge(BindingRestrictions.GetExpressionRestriction(argUriEqualExpr));
-                
+
                 var resultExpr = Expression.Constant(result, typeof(object));
 
                 return new DynamicMetaObject(resultExpr, restrictions);
@@ -174,15 +174,71 @@ namespace FryScript.Helpers
             target = target ?? throw new ArgumentNullException(nameof(target));
             arg = arg ?? throw new ArgumentNullException(nameof(arg));
 
-            var extendsScriptType = ScriptTypeHelper.ExtendsScriptType(target.Value, arg.Value);
+            var targetBuilder = (target?.Value as IScriptObject)?.ObjectCore?.Builder;
+            var argBuilder = (arg.Value as IScriptObject)?.ObjectCore?.Builder;
 
-            var restrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
-                .Merge(BindingRestrictions.GetTypeRestriction(arg.Expression, arg.LimitType));
+            if (targetBuilder != null && argBuilder != null)
+            {
+                var result = targetBuilder.Extends(argBuilder);
 
-            return new DynamicMetaObject(
-                Expression.Constant(extendsScriptType, typeof(object)),
-                restrictions
-                );
+                var convertTargetExpr = Expression.Convert(target.Expression, typeof(IScriptObject));
+                var targetObjectCoreExpr = Expression.Property(convertTargetExpr, nameof(IScriptObject.ObjectCore));
+                var targetObjectCoreNotNullExpr = Expression.NotEqual(targetObjectCoreExpr, ExpressionHelper.Null());
+
+                var targetObjectBuilderExpr = Expression.Field(targetObjectCoreExpr, nameof(ObjectCore.Builder));
+                var targetBuilderNotNullExpr = Expression.NotEqual(targetObjectBuilderExpr, ExpressionHelper.Null());
+
+                var convertArgExpr = Expression.Convert(arg.Expression, typeof(IScriptObject));
+                var argObjectCoreExpr = Expression.Property(convertArgExpr, nameof(IScriptObject.ObjectCore));
+                var argObjectCoreNotNullExpr = Expression.NotEqual(argObjectCoreExpr, ExpressionHelper.Null());
+
+                var argObjectBuilderExpr = Expression.Field(argObjectCoreExpr, nameof(ObjectCore.Builder));
+                var argBuilderNotNullExpr = Expression.NotEqual(argObjectBuilderExpr, ExpressionHelper.Null());
+
+                var targetUriExpr = Expression.Property(targetObjectBuilderExpr, nameof(ScriptObjectBuilder<ScriptObject>.Uri));
+                var targetUriEqualExpr = Expression.Equal(targetUriExpr, Expression.Constant(targetBuilder.Uri));
+
+                var argUriExpr = Expression.Property(argObjectBuilderExpr, nameof(ScriptObjectBuilder<ScriptObject>.Uri));
+                var argUriEqualExpr = Expression.Equal(argUriExpr, Expression.Constant(argBuilder.Uri));
+
+                var restrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
+                    .Merge(BindingRestrictions.GetTypeRestriction(arg.Expression, arg.LimitType))
+                    .Merge(BindingRestrictions.GetExpressionRestriction(targetObjectCoreNotNullExpr))
+                    .Merge(BindingRestrictions.GetExpressionRestriction(argObjectCoreNotNullExpr))
+                    .Merge(BindingRestrictions.GetExpressionRestriction(targetBuilderNotNullExpr))
+                    .Merge(BindingRestrictions.GetExpressionRestriction(argBuilderNotNullExpr))
+                    .Merge(BindingRestrictions.GetExpressionRestriction(targetUriEqualExpr))
+                    .Merge(BindingRestrictions.GetExpressionRestriction(argUriEqualExpr));
+
+                var resultExpr = Expression.Constant(result, typeof(object));
+
+                return new DynamicMetaObject(resultExpr, restrictions);
+            }
+            else
+            {
+                var result = arg.LimitType != target.LimitType && arg.LimitType.IsAssignableFrom(target.LimitType);
+                var resultExpr = Expression.Constant(result, typeof(object));
+
+                var restrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
+                    .Merge(BindingRestrictions.GetTypeRestriction(arg.Expression, arg.LimitType));
+
+                return new DynamicMetaObject(resultExpr, restrictions);
+            }
+
+            throw new NotImplementedException();
+            // binder = binder ?? throw new ArgumentNullException(nameof(binder));
+            // target = target ?? throw new ArgumentNullException(nameof(target));
+            // arg = arg ?? throw new ArgumentNullException(nameof(arg));
+
+            // var extendsScriptType = ScriptTypeHelper.ExtendsScriptType(target.Value, arg.Value);
+
+            // var restrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
+            //     .Merge(BindingRestrictions.GetTypeRestriction(arg.Expression, arg.LimitType));
+
+            // return new DynamicMetaObject(
+            //     Expression.Constant(extendsScriptType, typeof(object)),
+            //     restrictions
+            //     );
         }
 
         public static DynamicMetaObject BindHasOperation(ScriptHasOperationBinder binder, DynamicMetaObject target)
