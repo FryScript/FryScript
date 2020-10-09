@@ -12,13 +12,13 @@ namespace FryScript
     {
         public static object SetMember(this IScriptObject source, int index, object value)
         {
-            var memberData = source.ObjectCore.MemberData ?? (source.ObjectCore.MemberData = new object[16]);
+            source.ObjectCore.MemberData = source.ObjectCore.MemberData ?? (source.ObjectCore.MemberData = new object[16]);
             
-            if (memberData.Length <= index)
-                while (memberData.Length <= index)
-                    Array.Resize(ref memberData, memberData.Length + 16);
+            if (source.ObjectCore.MemberData.Length <= index)
+                while (source.ObjectCore.MemberData.Length <= index)
+                    Array.Resize(ref source.ObjectCore.MemberData, source.ObjectCore.MemberData.Length + 16);
 
-            return memberData[index] = value;
+            return source.ObjectCore.MemberData[index] = value;
         }
 
         public static object SetIndex(this IScriptObject source, string name, object value)

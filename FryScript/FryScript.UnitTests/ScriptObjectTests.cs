@@ -136,6 +136,17 @@ namespace FryScript.UnitTests
             Assert.AreEqual(20, result);
         }
 
+        [TestMethod]
+        public void Iternal_Member_Array_Resizes_As_Members_Are_Added()
+        {
+            for(var i = 0; i < 100; i++)
+            {
+                _dynamicObj[$"member_{i}"] = i;
+            }
+
+            Assert.AreEqual(112, _scriptObject.ObjectCore.MemberData.Length);
+        }
+
         // [TestMethod]
         
         // public void SetMemberThreadingTest()
