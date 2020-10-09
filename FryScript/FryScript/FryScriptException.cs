@@ -27,8 +27,8 @@ namespace FryScript
             : base(message, innerException)
         {
             Name = name;
-            Line = line;
-            Column = column;
+            Line = line + 1;
+            Column = column + 1;
         }
 
         public static object FormatException(Exception ex, string name, int line, int column)
