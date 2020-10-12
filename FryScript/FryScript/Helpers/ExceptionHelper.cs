@@ -208,14 +208,6 @@ namespace FryScript.Helpers
             throw new FryScriptException(string.Format("Cannot perform has operation on type {0} no operator is defined", type.GetType().FullName));
         }
 
-        public static FryScriptException NativeInteropException(Exception ex, string name, int line, int position)
-        {
-            ex = ex ?? throw new ArgumentNullException(nameof(ex));
-            name = name ?? throw new ArgumentNullException(nameof(name));
-
-            return new FryScriptException("Native interop exception see inner exception for details", ex, name, line, position);
-        }
-
         public static CompilerException InvalidContext(string keyword, AstNode astNode)
         {
             keyword = keyword ?? throw new ArgumentNullException(nameof(keyword));

@@ -27,8 +27,8 @@ namespace FryScript
             : base(message, innerException)
         {
             Name = name;
-            Line = line + 1;
-            Column = column + 1;
+            Line = line;
+            Column = column;
         }
 
         public static object FormatException(Exception ex, string name, int line, int column)
@@ -39,7 +39,7 @@ namespace FryScript
             var fryEx = ex as FryScriptException;
 
             if (fryEx == null)
-                fryEx = ExceptionHelper.NativeInteropException(ex, name, line, column);
+                fryEx = new FryScriptException("Native interop exception see inner exception for details", ex, name, line, column);
 
             if (!fryEx.Line.HasValue)
                 fryEx.Line = line;
