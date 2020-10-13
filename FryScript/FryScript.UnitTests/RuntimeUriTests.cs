@@ -1,7 +1,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FryScript
+namespace FryScript.UnitTests
 {
     [TestClass]
     public class RuntimeUriTests

@@ -1,0 +1,20 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
+{
+    [TestClass]
+    public class ScriptFibreTests : IntegrationTestBase
+    {
+         [TestMethod]
+        public void New_Fibre_Context()
+        {
+            Eval("@import \"fibre\" as f;");
+
+            var result = Eval("new f();");
+            var f = Eval("f;");
+
+            Assert.IsInstanceOfType(result, typeof(ScriptFibre));
+            Assert.AreNotEqual(f, result);
+        }
+    }
+}
