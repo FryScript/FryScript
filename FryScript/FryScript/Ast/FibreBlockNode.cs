@@ -53,6 +53,8 @@ namespace FryScript.Ast
 
                 yieldStatement.ChildNodes = new AstNode[] { null }.Concat(yieldStatement.ChildNodes).ToArray();
             };
+
+            lastStatementNode.ChildNodes = lastStatementNode.ChildNodes.Concat(new[]{Transform<YieldStatementNode>(null, null)}).ToArray();
         }
     }
 }

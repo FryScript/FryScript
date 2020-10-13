@@ -177,5 +177,29 @@ namespace FryScript.IntegrationTests.Runtime.Eval
 
             fc.Resume();
         }
+
+        [TestMethod]
+        public void Implicit_Yield_Return_At_Fibre_Body_End()
+        {
+            Eval("counter = { count: 0 };");
+
+            Eval(@"
+            var f = fibre() => {
+                var count = 2;
+                for(var i = 0; i < count; i++) {
+                    counter.count++;
+                }
+            };
+            ");
+
+            var counter = Eval("counter;");
+            var f = Eval("f;");
+            var fc = f() as ScriptFibreContext;
+
+            fc.Resume();
+
+            Assert.IsTrue(fc.Completed);
+            Assert.IsFalse(fc.HasResult);
+        }
     }
 }
