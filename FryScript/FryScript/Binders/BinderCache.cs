@@ -94,16 +94,6 @@ namespace FryScript.Binders
             return binder;
         }
 
-        public UnaryOperationBinder UnaryOperationBinder(ExpressionType operation)
-        {
-            if (!_unaryOperationBinders.TryGetValue(operation, out UnaryOperationBinder binder))
-            {
-                _unaryOperationBinders[operation] = binder = new ScriptUnaryOperationBinder(operation);
-            }
-
-            return binder;
-        }
-
         public InvokeMemberBinder InvokeMemberBinder(string name, int argCount)
         {
             if (!_invokeMemberBinders.TryGetValue(name, out ConcurrentDictionary<int, InvokeMemberBinder> argCounts))

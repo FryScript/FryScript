@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 namespace FryScript.Binders
 {
 
-    class ScriptBinaryOperationBinder : BinaryOperationBinder
+    public class ScriptBinaryOperationBinder : BinaryOperationBinder
     {
         public ScriptBinaryOperationBinder(ExpressionType operation)
             : base(operation)

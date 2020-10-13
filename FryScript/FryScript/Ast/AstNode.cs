@@ -11,38 +11,54 @@ namespace FryScript.Ast
 {
     public abstract class AstNode : IAstNodeInit
     {
-        private class PlaceHolder : AstNode
+        public class AstNodeTransformer
         {
-            public override Expression GetExpression(Scope scope)
+            public virtual AstNode Transform<T>(ParseTreeNode parseNode, CompilerContext compilerContext, params AstNode[] childNodes)
+            where T : AstNode, new()
             {
-                throw new NotImplementedException();
+                return new T
+                {
+                    ParseNode = parseNode,
+                    CompilerContext = compilerContext,
+                    ChildNodes = childNodes
+                };
             }
         }
 
-        private class ExpressionWrapper : AstNode
+        public class GetChildExpressionVisitor
         {
-            private readonly Expression _expression;
-
-            public ExpressionWrapper(Expression expression)
+            public virtual Expression GetExpression(AstNode node, Scope scope)
             {
-                _expression = expression;
-            }
+                scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            public override Expression GetExpression(Scope scope)
-            {
-                return _expression;
+                if (node.ChildNodes.Length == 1 && node.ChildNodes[0] == null)
+                    return ExpressionHelper.Null();
+
+                if (node.ChildNodes.Length == 1)
+                    return node.ChildNodes.Single().GetExpression(scope);
+
+                var childExprs = node.ChildNodes.Select(c => c.GetExpression(scope)).Where(c => c != null);
+
+                return Expression.Block(typeof(object), childExprs);
             }
         }
 
+        private static AstNodeTransformer _astNodeTransformer = new AstNodeTransformer();
+        private static GetChildExpressionVisitor _getChildExpressionVisitor = new GetChildExpressionVisitor();
+        private readonly static AstNode[] _emptyNodes = new AstNode[0];
         public ParseTreeNode ParseNode;
 
-        public AstNode[] ChildNodes;
+        public AstNode[] ChildNodes = _emptyNodes;
 
         public CompilerContext CompilerContext;
 
         public virtual string ValueString { get { return ParseNode.Token.ValueString; } }
 
         public virtual object Value { get { return ParseNode.Token.Value; } }
+
+        public AstNodeTransformer NodeTransformer { get; set; } = _astNodeTransformer;
+
+        public GetChildExpressionVisitor ChildExpressionVisitor {get;set;} = _getChildExpressionVisitor;
 
         public abstract Expression GetExpression(Scope scope);
 
@@ -111,19 +127,9 @@ namespace FryScript.Ast
             return default(T);
         }
 
-        protected Expression GetChildExpression(Scope scope)
+        public Expression GetChildExpression(Scope scope)
         {
-            scope = scope ?? throw new ArgumentNullException(nameof(scope));
-
-            if (ChildNodes.Length == 1 && ChildNodes[0] == null)
-                return ExpressionHelper.Null();
-
-            if (ChildNodes.Length == 1)
-                return ChildNodes.Single().GetExpression(scope);
-
-            var childExprs = ChildNodes.Select(c => c.GetExpression(scope)).Where(c => c != null);
-
-            return Expression.Block(typeof(object), childExprs);
+            return ChildExpressionVisitor.GetExpression(this, scope);
         }
 
         protected Expression WrapDebugExpression(DebugEvent debugEvent, Scope scope, Func<Scope, Expression> func)
@@ -162,12 +168,7 @@ namespace FryScript.Ast
         protected AstNode Transform<T>(params AstNode[] childNodes)
             where T : AstNode, new()
         {
-            return new T
-            {
-                ParseNode = ParseNode,
-                CompilerContext = CompilerContext,
-                ChildNodes = childNodes
-            };
+            return NodeTransformer.Transform<T>(ParseNode, CompilerContext, childNodes);
         }
     }
 }
