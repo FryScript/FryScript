@@ -85,7 +85,6 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BlockStatements
         }
 
         [TestMethod]
-
         public void Throw_Rethrow_Inside_Catch()
         {
 

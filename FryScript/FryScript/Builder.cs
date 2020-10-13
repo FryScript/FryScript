@@ -10,7 +10,7 @@ namespace FryScript
 
         public static IScriptObjectBuilder ScriptFibreBuilder { get; } = new ScriptObjectBuilder<ScriptFibre>(o => o, RuntimeUri.ScriptFibreUri, ScriptObjectBuilder);
 
-        public static IScriptObjectBuilder ScriptFibreContextBuilder { get; } = new ScriptObjectBuilder<ScriptFibreContext>(o => o, RuntimeUri.ScriptFibreUri, ScriptObjectBuilder);
+        public static IScriptObjectBuilder ScriptFibreContextBuilder { get; } = new ScriptObjectBuilder<ScriptFibreContext>(o => o, RuntimeUri.ScriptFibreContextUri, ScriptObjectBuilder);
 
         public static IScriptObjectBuilder ScriptFunctionBuilder { get; } = new ScriptObjectBuilder<ScriptFunction>(o => o, RuntimeUri.ScriptFunctionUri, ScriptObjectBuilder);
     }

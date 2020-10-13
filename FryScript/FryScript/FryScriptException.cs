@@ -73,7 +73,7 @@ namespace FryScript
             var fryEx = ex as FryScriptException;
 
             if (fryEx == null || fryEx.ScriptData == null)
-                return ex.Message ?? string.Empty;
+                return ex.Message;
 
             return fryEx.ScriptData;
         }
