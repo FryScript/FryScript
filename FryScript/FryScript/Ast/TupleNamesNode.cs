@@ -25,7 +25,7 @@ namespace FryScript.Ast
             throw new NotImplementedException();
         }
 
-        public IEnumerable<AstNode> GetIdentifiers(Scope scope, List<AstNode> nodes = null)
+        public virtual IEnumerable<AstNode> GetIdentifiers(Scope scope, List<AstNode> nodes = null)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
@@ -89,7 +89,7 @@ namespace FryScript.Ast
             return exprs; 
         }
 
-        public Expression CreateTuple(Scope scope)
+        public virtual Expression CreateTuple(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 

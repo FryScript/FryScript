@@ -24,12 +24,11 @@ namespace FryScript.UnitTests.Ast
         {
             Node.SetChildren(Node<AstNode>.Empty);
 
-            var scope = new Scope();
             var expr = Expression.Empty();
 
-            ChildExpressionVisitor.GetExpression(Node, scope).Returns(expr);
+            ChildExpressionVisitor.GetExpression(Node, Scope).Returns(expr);
 
-            var result = Node.GetExpression(scope);
+            var result = Node.GetExpression(Scope);
 
             Assert.AreEqual(expr, result);
         }
@@ -43,14 +42,12 @@ namespace FryScript.UnitTests.Ast
                             .WithValueString("test")
                             .WithValue(new object());
 
-            var scope = new Scope();
-
             Node.SetChildren(left, op, right);
 
-            Node.GetExpression(scope);
+            Node.GetExpression(Scope);
 
-            right.Received().SetIdentifier(scope, Arg.Any<Expression>());
-            left.Received().GetExpression(scope);
+            right.Received().SetIdentifier(Scope, Arg.Any<Expression>());
+            left.Received().GetExpression(Scope);
         }
 
         [TestMethod]
@@ -75,12 +72,10 @@ namespace FryScript.UnitTests.Ast
                 && a[3] == tupleNameValues
             )).Returns(declareTuple);
 
-            var scope = new Scope();
-
-            var result = Node.GetExpression(scope);
+            var result = Node.GetExpression(Scope);
 
             Assert.AreEqual(declareTupleExpr, result);
-            declareTuple.Received().GetExpression(scope);
+            declareTuple.Received().GetExpression(Scope);
         }
     }
 }

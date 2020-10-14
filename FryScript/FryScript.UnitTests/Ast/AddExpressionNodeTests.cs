@@ -20,6 +20,20 @@ namespace FryScript.UnitTests.Ast
         }
 
         [TestMethod]
+        public void GetExpression_Single_Child_Gets_Child_Expression()
+        {
+            Node.SetChildren(Node<AstNode>.Empty);
+
+            var expr = Expression.Empty();
+
+            ChildExpressionVisitor.GetExpression(Node, Scope).Returns(expr);
+
+            var result = Node.GetExpression(Scope);
+
+            Assert.AreEqual(expr, result);
+        }
+
+        [TestMethod]
         public void GetExpression_Op_Add()
         {
             var rightNode = Node<AstNode>.WithValue(1);
@@ -28,11 +42,10 @@ namespace FryScript.UnitTests.Ast
 
             Node.SetChildren(rightNode, opNode, leftNode);
 
-            var scope = new Scope();
-            var result = Node.GetExpression(scope) as DynamicExpression;
+            var result = Node.GetExpression(Scope) as DynamicExpression;
 
-            rightNode.Received().GetExpression(scope);
-            leftNode.Received().GetExpression(scope);
+            rightNode.Received().GetExpression(Scope);
+            leftNode.Received().GetExpression(Scope);
 
             Assert.IsInstanceOfType(result.Binder, typeof(ScriptBinaryOperationBinder));
             Assert.AreEqual(2, result.Arguments.Count);
@@ -48,11 +61,10 @@ namespace FryScript.UnitTests.Ast
 
             Node.SetChildren(rightNode, opNode, leftNode);
 
-            var scope = new Scope();
-            var result = Node.GetExpression(scope) as DynamicExpression;
+            var result = Node.GetExpression(Scope) as DynamicExpression;
 
-            rightNode.Received().GetExpression(scope);
-            leftNode.Received().GetExpression(scope);
+            rightNode.Received().GetExpression(Scope);
+            leftNode.Received().GetExpression(Scope);
 
             Assert.IsInstanceOfType(result.Binder, typeof(ScriptBinaryOperationBinder));
             Assert.AreEqual(2, result.Arguments.Count);

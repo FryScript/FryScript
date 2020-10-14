@@ -86,29 +86,6 @@ namespace FryScript.Ast
                           select c.AstNode as AstNode).ToArray();
         }
 
-        public bool TryGetChild<T>(out T child)
-            where T : AstNode
-        {
-            child = null;
-            var current = this;
-
-            while (current != null)
-            {
-                if (current is T match && match.ChildNodes.Length != 1)
-                {
-                    child = match;
-                    return true;
-                }
-
-                if (current.ChildNodes.Length == 1)
-                    current = current.ChildNodes.FirstOrDefault();
-                else
-                    return false;
-            }
-
-            return false;
-        }
-
         public T FindChild<T>()
             where T : AstNode
         {
@@ -127,7 +104,7 @@ namespace FryScript.Ast
             return default(T);
         }
 
-        public Expression GetChildExpression(Scope scope)
+        protected Expression GetChildExpression(Scope scope)
         {
             return ChildExpressionVisitor.GetExpression(this, scope);
         }

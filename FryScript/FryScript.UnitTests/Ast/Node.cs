@@ -43,6 +43,13 @@ namespace FryScript.UnitTests.Ast
 
             return node;
         }
+
+        public static T GetExpression<T>(this T node, Expression exprToReturn, Scope scope) where T : AstNode
+        {
+            node.GetExpression(scope).Returns(exprToReturn);
+
+            return node;
+        }
     }
 
     public static class Node<T> where T : AstNode

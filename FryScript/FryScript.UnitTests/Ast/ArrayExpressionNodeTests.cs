@@ -22,7 +22,7 @@ namespace FryScript.UnitTests.Ast
         {
             Node.SetChildren(Node<AstNode>.WithValue(1));
 
-            var result = Node.GetExpression(new Scope()) as NewExpression;
+            var result = Node.GetExpression(Scope) as NewExpression;
 
             Assert.AreEqual(ExpressionType.New, result.NodeType);
             Assert.AreEqual(typeof(ScriptArray), result.Type);
@@ -40,14 +40,14 @@ namespace FryScript.UnitTests.Ast
 
             Node.SetChildren(arrayItems);
 
-            var result = Node.GetExpression(new Scope()) as NewExpression;
+            var result = Node.GetExpression(Scope) as NewExpression;
 
             Assert.AreEqual(ExpressionType.New, result.NodeType);
             Assert.AreEqual(typeof(ScriptArray), result.Type);
 
-            arrayItems.ChildNodes[0].Received().GetExpression(Arg.Any<Scope>());
-            arrayItems.ChildNodes[1].Received().GetExpression(Arg.Any<Scope>());
-            arrayItems.ChildNodes[2].Received().GetExpression(Arg.Any<Scope>());
+            arrayItems.ChildNodes[0].Received().GetExpression(Scope);
+            arrayItems.ChildNodes[1].Received().GetExpression(Scope);
+            arrayItems.ChildNodes[2].Received().GetExpression(Scope);
         }
     }
 }
