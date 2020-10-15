@@ -26,7 +26,7 @@ namespace FryScript.Ast
             scope.SetData(ScopeData.CurrentException, exceptionExpr);
 
             var exMessageExpr = Expression.Call(typeof(FryScriptException),
-                "GetCatchObject",
+                nameof(FryScriptException.GetCatchObject),
                 null,
                 exceptionExpr);
 

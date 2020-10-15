@@ -10,6 +10,7 @@ namespace FryScript.Ast
     public class ConditionalAssignExpressionNode : AstNode
     {
         public override Expression GetExpression(Scope scope)
+        
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 

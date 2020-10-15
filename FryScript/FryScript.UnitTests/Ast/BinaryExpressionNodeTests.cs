@@ -67,7 +67,7 @@ namespace FryScript.UnitTests.Ast
         [DataRow(Operators.DecrementAssign)]
         [DataRow(Operators.MultiplyAssign)]
         [DataRow(Operators.DivideAssign)]
-        [DataRow(Operators.Modulo)]
+        [DataRow(Operators.ModuloAssign)]
         public void GetExpression_Uses_Operator(string op)
         {
             SetOperator(op);

@@ -36,7 +36,7 @@ namespace FryScript.Ast
                 case Operators.DivideAssign:
                     operation = ExpressionType.Divide;
                     break;
-                case Operators.Modulo:
+                case Operators.ModuloAssign:
                     operation = ExpressionType.Modulo;
                     break;
                 default:
