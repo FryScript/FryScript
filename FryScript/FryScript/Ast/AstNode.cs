@@ -29,17 +29,7 @@ namespace FryScript.Ast
         {
             public virtual Expression GetExpression(AstNode node, Scope scope)
             {
-                scope = scope ?? throw new ArgumentNullException(nameof(scope));
-
-                if (node.ChildNodes.Length == 1 && node.ChildNodes[0] == null)
-                    return ExpressionHelper.Null();
-
-                if (node.ChildNodes.Length == 1)
-                    return node.ChildNodes.Single().GetExpression(scope);
-
-                var childExprs = node.ChildNodes.Select(c => c.GetExpression(scope)).Where(c => c != null);
-
-                return Expression.Block(typeof(object), childExprs);
+                throw new NotImplementedException();
             }
         }
 
@@ -104,42 +94,19 @@ namespace FryScript.Ast
             return default(T);
         }
 
-        protected Expression GetChildExpression(Scope scope)
+        public virtual Expression GetChildExpression(Scope scope)
         {
-            return ChildExpressionVisitor.GetExpression(this, scope);
-        }
+            scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-        protected Expression WrapDebugExpression(DebugEvent debugEvent, Scope scope, Func<Scope, Expression> func)
-        {
-            var span = ParseNode.Span;
-            var location = span.Location;
+            if (ChildNodes.Length == 1 && ChildNodes[0] == null)
+                return ExpressionHelper.Null();
 
-            return DebugExpressionHelper.GetDebugEventExpression(
-                debugEvent,
-                scope,
-                func,
-                CompilerContext.Name,
-                location.Line,
-                location.Position,
-                span.Length,
-                CompilerContext.DebugHook);
-        }
+            if (ChildNodes.Length == 1)
+                return ChildNodes.Single().GetExpression(scope);
 
-        protected Expression WrapDebugStack(Scope scope, Func<Scope, Expression> func, DebugEvent pushEvent = DebugEvent.PushStackFrame, DebugEvent popEvent = DebugEvent.PopStackFrame)
-        {
-            var span = ParseNode.Span;
-            var location = span.Location;
+            var childExprs = ChildNodes.Select(c => c.GetExpression(scope)).Where(c => c != null);
 
-            return DebugExpressionHelper.GetCallStackExpression(
-                scope,
-                func,
-                CompilerContext.Name,
-                location.Line,
-                location.Column,
-                span.Length,
-                CompilerContext.DebugHook,
-                pushEvent,
-                popEvent);
+            return Expression.Block(typeof(object), childExprs);
         }
 
         protected AstNode Transform<T>(params AstNode[] childNodes)

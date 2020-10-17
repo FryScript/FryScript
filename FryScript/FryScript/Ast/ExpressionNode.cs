@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace FryScript.Ast
 {
-    public class ExpressionNode : AstNode
+    public class ExpressionNode : DebugNode
     {
         public override Expression GetExpression(Scope scope)
         {
@@ -16,7 +16,7 @@ namespace FryScript.Ast
                 return WrapDebugExpression(DebugEvent.Expression, scope, s => GetChildExpression(s));
 
             Expression expr = CompilerContext.DetailedExceptions == true
-                ? ExpressionHelper.WrapNativeCall(GetChildExpression(scope), this, scope)
+                ? GetDetailedExceptionExpression(GetChildExpression(scope), this, scope)
                 : GetChildExpression(scope);
 
             return expr;

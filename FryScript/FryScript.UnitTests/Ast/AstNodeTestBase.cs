@@ -1,9 +1,12 @@
 using FryScript.Ast;
 using FryScript.Compilation;
+using FryScript.Debugging;
 using Irony.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using NSubstitute.Extensions;
 using System;
+using System.Linq.Expressions;
 
 namespace FryScript.UnitTests.Ast
 {
@@ -20,8 +23,8 @@ namespace FryScript.UnitTests.Ast
         [TestInitialize]
         public void TestInitialize()
         {
-            Node = new T();
-          
+            Node = Substitute.ForPartsOf<T>();
+
             NodeTransformer = Substitute.For<AstNode.AstNodeTransformer>();
             ChildExpressionVisitor = Substitute.For<AstNode.GetChildExpressionVisitor>();
 
@@ -36,7 +39,20 @@ namespace FryScript.UnitTests.Ast
 
         }
 
-        public void StubParseNode(string valueString = "", object value = null, int position = 0, int line = 0,  int column = 0)
+        public void TestSingleChildNode()
+        {
+            Node.SetChildren(Node<AstNode>.Empty);
+
+            var expr = Expression.Empty();
+
+            Node.Configure().GetChildExpression(Scope).Returns(expr);
+
+            var result = Node.GetExpression(Scope);
+
+            Assert.AreEqual(expr, result);
+        }
+
+        public void StubParseNode(string valueString = "", object value = null, int position = 0, int line = 0, int column = 0)
         {
             Node.ParseNode = new ParseTreeNode(
                 new Token(
@@ -47,10 +63,14 @@ namespace FryScript.UnitTests.Ast
                     ));
         }
 
-        public void StubCompilerContext()
+        public void StubCompilerContext(DebugHook debugHook = null, bool detailedExceptions = false)
         {
+            var runtime = Substitute.For<IScriptRuntime>();
+            runtime.DebugHook = debugHook;
+            runtime.DetailedExceptions = detailedExceptions;
+
             Node.CompilerContext = new CompilerContext(
-                Substitute.For<IScriptRuntime>(),
+                runtime,
                 new Uri("test://test"));
         }
     }

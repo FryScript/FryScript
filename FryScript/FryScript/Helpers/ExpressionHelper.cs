@@ -189,34 +189,6 @@ namespace FryScript.Helpers
             return expression != null;
         }
 
-        public static Expression WrapNativeCall(Expression expression, AstNode astNode, Scope scope)
-        {
-            expression = expression ?? throw new ArgumentNullException(nameof(expression));
-            astNode = astNode ?? throw new ArgumentNullException(nameof(astNode));
-            scope = scope ?? throw new ArgumentNullException(nameof(scope));
-
-            var location = astNode.ParseNode.Span.Location;
-
-            var exceptionExpr = Expression.Parameter(typeof(Exception), scope.GetTempName(TempPrefix.Exception));
-            var wrapExpr = Expression.Call(typeof(FryScriptException),
-                "FormatException",
-                null,
-                exceptionExpr,
-                Expression.Constant(astNode.CompilerContext.Name),
-                Expression.Constant(location.Line),
-                Expression.Constant(location.Column));
-
-            var scriptExExpr = Expression.Parameter(typeof(FryScriptException), scope.GetTempName(TempPrefix.Exception));
-            var scriptExCatchExpr = Expression.Catch(scriptExExpr, Expression.Rethrow(expression.Type));
-
-            var throwExpr = Expression.Throw(wrapExpr, expression.Type);
-            var catchAllBlock = Expression.Catch(exceptionExpr, throwExpr);
-
-            var tryCatchExpr = Expression.TryCatch(expression, scriptExCatchExpr, catchAllBlock);
-
-            return tryCatchExpr;
-        }
-
         // public static Expression NewScriptObject(
         //     Expression scriptType = null,
         //     Expression ctor = null,

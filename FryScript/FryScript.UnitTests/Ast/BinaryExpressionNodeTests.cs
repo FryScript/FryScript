@@ -51,15 +51,7 @@ namespace FryScript.UnitTests.Ast
         [TestMethod]
         public void GetExpression_Single_Child_Gets_Child_Expression()
         {
-            Node.SetChildren(Node<AstNode>.Empty);
-
-            var expr = Expression.Empty();
-
-            ChildExpressionVisitor.GetExpression(Node, Scope).Returns(expr);
-
-            var result = Node.GetExpression(Scope);
-
-            Assert.AreEqual(expr, result);
+            TestSingleChildNode();
         }
 
         [DataTestMethod]
