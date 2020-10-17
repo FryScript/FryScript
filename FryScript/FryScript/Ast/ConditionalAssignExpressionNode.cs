@@ -23,7 +23,6 @@ namespace FryScript.Ast
             scope = scope.New(this);
 
             var left = (IdentifierExpressionNode)ChildNodes.First();
-            var op = ChildNodes.Skip(1).First().ValueString;
             var right = ChildNodes.Skip(2).First();
 
             var tempExpr = scope.AddTempMember(TempPrefix.ConditionalAssign, this);

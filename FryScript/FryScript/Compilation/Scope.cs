@@ -237,10 +237,13 @@ namespace FryScript.Compilation
             return $"{TempPrefix}{name}_{_tempNames[name]++}";
         }
 
-        public IEnumerable<ScopeMemberInfo> GetAllowedMembers()
+        public IEnumerable<ScopeMemberInfo> GetAllowedMembers(bool includeCompilerMembers = false)
         {
-            return _members.Values.Where(v => !v.Name.StartsWith(TempPrefix));
+            return includeCompilerMembers
+                ? _members.Values
+                : _members.Values.Where(v => !v.Name.StartsWith(TempPrefix));
         }
+
 
         private Scope GetHoistedScope(Scope scope)
         {
