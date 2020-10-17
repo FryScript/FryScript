@@ -43,10 +43,9 @@ namespace FryScript.Ast
             scope = scope.New(this);
 
             var rightScope = scope.Clone();
-            var rightAwaitContexts = rightScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
+            rightScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
 
             var left = (IdentifierExpressionNode)ChildNodes.First();
-            var op = ChildNodes.Skip(1).First().ValueString;
             var right = ChildNodes.Skip(2).First();
 
             var tempExpr = scope.AddTempMember(TempPrefix.ConditionalAssign, this);

@@ -2,7 +2,6 @@
 using FryScript.Debugging;
 using FryScript.Helpers;
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace FryScript.Ast
