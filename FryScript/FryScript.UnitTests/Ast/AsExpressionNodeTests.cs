@@ -6,6 +6,7 @@ using FryScript.Parsing;
 using Irony.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using NSubstitute.Extensions;
 
 namespace FryScript.UnitTests.Ast
 {
@@ -53,11 +54,14 @@ namespace FryScript.UnitTests.Ast
 
             var tupleNameValues = Node<AssignTupleExpressionNode>.Empty;
 
-            NodeTransformer.Transform<AssignTupleExpressionNode>(Arg.Any<ParseTreeNode>(), Arg.Any<CompilerContext>(), Arg.Is<AstNode[]>(a => a[0] == values)).Returns(tupleNameValues);
+            Node.Configure()
+                .Transform<AssignTupleExpressionNode>(Arg.Is<AstNode[]>(a => a[0] == values))
+                .Returns(tupleNameValues);
 
             var declareTupleExpr = Expression.Constant(true);
             var declareTuple = Node<TupleDeclarationNode>.Empty.GetExpression(declareTupleExpr);
-            NodeTransformer.Transform<TupleDeclarationNode>(Arg.Any<ParseTreeNode>(), Arg.Any<CompilerContext>(), Arg.Is<AstNode[]>(a => 
+            Node.Configure()
+                .Transform<TupleDeclarationNode>(Arg.Is<AstNode[]>(a => 
                 a[0] == null
                 && a[1] == identifiers
                 && a[2] == null

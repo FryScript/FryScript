@@ -2,6 +2,7 @@
 using FryScript.Compilation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using NSubstitute.Extensions;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -30,7 +31,10 @@ namespace FryScript.UnitTests.Ast
         public void Get_Expression_Creates_New_Scope_Block()
         {
             var expectedExpr = Expression.Constant(new object());
-            ChildExpressionVisitor.GetExpression(Node, Arg.Is<Scope>(s => s.Parent == Scope)).Returns(expectedExpr);
+
+            Node.Configure()
+                .GetChildExpression(Arg.Is<Scope>(s => s.Parent == Scope))
+                .Returns(expectedExpr);
 
             Node.SetChildren(Node<AstNode>.Empty);
 

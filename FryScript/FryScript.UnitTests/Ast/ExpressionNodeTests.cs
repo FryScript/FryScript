@@ -56,5 +56,18 @@ namespace FryScript.UnitTests.Ast
 
             Assert.AreEqual(expectedDetailedExceptionExpr, result);
         }
+
+        [TestMethod]
+        public void GetExpression_No_Detailed_Exception()
+        {
+            StubCompilerContext(detailedExceptions: false);
+
+            var expectedExpr = Expression.Empty();
+            Node.Configure().GetChildExpression(Scope).Returns(expectedExpr);
+
+            var result = Node.GetExpression(Scope);
+
+            Assert.AreEqual(expectedExpr, result);
+        }
     }
 }

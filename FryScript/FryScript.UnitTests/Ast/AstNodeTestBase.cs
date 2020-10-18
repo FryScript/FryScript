@@ -16,20 +16,10 @@ namespace FryScript.UnitTests.Ast
 
         public Scope Scope { get; set; } = new Scope();
 
-        public AstNode.AstNodeTransformer NodeTransformer { get; private set; }
-
-        public AstNode.GetChildExpressionVisitor ChildExpressionVisitor { get; private set; }
-
         [TestInitialize]
         public void TestInitialize()
         {
             Node = Substitute.ForPartsOf<T>();
-
-            NodeTransformer = Substitute.For<AstNode.AstNodeTransformer>();
-            ChildExpressionVisitor = Substitute.For<AstNode.GetChildExpressionVisitor>();
-
-            Node.NodeTransformer = NodeTransformer;
-            Node.ChildExpressionVisitor = ChildExpressionVisitor;
 
             OnTestInitialize();
         }

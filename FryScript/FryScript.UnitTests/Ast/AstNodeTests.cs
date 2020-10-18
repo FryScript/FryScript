@@ -41,93 +41,7 @@ namespace FryScript.UnitTests.Ast
         [TestClass]
         public class AstNodeTransformerTests
         {
-            [TestMethod]
-            public void AstNodeTransformer_Transform()
-            {
-                var node = new ProxyAstNode();
-
-                var parseNode = new ParseTreeNode(new Token(new Terminal("test"), new SourceLocation(), "test", "test"));
-                var compilerContext = new CompilerContext(Substitute.For<IScriptRuntime>(), new Uri("test://test"));
-                var children = new[] { Node<AstNode>.Empty };
-
-                var result = node.NodeTransformer.Transform<ProxyAstNode>(
-                    parseNode,
-                    compilerContext, children
-                    );
-
-                Assert.AreEqual(parseNode, result.ParseNode);
-                Assert.AreEqual(compilerContext, result.CompilerContext);
-                Assert.AreEqual(children, result.ChildNodes);
-            }
-        }
-
-        [TestClass]
-        public class GetChildExpressionVisitorTests
-        {
-            private ProxyAstNode _node;
-            private Scope _scope = new Scope();
-
-            [TestInitialize]
-            public void TestInitialize()
-            {
-                _node = new ProxyAstNode();
-                _scope = new Scope();
-            }
-
-            [TestMethod]
-            [ExpectedException(typeof(ArgumentNullException))]
-            public void GetExpression_Null_Scope()
-            {
-                var node = new ProxyAstNode();
-
-                node.ChildExpressionVisitor.GetExpression(node, null);
-            }
-
-            [TestMethod]
-            public void GetExpression_Single_Null_Child()
-            {
-                _node.SetChildren(new AstNode[] { null });
-
-                var result = _node.ChildExpressionVisitor.GetExpression(_node, _scope) as ConstantExpression;
-
-                Assert.IsNull(result.Value);
-            }
-
-            [TestMethod]
-            public void GetExpression_Single_Child_Calls_Child_Get_Expression()
-            {
-                var childExpr = Expression.Constant(true);
-                var child = Node<AstNode>.Empty;
-
-                child.GetExpression(childExpr, _scope);
-
-                _node.SetChildren(child);
-
-                var result = _node.ChildExpressionVisitor.GetExpression(_node, _scope);
-
-                Assert.AreEqual(childExpr, result);
-            }
-
-            [TestMethod]
-            public void GetExpression_Multiple_Children_Calls_Multiple_Get_Expression()
-            {
-                var childExpr1 = Expression.Constant(new object());
-                var childExpr2 = Expression.Constant(new object());
-
-                var child1 = Node<AstNode>.Empty;
-                child1.GetExpression(childExpr1, _scope);
-
-                var child2 = Node<AstNode>.Empty;
-                child2.GetExpression(childExpr2);
-
-                _node.SetChildren(child1, child2);
-
-                var result = _node.ChildExpressionVisitor.GetExpression(_node, _scope) as BlockExpression;
-
-                Assert.AreEqual(2, result.Expressions.Count);
-                Assert.AreEqual(childExpr1, result.Expressions[0]);
-                Assert.AreEqual(childExpr2, result.Expressions[1]);
-            }
+            
         }
 
         [TestMethod]
@@ -229,35 +143,74 @@ namespace FryScript.UnitTests.Ast
         }
 
         [TestMethod]
-        public void GetChildExpression_Forwards_To_ChildExpressionVisitor()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void GetChildExpression_Null_Scope()
         {
-            var expectedExpr = Expression.Constant(true);
-            ChildExpressionVisitor.GetExpression(Node, Scope).Returns(expectedExpr);
-
-            var result = Node.GetChildExpression(Scope);
-
-            Assert.AreEqual(expectedExpr, result);
+            Node.GetChildExpression(null);
         }
 
         [TestMethod]
-        public void Transform_Forwards_To_NodeTransformer()
+        public void GetChildExpression_Single_Null_Child()
         {
-            var expectedNode = Node<ObjectLiteralExpressionNode>.Empty;
-            var childNodes = new[]
-            {
-                Node<AstNode>.Empty
-            };
+            Node.SetChildren(new AstNode[] { null });
 
-            Node.ParseNode = _parseNode;
-            Node.CompilerContext = _compilerContext;
+            var result = Node.GetChildExpression(Scope) as ConstantExpression;
 
-            NodeTransformer
-                .Transform<ObjectLiteralExpressionNode>(_parseNode, _compilerContext, childNodes)
-                .Returns(expectedNode);
+            Assert.IsNull(result.Value);
+        }
 
-            var result = Node.Transform<ObjectLiteralExpressionNode>(childNodes);
+        [TestMethod]
+        public void GetChildExpression_Single_Child_Calls_Child_Get_Expression()
+        {
+            var childExpr = Expression.Constant(true);
+            var child = Node<AstNode>.Empty;
 
-            Assert.AreEqual(expectedNode, result);
+            child.GetExpression(childExpr);
+
+            Node.SetChildren(child);
+
+            var result = Node.GetChildExpression(Scope);
+
+            Assert.AreEqual(childExpr, result);
+        }
+
+        [TestMethod]
+        public void GetExpression_Multiple_Children_Calls_Multiple_Get_Expression()
+        {
+            var childExpr1 = Expression.Constant(new object());
+            var childExpr2 = Expression.Constant(new object());
+
+            var child1 = Node<AstNode>.Empty;
+            child1.GetExpression(childExpr1);
+
+            var child2 = Node<AstNode>.Empty;
+            child2.GetExpression(childExpr2);
+
+            Node.SetChildren(child1, child2);
+
+            var result = Node.GetChildExpression(Scope) as BlockExpression;
+
+            Assert.AreEqual(2, result.Expressions.Count);
+            Assert.AreEqual(childExpr1, result.Expressions[0]);
+            Assert.AreEqual(childExpr2, result.Expressions[1]);
+        }
+
+        [TestMethod]
+        public void Transform_Transforms_Node()
+        {
+            var parseNode = new ParseTreeNode(new Token(new Terminal("test"), new SourceLocation(), "test", "test"));
+            var compilerContext = new CompilerContext(Substitute.For<IScriptRuntime>(), new Uri("test://test"));
+            var children = new[] { Node<AstNode>.Empty };
+
+            Node.ParseNode = parseNode;
+            Node.CompilerContext = compilerContext;
+            Node.SetChildren(children);
+
+            var result = Node.Transform<ProxyAstNode>(children);
+
+            Assert.AreEqual(parseNode, result.ParseNode);
+            Assert.AreEqual(compilerContext, result.CompilerContext);
+            Assert.AreEqual(children, result.ChildNodes);
         }
     }
 }

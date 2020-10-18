@@ -1,5 +1,4 @@
 ﻿using FryScript.Compilation;
-using FryScript.Debugging;
 using FryScript.Helpers;
 using Irony.Ast;
 using Irony.Parsing;
@@ -11,30 +10,6 @@ namespace FryScript.Ast
 {
     public abstract class AstNode : IAstNodeInit
     {
-        public class AstNodeTransformer
-        {
-            public virtual AstNode Transform<T>(ParseTreeNode parseNode, CompilerContext compilerContext, params AstNode[] childNodes)
-            where T : AstNode, new()
-            {
-                return new T
-                {
-                    ParseNode = parseNode,
-                    CompilerContext = compilerContext,
-                    ChildNodes = childNodes
-                };
-            }
-        }
-
-        public class GetChildExpressionVisitor
-        {
-            public virtual Expression GetExpression(AstNode node, Scope scope)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private static AstNodeTransformer _astNodeTransformer = new AstNodeTransformer();
-        private static GetChildExpressionVisitor _getChildExpressionVisitor = new GetChildExpressionVisitor();
         private readonly static AstNode[] _emptyNodes = new AstNode[0];
         public ParseTreeNode ParseNode;
 
@@ -45,10 +20,6 @@ namespace FryScript.Ast
         public virtual string ValueString { get { return ParseNode.Token.ValueString; } }
 
         public virtual object Value { get { return ParseNode.Token.Value; } }
-
-        public AstNodeTransformer NodeTransformer { get; set; } = _astNodeTransformer;
-
-        public GetChildExpressionVisitor ChildExpressionVisitor {get;set;} = _getChildExpressionVisitor;
 
         public abstract Expression GetExpression(Scope scope);
 
@@ -91,7 +62,7 @@ namespace FryScript.Ast
                 return (T)curNode;
             }
 
-            return default(T);
+            return default;
         }
 
         public virtual Expression GetChildExpression(Scope scope)
@@ -109,10 +80,15 @@ namespace FryScript.Ast
             return Expression.Block(typeof(object), childExprs);
         }
 
-        protected AstNode Transform<T>(params AstNode[] childNodes)
+        public virtual AstNode Transform<T>(params AstNode[] childNodes)
             where T : AstNode, new()
         {
-            return NodeTransformer.Transform<T>(ParseNode, CompilerContext, childNodes);
+            return new T
+            {
+                ParseNode = ParseNode,
+                CompilerContext = CompilerContext,
+                ChildNodes = childNodes
+            };
         }
     }
 }
