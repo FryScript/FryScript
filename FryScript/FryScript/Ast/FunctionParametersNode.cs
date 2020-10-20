@@ -15,7 +15,7 @@ namespace FryScript.Ast
             throw new NotImplementedException();
         }
 
-        public void DeclareParameters(Scope scope)
+        public virtual void DeclareParameters(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 

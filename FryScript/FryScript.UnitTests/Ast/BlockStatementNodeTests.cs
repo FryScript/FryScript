@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.Extensions;
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace FryScript.UnitTests.Ast

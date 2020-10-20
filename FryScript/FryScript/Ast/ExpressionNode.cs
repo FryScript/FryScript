@@ -1,6 +1,5 @@
 ﻿using FryScript.Compilation;
 using FryScript.Debugging;
-using FryScript.Helpers;
 using System;
 using System.Linq.Expressions;
 

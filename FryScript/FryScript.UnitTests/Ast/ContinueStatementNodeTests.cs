@@ -22,8 +22,8 @@ namespace FryScript.UnitTests.Ast
         public void GetExpression_Invalid_Continue_Context()
         {
             Scope.RemoveData(ScopeData.ContinueTarget);
-            StubParseNode();
-            StubCompilerContext();
+            Node.StubParseNode();
+            Node.StubCompilerContext();
 
             Node.GetExpression(Scope);
         }

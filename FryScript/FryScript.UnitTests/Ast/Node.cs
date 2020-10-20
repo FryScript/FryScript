@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using FryScript.Ast;
 using FryScript.Compilation;
+using FryScript.Debugging;
 using Irony.Parsing;
 using NSubstitute;
 
@@ -48,6 +50,32 @@ namespace FryScript.UnitTests.Ast
         {
             node.GetExpression(scope).Returns(exprToReturn);
 
+            return node;
+        }
+
+        public static AstNode StubParseNode(this AstNode node, string valueString = "", object value = null, int position = 0, int line = 0, int column = 0)
+        {
+            node.ParseNode = new ParseTreeNode(
+                new Token(
+                    new Terminal("test"),
+                    new SourceLocation(position, line, column),
+                    valueString,
+                    value
+                    ));
+
+            return node;
+        }
+
+        public static AstNode StubCompilerContext(this AstNode node, DebugHook debugHook = null, bool detailedExceptions = false)
+        {
+            var runtime = Substitute.For<IScriptRuntime>();
+            runtime.DebugHook = debugHook;
+            runtime.DetailedExceptions = detailedExceptions;
+
+            node.CompilerContext = new CompilerContext(
+                runtime,
+                new Uri("test://test"));
+            
             return node;
         }
     }

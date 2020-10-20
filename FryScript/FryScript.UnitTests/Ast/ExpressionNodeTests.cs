@@ -23,7 +23,7 @@ namespace FryScript.UnitTests.Ast
         public void GetExpression_Has_Debug_Hook()
         {
             var debugHook = Substitute.For<DebugHook>();
-            StubCompilerContext(debugHook);
+            Node.StubCompilerContext(debugHook);
 
             var expectedExpr = Expression.Empty();
             Node.Configure().WrapDebugExpression(
@@ -40,7 +40,7 @@ namespace FryScript.UnitTests.Ast
         [TestMethod]
         public void GetExpression_Detailed_Exceptions()
         {
-            StubCompilerContext(detailedExceptions: true);
+            Node.StubCompilerContext(detailedExceptions: true);
 
             var expectedChildExpr = Expression.Empty();
             Node.Configure().GetChildExpression(Scope).Returns(expectedChildExpr);
@@ -60,7 +60,7 @@ namespace FryScript.UnitTests.Ast
         [TestMethod]
         public void GetExpression_No_Detailed_Exception()
         {
-            StubCompilerContext(detailedExceptions: false);
+            Node.StubCompilerContext(detailedExceptions: false);
 
             var expectedExpr = Expression.Empty();
             Node.Configure().GetChildExpression(Scope).Returns(expectedExpr);

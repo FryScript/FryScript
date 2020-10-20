@@ -22,14 +22,12 @@ namespace FryScript.Ast
 
             parameters.DeclareParameters(paramametersScope);
 
-            
             var fibreScope = paramametersScope.New(this, true, true);
 
             var parameterExprs = paramametersScope.GetLocalExpressions().ToArray();
 
             if(parameterExprs.Length > 16)
                 throw CompilerException.FromAst("A fibre cannot declare more than 16 parameters", parameters);
-
 
             var newFibreContextExpr = GetFibreContextExpression(fibreScope, body);
             newFibreContextExpr = fibreScope.ScopeBlock(typeof(ScriptFibreContext), newFibreContextExpr);
@@ -43,7 +41,7 @@ namespace FryScript.Ast
             return newFibreExpr;
         }
 
-        private Expression GetFibreContextExpression(Scope scope, AstNode body)
+        public virtual Expression GetFibreContextExpression(Scope scope, AstNode body)
         {
             var contextScope = scope.New(this);
 

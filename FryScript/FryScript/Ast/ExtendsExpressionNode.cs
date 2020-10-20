@@ -1,5 +1,5 @@
-﻿using FryScript.Compilation;
-using FryScript.Helpers;
+﻿using FryScript.Binders;
+using FryScript.Compilation;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -18,7 +18,11 @@ namespace FryScript.Ast
             var identifier = ChildNodes.First();
             var type = ChildNodes.Skip(2).First();
 
-            return ExpressionHelper.DynamicExtendsOperation(identifier.GetExpression(scope), type.GetExpression(scope));
+            var instanceExpr = identifier.GetExpression(scope);
+            var valueExpr = type.GetExpression(scope);
+
+            var binder = BinderCache.Current.ExtendsOperationBinder();
+            return Expression.Dynamic(binder, typeof(object), instanceExpr, valueExpr);
         }
     }
 }
