@@ -41,7 +41,7 @@ namespace FryScript.Ast
             return newFibreExpr;
         }
 
-        public virtual Expression GetFibreContextExpression(Scope scope, AstNode body)
+        protected internal virtual Expression GetFibreContextExpression(Scope scope, AstNode body)
         {
             var contextScope = scope.New(this);
 
@@ -62,7 +62,7 @@ namespace FryScript.Ast
             return initContextExpr;
         }
 
-        private Expression AddYieldSwitchExpression(Scope scope, ParameterExpression contextParam, Expression bodyExpr, List<LabelTarget> yieldLabels)
+        protected internal virtual Expression AddYieldSwitchExpression(Scope scope, ParameterExpression contextParam, Expression bodyExpr, List<LabelTarget> yieldLabels)
         {
             if (yieldLabels.Count == 0)
                 return bodyExpr;
@@ -75,7 +75,7 @@ namespace FryScript.Ast
             return scope.ScopeBlock(switchExpr, bodyExpr);
         }
 
-        private Expression AddReturnExpression(LabelTarget yieldTarget, Expression bodyExpr)
+        protected internal virtual Expression AddReturnExpression(LabelTarget yieldTarget, Expression bodyExpr)
         {
             var returnExpr = Expression.Label(yieldTarget, bodyExpr);
 

@@ -5,8 +5,6 @@ using System.Linq.Expressions;
 
 namespace FryScript.Ast
 {
-
-
     public class BlockStatementNode: AstNode
     {
         public override Expression GetExpression(Scope scope)

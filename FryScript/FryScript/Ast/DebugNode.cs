@@ -8,7 +8,7 @@ namespace FryScript.Ast
 {
     public abstract class DebugNode : AstNode
     {
-        public virtual Expression WrapDebugExpression(DebugEvent debugEvent, Scope scope, Func<Scope, Expression> func)
+        protected internal virtual Expression WrapDebugExpression(DebugEvent debugEvent, Scope scope, Func<Scope, Expression> func)
         {
             var span = ParseNode.Span;
             var location = span.Location;
@@ -24,7 +24,7 @@ namespace FryScript.Ast
                 CompilerContext.DebugHook);
         }
 
-        public virtual Expression WrapDebugStack(Scope scope, Func<Scope, Expression> func, DebugEvent pushEvent = DebugEvent.PushStackFrame, DebugEvent popEvent = DebugEvent.PopStackFrame)
+        protected internal virtual Expression WrapDebugStack(Scope scope, Func<Scope, Expression> func, DebugEvent pushEvent = DebugEvent.PushStackFrame, DebugEvent popEvent = DebugEvent.PopStackFrame)
         {
             var span = ParseNode.Span;
             var location = span.Location;
@@ -41,7 +41,7 @@ namespace FryScript.Ast
                 popEvent);
         }
 
-        public virtual Expression GetDetailedExceptionExpression(Expression expression, AstNode astNode, Scope scope)
+        protected internal virtual Expression GetDetailedExceptionExpression(Expression expression, AstNode astNode, Scope scope)
         {
             expression = expression ?? throw new ArgumentNullException(nameof(expression));
             astNode = astNode ?? throw new ArgumentNullException(nameof(astNode));

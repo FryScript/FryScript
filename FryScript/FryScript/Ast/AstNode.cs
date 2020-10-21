@@ -65,7 +65,7 @@ namespace FryScript.Ast
             return default;
         }
 
-        public virtual Expression GetChildExpression(Scope scope)
+        protected internal virtual Expression GetChildExpression(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
@@ -80,7 +80,7 @@ namespace FryScript.Ast
             return Expression.Block(typeof(object), childExprs);
         }
 
-        public virtual AstNode Transform<T>(params AstNode[] childNodes)
+        protected internal virtual AstNode Transform<T>(params AstNode[] childNodes)
             where T : AstNode, new()
         {
             return new T

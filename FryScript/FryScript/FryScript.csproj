@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netstandard2.1;net452</TargetFrameworks>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
     <Version>0.0.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -53,10 +53,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ScriptFunction.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>
