@@ -71,11 +71,14 @@ namespace FryScript.UnitTests.Ast
             Scope
                 .Children[0]
                 .TryGetData(ScopeData.ContinueTarget, out LabelTarget expectedContinueTarget);
-            Assert.AreEqual(expectedContinueTarget, loopExpr.ContinueLabel);
 
             var bodyExpr = loopExpr.Body as BlockExpression;
-            Assert.AreEqual(2, bodyExpr.Expressions.Count);
-            Assert.AreEqual(expectedActionExpr, bodyExpr.Expressions[1]);
+            Assert.AreEqual(3, bodyExpr.Expressions.Count);
+
+            var continueLabelExpr = bodyExpr.Expressions[1] as LabelExpression;
+            Assert.AreEqual(expectedContinueTarget, continueLabelExpr.Target);
+
+            Assert.AreEqual(expectedActionExpr, bodyExpr.Expressions[2]);
 
             var ifExpr = bodyExpr.Expressions[0] as ConditionalExpression;
             var convertTestExpr = ifExpr.Test as DynamicExpression;

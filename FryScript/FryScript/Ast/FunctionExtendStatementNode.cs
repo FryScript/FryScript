@@ -22,7 +22,7 @@ namespace FryScript.Ast
                 baseExpr,
                 Expression.Call(
                     typeof (ScriptFunction),
-                    "Extend",
+                    nameof(ScriptFunction.Extend),
                     null,
                     identifier.GetIdentifier(scope)
                     )

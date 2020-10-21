@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace FryScript.Ast
 {
-    public class ForStatementNode: AstNode
+    public class ForStatementNode : AstNode
     {
         public override Expression GetExpression(Scope scope)
         {
@@ -20,7 +20,7 @@ namespace FryScript.Ast
             var loopScope = scope.New(this);
 
             var breakTarget = loopScope.SetData(ScopeData.BreakTarget, Expression.Label(typeof(object), scope.GetTempName(TempPrefix.BreakTarget)));
-            var continueTarget = loopScope.SetData(ScopeData.ContinueTarget, Expression.Label(typeof(void), scope.GetTempName(TempPrefix.ContinueTarget)));
+            var continueTarget = loopScope.SetData(ScopeData.ContinueTarget, Expression.Label(typeof(object), scope.GetTempName(TempPrefix.ContinueTarget)));
 
             var initExpr = init.GetExpression(loopScope);
             var conditionExpr = ExpressionHelper.DynamicConvert(condition.GetExpression(loopScope), typeof(bool));
@@ -37,9 +37,9 @@ namespace FryScript.Ast
 
             var continueLabelExpr = Expression.Label(continueTarget, ExpressionHelper.Null());
 
-            var loopBodyExpr = statementScope.ScopeBlock(ifBreakExpr, actionExpr);
+            var loopBodyExpr = statementScope.ScopeBlock(ifBreakExpr, continueLabelExpr, actionExpr);
 
-            var loopExpr = Expression.Loop(loopBodyExpr, breakTarget, continueTarget);
+            var loopExpr = Expression.Loop(loopBodyExpr, breakTarget);
 
             var loopInitExpr = loopScope.ScopeBlock(initExpr, loopExpr);
 
