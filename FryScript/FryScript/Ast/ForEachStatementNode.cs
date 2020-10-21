@@ -13,7 +13,7 @@ namespace FryScript.Ast
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            var identifier = ChildNodes.Skip(2).First();
+            var identifier = ChildNodes.Skip(2).First() as IdentifierNode;
             var obj = ChildNodes.Skip(4).First();
             var statement = ChildNodes.Skip(5).First();
 
@@ -23,19 +23,19 @@ namespace FryScript.Ast
 
             var breakTarget = statementScope.SetData(ScopeData.BreakTarget,
                 Expression.Label(typeof (object), TempPrefix.BreakTarget));
-            var continueTarget = statementScope.SetData(ScopeData.ContinueTarget, Expression.Label(typeof(object), scope.GetTempName(TempPrefix.ContinueTarget)));
+            var continueTarget = statementScope.SetData(ScopeData.ContinueTarget, Expression.Label(typeof(void), scope.GetTempName(TempPrefix.ContinueTarget)));
 
             var objExpr = obj.GetExpression(enumeratorScope);
             var enumerableObjExpr = Expression.Call(
                 typeof(EnumerableHelper),
-                "GetEnumerator",
+                nameof(EnumerableHelper.GetEnumerator),
                 null,
                 objExpr
                 );
             var enumeratorExpr = enumeratorScope.AddTempMember(TempPrefix.Enumerator, this, typeof(IEnumerator));
             var assignEnumeratorExpr = Expression.Assign(enumeratorExpr, enumerableObjExpr);
             
-            var enumeratorCurrentExpr = Expression.Property(enumeratorExpr, "Current");
+            var enumeratorCurrentExpr = Expression.Property(enumeratorExpr, nameof(IEnumerator.Current));
 
             identifier.CreateIdentifier(statementScope);
 
@@ -49,17 +49,17 @@ namespace FryScript.Ast
             var ifBreakExpr = Expression.IfThenElse(
                 Expression.Call(
                     enumeratorExpr,
-                    "MoveNext",
+                    nameof(IEnumerator.MoveNext),
                     null
                     ),
                 statementBlockExpr,
                 Expression.Break(breakTarget, ExpressionHelper.Null(), typeof(object))
                 );
             var continueLabelExpr = Expression.Label(continueTarget, ExpressionHelper.Null());
-   
-            var loopBodyExpr = loopScope.ScopeBlock(ifBreakExpr, continueLabelExpr);
 
-            var loopExpr = Expression.Loop(loopBodyExpr, breakTarget);
+            var loopBodyExpr = loopScope.ScopeBlock(typeof(void), ifBreakExpr);
+
+            var loopExpr = Expression.Loop(loopBodyExpr, breakTarget, continueTarget);
 
             var initEnumeratorExpr = enumeratorScope.ScopeBlock(assignEnumeratorExpr, loopExpr);
             
