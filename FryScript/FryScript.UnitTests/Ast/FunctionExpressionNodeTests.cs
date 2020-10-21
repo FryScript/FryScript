@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.Extensions;
 using System;
+using System.Linq.Expressions;
 
 namespace FryScript.UnitTests.Ast
 {
@@ -54,8 +55,55 @@ namespace FryScript.UnitTests.Ast
         [TestMethod]
         public void GetExpression_Empty_Function()
         {
-            var result = Node.GetExpression(Scope);
-            throw new NotImplementedException();
+            var result = Node.GetExpression(Scope) as NewExpression;
+
+            Assert.AreEqual(typeof(ScriptFunction), result.Constructor.DeclaringType);
+            Assert.AreEqual(1, result.Arguments.Count);
+
+            var lambdaExpr = result.Arguments[0] as LambdaExpression;
+            Assert.AreEqual(typeof(object), lambdaExpr.ReturnType);
+
+            var bodyExpr = lambdaExpr.Body as LabelExpression;
+            var constantExpr = bodyExpr.DefaultValue as ConstantExpression;
+            Assert.IsNull(constantExpr.Value);
+
+            Scope
+                .Children[0]
+                .Children[0]
+                .TryGetData(ScopeData.ReturnTarget, out LabelTarget expectedReturnTarget);
+
+            Assert.AreEqual(expectedReturnTarget, bodyExpr.Target);
+        }
+
+        [TestMethod]
+        public void GetExpression_With_Function_Body()
+        {
+            var expectedBlockExpr = Expression.Constant("block", typeof(object));
+            var blockChildren = Node<AstNode>.Empty;
+            
+            _blockNode.SetChildren(blockChildren);
+            _blockNode
+                .GetExpression(Arg.Is<Scope>(s => s.Parent.Parent == Scope))
+                .Returns(expectedBlockExpr);
+
+            var result = Node.GetExpression(Scope) as NewExpression;
+
+            Assert.AreEqual(typeof(ScriptFunction), result.Constructor.DeclaringType);
+            Assert.AreEqual(1, result.Arguments.Count);
+
+            var lambdaExpr = result.Arguments[0] as LambdaExpression;
+            Assert.AreEqual(typeof(object), lambdaExpr.ReturnType);
+
+            var bodyExpr = lambdaExpr.Body as LabelExpression;
+            var constantExpr = bodyExpr.DefaultValue as ConstantExpression;
+            Assert.AreEqual(expectedBlockExpr, constantExpr);
+
+            Scope
+                .Children[0]
+                .Children[0]
+                .TryGetData(ScopeData.ReturnTarget, out LabelTarget expectedReturnTarget);
+
+            Assert.AreEqual(expectedReturnTarget, bodyExpr.Target);
         }
     }
 }
