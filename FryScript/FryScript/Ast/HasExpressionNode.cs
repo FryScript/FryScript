@@ -1,5 +1,5 @@
-﻿using FryScript.Compilation;
-using FryScript.Helpers;
+﻿using FryScript.Binders;
+using FryScript.Compilation;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -19,7 +19,9 @@ namespace FryScript.Ast
             var member = ChildNodes.Skip(2).First();
 
             var identifierExpr = identifier.GetExpression(scope);
-            var hasExpr = ExpressionHelper.DynamicHasOperation(member.ValueString, identifierExpr);
+
+            var binder = BinderCache.Current.HasOperationBinder(member.ValueString);
+            var hasExpr = Expression.Dynamic(binder, typeof(object), identifierExpr);
 
             return hasExpr;
         }

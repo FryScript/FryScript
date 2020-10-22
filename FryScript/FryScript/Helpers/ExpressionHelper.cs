@@ -153,15 +153,6 @@ namespace FryScript.Helpers
             return Expression.Dynamic(binder, typeof(object), instance, value);
         }
 
-        public static Expression DynamicHasOperation(string name, Expression instance)
-        {
-            name = name ?? throw new ArgumentNullException(nameof(name));
-            instance = instance ?? throw new ArgumentNullException(nameof(instance));
-
-            var binder = BinderCache.Current.HasOperationBinder(name);
-            return Expression.Dynamic(binder, typeof(object), instance);
-        }
-
         public static bool TryGetMethodExpression(Expression instance, string name, out Expression expression)
         {
             instance = instance ?? throw new ArgumentNullException(nameof(instance));
