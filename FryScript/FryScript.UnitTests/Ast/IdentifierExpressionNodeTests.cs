@@ -55,7 +55,7 @@ namespace FryScript.UnitTests.Ast
             var leftNode = Node<AstNode>.Empty;
             leftNode.GetExpression(expectedLeftExpr, Scope);
 
-            var rightNode = Node<IdentifierNode>.WithValueString("property");
+            var rightNode = Node<IdentifierNode>.WithValueString("member");
 
             Node.SetChildren(leftNode, rightNode);
 
@@ -66,7 +66,7 @@ namespace FryScript.UnitTests.Ast
             Assert.AreEqual(expectedLeftExpr, result.Arguments[0]);
 
             var binder = result.Binder as ScriptGetMemberBinder;
-            Assert.AreEqual("property", binder.Name);            
+            Assert.AreEqual("member", binder.Name);
         }
 
         [TestMethod]
@@ -135,6 +135,67 @@ namespace FryScript.UnitTests.Ast
             var result = Node.SetIdentifier(Scope, valueExpr);
 
             Assert.AreEqual(expectedSetIdentifierExpr, result);
+        }
+
+        [TestMethod]
+        public void SetIdentifier_Sets_Member()
+        {
+            var valueExpr = Expression.Constant(new object());
+            var expectedLeftExpr = Expression.Constant(new object());
+            var leftNode = Node<AstNode>.Empty;
+            leftNode.GetExpression(expectedLeftExpr, Scope);
+
+            var rightNode = Node<IdentifierNode>.WithValueString("member");
+
+            Node.SetChildren(leftNode, rightNode);
+
+            var result = Node.SetIdentifier(Scope, valueExpr) as DynamicExpression;
+
+            Assert.AreEqual(ExpressionType.Dynamic, result.NodeType);
+            Assert.AreEqual(2, result.Arguments.Count);
+            Assert.AreEqual(expectedLeftExpr, result.Arguments[0]);
+            Assert.AreEqual(valueExpr, result.Arguments[1]);
+
+            var binder = result.Binder as ScriptSetMemberBinder;
+            Assert.AreEqual("member", binder.Name);
+        }
+
+        [TestMethod]
+        public void SetIdentifier_Sets_Index()
+        {
+            var valueExpr = Expression.Constant(new object());
+            var expectedLeftExpr = Expression.Constant(new object());
+            var leftNode = Node<AstNode>.Empty;
+            leftNode.GetExpression(expectedLeftExpr, Scope);
+
+            var expectedRightExpr = Expression.Constant(new object());
+            var rightNode = Node<IndexNode>.Empty;
+            rightNode.GetExpression(expectedRightExpr, Scope);
+
+            Node.SetChildren(leftNode, rightNode);
+
+            var result = Node.SetIdentifier(Scope, valueExpr) as DynamicExpression;
+
+            Assert.AreEqual(ExpressionType.Dynamic, result.NodeType);
+            Assert.AreEqual(3, result.Arguments.Count);
+            Assert.AreEqual(expectedLeftExpr, result.Arguments[0]);
+            Assert.AreEqual(expectedRightExpr, result.Arguments[1]);
+            Assert.AreEqual(valueExpr, result.Arguments[2]);
+
+            Assert.IsInstanceOfType(result.Binder, typeof(ScriptSetIndexBinder));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void SetIdentifier_Unexpected_Right_Hand_Node()
+        {
+            var valueExpr = Expression.Constant(new object());
+            var leftNode = Node<AstNode>.Empty;
+            var rightNode = Node<AstNode>.Empty;
+
+            Node.SetChildren(leftNode, rightNode);
+
+            Node.SetIdentifier(Scope, valueExpr);
         }
     }
 }

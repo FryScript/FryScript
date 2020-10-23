@@ -73,7 +73,7 @@ namespace FryScript.Ast
                 return setIndexExpr;
             }
 
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Unexpected right hand node");
         }
     }
 }

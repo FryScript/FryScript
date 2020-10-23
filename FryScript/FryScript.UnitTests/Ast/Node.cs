@@ -66,7 +66,7 @@ namespace FryScript.UnitTests.Ast
             return node;
         }
 
-        public static AstNode StubCompilerContext(this AstNode node, DebugHook debugHook = null, bool detailedExceptions = false)
+        public static AstNode StubCompilerContext(this AstNode node, DebugHook debugHook = null, bool detailedExceptions = false, bool isEvalMode = false)
         {
             var runtime = Substitute.For<IScriptRuntime>();
             runtime.DebugHook = debugHook;
@@ -74,7 +74,8 @@ namespace FryScript.UnitTests.Ast
 
             node.CompilerContext = new CompilerContext(
                 runtime,
-                new Uri("test://test"));
+                new Uri("test://test"),
+                isEvalMode);
             
             return node;
         }
