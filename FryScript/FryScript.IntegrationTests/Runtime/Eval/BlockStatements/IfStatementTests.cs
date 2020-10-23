@@ -36,5 +36,47 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BlockStatements
             Eval("if(false) x; else if(false) x; else x=\"test\";");
             Assert.AreEqual("test", Eval("x;"));
         }
+
+        [TestMethod]
+        public void If_Then_Awaits_Condition()
+        {
+            Eval(@"
+            var condition = fibre() => true;
+
+            var f = fibre() => {
+                if(await condition())
+                    yield return true;
+            };
+            ");
+
+            var f = Eval("f;");
+            var fc = f() as ScriptFibreContext;
+
+            fc.Execute();
+
+            Assert.AreEqual(true, fc.Result);
+        }
+
+        [TestMethod]
+        public void If_Then_Else_Awaits_Condition()
+        {
+            Eval(@"
+            var condition = fibre() => false;
+
+            var f = fibre() => {
+                if(await condition())
+                    yield return true;
+                else
+                    yield return false;
+            };
+            ");
+
+            var f = Eval("f;");
+            var fc = f() as ScriptFibreContext;
+
+            fc.Execute();
+
+            Assert.AreEqual(false, fc.Result);
+        }
     }
 }

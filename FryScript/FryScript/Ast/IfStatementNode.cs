@@ -32,10 +32,10 @@ namespace FryScript.Ast
             return ifThenElseExpr;
         }
 
-        private Expression TryMakeAwaitable(Scope scope)
+        protected internal virtual Expression TryMakeAwaitable(Scope scope)
         {
             var conditionScope = scope.Clone();
-            var conditionAwaitContexts = conditionScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
+            conditionScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
 
             var conditionExpr = ExpressionHelper.DynamicConvert(ChildNodes.Skip(1).First().GetExpression(conditionScope), typeof(bool));
 

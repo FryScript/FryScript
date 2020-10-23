@@ -113,7 +113,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval
         }
 
         [TestMethod]
-        public void Yield_Return_Without_Completes_Fibre_Context()
+        public void Yield_Return_Without_Result_Completes_Fibre_Context()
         {
             Eval(@"
             var f = fibre () => {
@@ -200,6 +200,26 @@ namespace FryScript.IntegrationTests.Runtime.Eval
 
             Assert.IsTrue(fc.Completed);
             Assert.IsFalse(fc.HasResult);
+        }
+
+        [TestMethod]
+        public void Implicit_Yield_Return_On_Last_Expression_In_Block()
+        {
+            Eval(@"
+            var f = fibre() => {
+                true;
+                ""result"";
+            };
+            ");
+
+            var f = Eval("f;");
+
+            var fc = f() as ScriptFibreContext;
+
+            fc.Resume();
+
+            Assert.IsTrue(fc.Completed);
+            Assert.AreEqual("result", fc.Result);
         }
     }
 }
