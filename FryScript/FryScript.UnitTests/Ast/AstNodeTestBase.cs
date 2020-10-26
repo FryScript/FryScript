@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 
 namespace FryScript.UnitTests.Ast
 {
-    public class AstNodeTestBase<T> where T : AstNode, new()
+    public class AstNodeTestBase<T> where T : AstNode
     {
         public T Node { get; private set; }
 
