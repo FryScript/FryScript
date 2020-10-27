@@ -8,7 +8,8 @@ namespace FryScript.Ast
     {
         public override Expression GetExpression(Scope scope)
         {
-            scope = scope ?? throw new ArgumentNullException(nameof(scope));
+            _ = scope ?? throw new ArgumentNullException(nameof(scope));
+
             var value = Value;
 
             if (value is double)

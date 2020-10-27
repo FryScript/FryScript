@@ -42,6 +42,9 @@ namespace FryScript.UnitTests.Ast
             Assert.AreEqual(expr, result);
         }
 
-       
+        public virtual void GetExpression_Single_Child_Gets_Child_Expression()
+        {
+            TestSingleChildNode();
+        }
     }
 }
