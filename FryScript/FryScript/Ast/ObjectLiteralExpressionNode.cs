@@ -17,7 +17,6 @@ namespace FryScript.Ast
 
             scope = scope.New(this);
 
-            //var paramExpr = Expression.Parameter(typeof(ScriptObject), scope.GetTempName(TempPrefix.ObjectLiteral));
             var paramExpr = scope.AddMember(scope.GetTempName(TempPrefix.ObjectLiteral), this, typeof(ScriptObject));
             scope.SetData(ScopeData.ObjectLiteralContext, paramExpr);
 

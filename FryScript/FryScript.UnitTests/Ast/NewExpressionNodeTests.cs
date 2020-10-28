@@ -12,9 +12,9 @@ namespace FryScript.UnitTests.Ast
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Getexpression_Null_Scope()
+        public void GetExpression_Null_Scope()
         {
-            Node.GetExpression(Scope);
+            Node.GetExpression(null);
         }
 
         [TestMethod]
