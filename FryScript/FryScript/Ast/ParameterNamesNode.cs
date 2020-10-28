@@ -21,12 +21,8 @@ namespace FryScript.Ast
                 .ForEach(i => i.CreateIdentifier(scope));
         }
 
-        private List<IdentifierNode> DeclareParameters(Scope scope, List<IdentifierNode> exprs = null)
+        protected internal virtual List<IdentifierNode> DeclareParameters(Scope scope, List<IdentifierNode> exprs = null)
         {
-            scope = scope ?? throw new ArgumentNullException(nameof(scope));
-
-            exprs = exprs ?? new List<IdentifierNode>();
-
             if (ChildNodes.Length == 1 && ChildNodes[0] is IdentifierNode firstIdentifier)
             {
                 exprs.Add(firstIdentifier);
