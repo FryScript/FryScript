@@ -47,18 +47,31 @@ namespace FryScript.UnitTests.Ast
             var childNode = Node<IdentifierNode>.Empty;
             Node.SetChildren(childNode);
 
-            var exprs = new List<IdentifierNode>();
+            var identifiers = new List<IdentifierNode>();
 
-            Node.DeclareParameters(Scope, exprs);
+            Node.DeclareParameters(Scope, identifiers);
 
-            Assert.AreEqual(1, exprs.Count);
-            Assert.AreEqual(childNode, exprs[0]);
+            Assert.AreEqual(1, identifiers.Count);
+            Assert.AreEqual(childNode, identifiers[0]);
         }
 
         [TestMethod]
-        public void MyTestMethod()
+        public void DeclareParameters_Multiple_Identifiers()
         {
-            Assert.Fail();
+            var parameterNamesNode = Node<ParameterNamesNode>.Empty;
+
+            var identifierNode = Node<IdentifierNode>.Empty;
+
+            Node.SetChildren(parameterNamesNode, identifierNode);
+
+            var identifiers = new List<IdentifierNode>();
+
+            Node.DeclareParameters(Scope, identifiers);
+
+            parameterNamesNode.Received().DeclareParameters(Scope, identifiers);
+
+            Assert.AreEqual(1, identifiers.Count);
+            Assert.AreEqual(identifierNode, identifiers[0]);
         }
     }
 }
