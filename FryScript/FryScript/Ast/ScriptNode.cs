@@ -19,7 +19,10 @@ namespace FryScript.Ast
             var bodyExpr = scope.ScopeBlock(GetChildExpression(scope));
 
             if (CompilerContext.HasDebugHook)
-                bodyExpr = WrapDebugStack(scope, s => bodyExpr, DebugEvent.ScriptInitializing, DebugEvent.ScriptInitialized);
+            {
+                var wrappedExpr = bodyExpr;
+                bodyExpr = WrapDebugStack(scope, s => wrappedExpr, DebugEvent.ScriptInitializing, DebugEvent.ScriptInitialized);
+            }
 
             var lambda = Expression.Lambda<Func<IScriptObject, object>>(bodyExpr, paramExpr);
 
