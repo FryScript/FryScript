@@ -12,7 +12,7 @@ namespace FryScript.Ast
             throw new NotImplementedException();
         }
 
-        public Expression GetExpression(Scope scope, IScriptObject obj)
+        public virtual Expression GetExpression(Scope scope, IScriptObject obj)
         {
             return Expression.Block(typeof(object),
                 ChildNodes.Cast<ImportAliasNode>().Select(c => c.GetExpression(scope, obj)));
