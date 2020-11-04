@@ -228,18 +228,5 @@ namespace FryScript.UnitTests.Ast
             Assert.AreEqual(expectedPosition, location.Position);
             Assert.AreEqual(expectedLength, span.Length);
         }
-
-        [TestMethod]
-        [ExpectedException(typeof(CompilerException))]
-        public void AdjustNode_Throws_Compiler_Exception_If_Node_Is_Await_Expression()
-        {
-            Node.StubParseNode();
-
-            var awaitNode = Node<AwaitExpressionNode>.Empty;
-            awaitNode.StubParseNode();
-            awaitNode.StubCompilerContext();
-
-            Node.AdjustNode(awaitNode, 0, 0);
-        }
     }
 }

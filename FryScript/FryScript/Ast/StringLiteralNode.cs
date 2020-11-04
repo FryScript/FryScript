@@ -152,9 +152,6 @@ namespace FryScript.Ast
             var span = new SourceSpan(location, length - 3);
 
             node.ParseNode.Span = span;
-
-            if (node is AwaitExpressionNode)
-                throw ExceptionHelper.InvalidContext(Keywords.Await, node);
         }
     }
 }
