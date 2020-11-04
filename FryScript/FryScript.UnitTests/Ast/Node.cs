@@ -83,7 +83,7 @@ namespace FryScript.UnitTests.Ast
 
     public static class Node<T> where T : AstNode
     {
-        public static T Empty => Node<T>.WithValue(new object());
+        public static T Empty => WithValue(new object());
         
         public static T WithValue(object value)
         {

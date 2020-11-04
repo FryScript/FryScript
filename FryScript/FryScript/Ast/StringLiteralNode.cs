@@ -12,7 +12,7 @@ namespace FryScript.Ast
 {
     public class StringLiteralNode : AstNode
     {
-        private struct Interpolation
+        public struct Interpolation
         {
             public readonly int
                 Start,
@@ -34,14 +34,14 @@ namespace FryScript.Ast
             return Expression.Constant(ValueString);
         }
 
-        private Expression GetFormatExpression(Scope scope)
+        protected internal virtual Expression GetFormatExpression(Scope scope)
         {
             var interpolations = GetInterpolations(ValueString).ToArray();
 
             if (interpolations.Length == 0)
                 return Expression.Constant(ValueString);
 
-            var subExprs = interpolations.Select(m => GetExpression(m, scope));
+            var subExprs = interpolations.Select(m => GetInterpolatedExpression(m, scope));
 
             var formatStr = ValueString;
 
@@ -65,7 +65,7 @@ namespace FryScript.Ast
             return formatExpr;
         }
 
-        private IEnumerable<Interpolation> GetInterpolations(string str)
+        protected internal virtual IEnumerable<Interpolation> GetInterpolations(string str)
         {
             var curPos = 0;
             var endPos = str.Length;
@@ -112,7 +112,7 @@ namespace FryScript.Ast
             }
         }
 
-        private Expression GetExpression(Interpolation interpolation, Scope scope)
+        protected internal virtual Expression GetInterpolatedExpression(Interpolation interpolation, Scope scope)
         {
             var subString = interpolation.Value;
 
@@ -144,7 +144,7 @@ namespace FryScript.Ast
             }
         } 
 
-        private void AdjustNode(AstNode node, int length, int startIndex)
+        protected internal virtual void AdjustNode(AstNode node, int length, int startIndex)
         {
             var parentLocation = ParseNode.Span.Location;
             var location = new SourceLocation(parentLocation.Position + startIndex + 3, parentLocation.Line, parentLocation.Column);
@@ -152,6 +152,9 @@ namespace FryScript.Ast
             var span = new SourceSpan(location, length - 3);
 
             node.ParseNode.Span = span;
+
+            if (node is AwaitExpressionNode)
+                throw ExceptionHelper.InvalidContext(Keywords.Await, node);
         }
     }
 }
