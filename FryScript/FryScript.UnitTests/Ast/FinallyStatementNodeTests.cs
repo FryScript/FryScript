@@ -1,6 +1,5 @@
 ﻿using FryScript.Ast;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Linq.Expressions;
 
 namespace FryScript.UnitTests.Ast
@@ -9,10 +8,9 @@ namespace FryScript.UnitTests.Ast
     public class FinallyStatementNodeTests : AstNodeTestBase<FinallyStatementNode>
     {
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void GetExpression_Null_Scope()
+        public override void GetExpression_Null_Scope()
         {
-            Node.GetExpression(null);
+            base.GetExpression_Null_Scope();
         }
 
         [TestMethod]

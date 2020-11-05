@@ -41,10 +41,9 @@ namespace FryScript.UnitTests.Ast
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void GetExpression_Null_Scope()
+        public override void GetExpression_Null_Scope()
         {
-            Node.GetExpression(null);
+            base.GetExpression_Null_Scope();
         }
 
         [TestMethod]

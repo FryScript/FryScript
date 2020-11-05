@@ -2,7 +2,6 @@
 using FryScript.Compilation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
-using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -12,10 +11,9 @@ namespace FryScript.UnitTests.Ast
     public class AssignTupleExpressionNodeTests : AstNodeTestBase<AssignTupleExpressionNode>
     {
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void GetExpression_Null_Scope()
+        public override void GetExpression_Null_Scope()
         {
-            Node.GetExpression(null);
+            base.GetExpression_Null_Scope();
         }
 
         [TestMethod]

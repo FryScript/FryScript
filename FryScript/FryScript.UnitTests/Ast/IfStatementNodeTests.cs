@@ -4,7 +4,6 @@ using FryScript.Compilation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.Extensions;
-using System;
 using System.Linq.Expressions;
 
 namespace FryScript.UnitTests.Ast
@@ -27,10 +26,9 @@ namespace FryScript.UnitTests.Ast
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void GetExpression_Null_Scope()
+        public override void GetExpression_Null_Scope()
         {
-            Node.GetExpression(null);
+            base.GetExpression_Null_Scope();
         }
 
         [TestMethod]
