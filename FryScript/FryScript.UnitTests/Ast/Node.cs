@@ -32,13 +32,6 @@ namespace FryScript.UnitTests.Ast
             return node;
         }
 
-        public static T WithValue<T>(this T node, object value) where T : AstNode
-        {
-            node.GetExpression(Arg.Any<Scope>()).Returns(Expression.Constant(value));
-
-            return node;
-        }
-
         public static T GetExpression<T>(this T node, Expression exprToReturn) where T : AstNode
         {
             node.GetExpression(Arg.Any<Scope>()).Returns(exprToReturn);

@@ -12,7 +12,7 @@ namespace FryScript.Ast
             throw new NotImplementedException();
         }
 
-        public CatchBlock GetCatchBlock(Scope scope)
+        public virtual CatchBlock GetCatchBlock(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 

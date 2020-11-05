@@ -1,4 +1,5 @@
 using FryScript.Ast;
+using FryScript.Compilation;
 using FryScript.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -28,8 +29,10 @@ namespace FryScript.UnitTests.Ast
             var left = Node<AstNode>.WithValue(new object());
             var op = Node<AstNode>.WithValueString(Keywords.As);
             var right = Node<IdentifierNode>
-                            .WithValueString("test")
-                            .WithValue(new object());
+                            .WithValueString("test");
+
+            var expr = Expression.Constant(new object());
+            right.GetExpression(expr, Arg.Any<Scope>());
 
             Node.SetChildren(left, op, right);
 

@@ -55,7 +55,7 @@ namespace FryScript.Ast
             return nodes;
         }
 
-        public void DeclareVariables(Scope scope)
+        public virtual void DeclareVariables(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
