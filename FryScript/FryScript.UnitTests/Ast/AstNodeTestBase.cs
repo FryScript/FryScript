@@ -29,7 +29,12 @@ namespace FryScript.UnitTests.Ast
 
         }
 
-        public void TestSingleChildNode()
+        public virtual void GetExpression_Null_Scope()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => Node.GetExpression(null));
+        }
+
+        public virtual void GetExpression_Single_Child_Gets_Child_Expression()
         {
             Node.SetChildren(Node<AstNode>.Empty);
 
@@ -40,16 +45,6 @@ namespace FryScript.UnitTests.Ast
             var result = Node.GetExpression(Scope);
 
             Assert.AreEqual(expr, result);
-        }
-
-        public virtual void GetExpression_Null_Scope()
-        {
-            Assert.ThrowsException<ArgumentNullException>(() => Node.GetExpression(null));
-        }
-
-        public virtual void GetExpression_Single_Child_Gets_Child_Expression()
-        {
-            TestSingleChildNode();
         }
     }
 }

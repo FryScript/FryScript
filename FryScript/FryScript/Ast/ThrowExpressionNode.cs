@@ -50,7 +50,7 @@ namespace FryScript.Ast
             var nullNode = throwTarget.FindChild<NullNode>();
 
             if (nullNode != null)
-                ExceptionHelper.InvalidContext(Keywords.Null, nullNode);
+                throw ExceptionHelper.InvalidContext(Keywords.Null, nullNode);
 
             return throwTarget.GetExpression(scope);
         }
@@ -58,7 +58,7 @@ namespace FryScript.Ast
         protected internal virtual Expression HandleRethrow(Scope scope)
         {
             if (!scope.TryGetData(ScopeData.CurrentException, out ParameterExpression exceptionExpr))
-                ExceptionHelper.InvalidContext(Keywords.Throw, this);
+                throw ExceptionHelper.InvalidContext(Keywords.Throw, this);
 
             return exceptionExpr;
         }

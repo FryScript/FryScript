@@ -117,12 +117,13 @@ namespace FryScript.UnitTests.Ast
         [ExpectedException(typeof(CompilerException))]
         public void HandleThrow_Handles_Throwing_Null()
         {
-            Node
+            var throwTarget = Node<AstNode>.Empty;
+            var nullNode = Node<NullNode>.Empty;
+
+            nullNode
                 .StubCompilerContext()
                 .StubParseNode();
 
-            var throwTarget = Node<AstNode>.Empty;
-            var nullNode = Node<NullNode>.Empty;
             throwTarget.SetChildren(nullNode);
 
             Node.SetChildren(null, throwTarget);
