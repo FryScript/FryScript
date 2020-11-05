@@ -26,7 +26,7 @@ namespace FryScript.Ast
             return throwExpr;
         }
 
-        private MethodCallExpression WrapException(Scope scope, Expression toThrowExpr, bool rethrow)
+        protected internal virtual Expression WrapException(Scope scope, Expression toThrowExpr, bool rethrow)
         {
             var location = ParseNode.Span.Location;
 
@@ -37,28 +37,28 @@ namespace FryScript.Ast
                             scope.TryGetData(ScopeData.CurrentException, out ParameterExpression currentException)
                                 ? currentException
                                 : ExpressionHelper.Null(typeof(Exception)),
-                            Expression.Constant(CompilerContext.Name ?? CompilerContext?.Uri?.AbsoluteUri ?? string.Empty),
+                            Expression.Constant(CompilerContext.Name),
                             Expression.Constant(location.Line),
                             Expression.Constant(location.Column),
                             Expression.Constant(rethrow)
                             );
         }
 
-        private Expression HandleThrow(Scope scope)
+        protected internal virtual Expression HandleThrow(Scope scope)
         {
             var throwTarget = ChildNodes.Skip(1).First();
             var nullNode = throwTarget.FindChild<NullNode>();
 
             if (nullNode != null)
-                throw ExceptionHelper.InvalidContext(Keywords.Null, nullNode);
+                ExceptionHelper.InvalidContext(Keywords.Null, nullNode);
 
             return throwTarget.GetExpression(scope);
         }
 
-        private Expression HandleRethrow(Scope scope)
+        protected internal virtual Expression HandleRethrow(Scope scope)
         {
             if (!scope.TryGetData(ScopeData.CurrentException, out ParameterExpression exceptionExpr))
-                throw ExceptionHelper.InvalidContext(Keywords.Throw, this);
+                ExceptionHelper.InvalidContext(Keywords.Throw, this);
 
             return exceptionExpr;
         }

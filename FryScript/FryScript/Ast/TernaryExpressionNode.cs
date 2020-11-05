@@ -13,11 +13,11 @@ namespace FryScript.Ast
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            scope = scope.New(this);
-
             if (ChildNodes.Length == 1)
                 return GetChildExpression(scope);
 
+            scope = scope.New(this);
+            
             if (scope.Hoisted)
                 return TryMakeAwaitable(scope);
 
@@ -45,9 +45,9 @@ namespace FryScript.Ast
                 leftScope = scope.Clone(),
                 rightScope = scope.Clone();
 
-            var testAwaitContexts = testScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
-            var leftAwaitContexts = leftScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
-            var rightAwaitContexts = rightScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
+            testScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
+            leftScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
+            rightScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
 
             var tempExpr = scope.AddTempMember(TempPrefix.TernaryFlag, this, typeof(object));
 
