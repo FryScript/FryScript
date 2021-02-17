@@ -14,10 +14,14 @@ namespace FryScript.Ast
             throw new NotImplementedException();
         }
 
-
         public override Expression SetIdentifier(Scope scope, Expression value)
         {
-            scope.TryGetData(ScopeData.TupleOut, out ParameterExpression tupleOut);
+            scope = scope ?? throw new ArgumentNullException(nameof(scope));
+            value = value ?? throw new ArgumentNullException(nameof(value));
+
+            if (!scope.TryGetData(ScopeData.TupleOut, out ParameterExpression tupleOut))
+                throw new InvalidOperationException("Missing tuple out scope data");
+
             return Expression.Assign(tupleOut, value);
         }
 
