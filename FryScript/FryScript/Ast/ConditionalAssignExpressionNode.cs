@@ -10,6 +10,7 @@ namespace FryScript.Ast
     public class ConditionalAssignExpressionNode : AstNode
     {
         public override Expression GetExpression(Scope scope)
+        
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
@@ -19,10 +20,9 @@ namespace FryScript.Ast
             if (scope.Hoisted)
                 return TryMakeAwaitable(scope);
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             var left = (IdentifierExpressionNode)ChildNodes.First();
-            var op = ChildNodes.Skip(1).First().ValueString;
             var right = ChildNodes.Skip(2).First();
 
             var tempExpr = scope.AddTempMember(TempPrefix.ConditionalAssign, this);
@@ -40,13 +40,12 @@ namespace FryScript.Ast
 
         private Expression TryMakeAwaitable(Scope scope)
         {
-            scope = scope.New();
+            scope = scope.New(this);
 
             var rightScope = scope.Clone();
-            var rightAwaitContexts = rightScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
+            rightScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
 
             var left = (IdentifierExpressionNode)ChildNodes.First();
-            var op = ChildNodes.Skip(1).First().ValueString;
             var right = ChildNodes.Skip(2).First();
 
             var tempExpr = scope.AddTempMember(TempPrefix.ConditionalAssign, this);

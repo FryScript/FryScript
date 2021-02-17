@@ -16,7 +16,7 @@ namespace FryScript.Ast
 
             var childNode = ChildNodes.Last();
 
-            if (childNode.GetType() == typeof(ExpressionNode))
+            if (childNode is ExpressionNode)
             {
                 ChildNodes[ChildNodes.Length - 1] = Transform<StatementNode>(Transform<YieldStatementNode>(null, null, childNode));
             }
@@ -28,7 +28,7 @@ namespace FryScript.Ast
             return GetChildExpression(scope);
         }
 
-        private void TransformBlockStatement(AstNode blockStatement)
+        protected internal virtual void TransformBlockStatement(AstNode blockStatement)
         {
             if (blockStatement.ChildNodes.Length == 0)
             {
@@ -39,20 +39,21 @@ namespace FryScript.Ast
             var lastStatementNode = blockStatement.ChildNodes.First().ChildNodes.Last();
             var innerStatementNode = lastStatementNode.ChildNodes.First();
 
-            if (innerStatementNode.GetType() == typeof(ExpressionNode))
+            if (innerStatementNode is ExpressionNode)
             {
                 lastStatementNode.ChildNodes[lastStatementNode.ChildNodes.Length - 1] = Transform<YieldStatementNode>(null, null, innerStatementNode);
             }
-
-            if (innerStatementNode.GetType() == typeof(YieldStatementNode))
+            else if (innerStatementNode is YieldStatementNode yieldStatement)
             {
-                var yieldStatement = (YieldStatementNode)innerStatementNode;
-
                 if (yieldStatement.IsYieldReturn() == true)
                     return;
-
+ 
                 yieldStatement.ChildNodes = new AstNode[] { null }.Concat(yieldStatement.ChildNodes).ToArray();
-            };
+            }
+            else
+            {
+                lastStatementNode.ChildNodes = lastStatementNode.ChildNodes.Concat(new[] { Transform<YieldStatementNode>(null, null) }).ToArray();
+            }
         }
     }
 }

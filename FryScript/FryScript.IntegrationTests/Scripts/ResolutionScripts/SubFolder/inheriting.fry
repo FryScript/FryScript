@@ -1,0 +1,4 @@
+﻿@extend "baseScript";
+@import "toImport" as toImport;
+
+this.toImport2 = toImport;

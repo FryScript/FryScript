@@ -208,14 +208,6 @@ namespace FryScript.Helpers
             throw new FryScriptException(string.Format("Cannot perform has operation on type {0} no operator is defined", type.GetType().FullName));
         }
 
-        public static FryScriptException NativeInteropException(Exception ex, string name, int line, int position)
-        {
-            ex = ex ?? throw new ArgumentNullException(nameof(ex));
-            name = name ?? throw new ArgumentNullException(nameof(name));
-
-            return new FryScriptException("Native interop exception see inner exception for details", ex, name, line, position);
-        }
-
         public static CompilerException InvalidContext(string keyword, AstNode astNode)
         {
             keyword = keyword ?? throw new ArgumentNullException(nameof(keyword));
@@ -262,6 +254,29 @@ namespace FryScript.Helpers
         public static CompilerException UnexpectedOut(AstNode astNode)
         {
             throw CompilerException.FromAst("Cannot use out here", astNode);
+        }
+
+        public static CompilerException ExtendUnavailable(AstNode astNode)
+        {
+            throw CompilerException.FromAst("@extend is unavailable", astNode);
+        }
+
+        public static CompilerException EmptyInterpolation(AstNode astNode, int position, int length)
+        {
+            var location = astNode.ParseNode.Span.Location;
+            throw new CompilerException(
+                "Empty interpolation group",
+                astNode.CompilerContext.Name,
+                location.Line,
+                location.Column + position + 1)
+            {
+                TokenLength = length
+            };
+        }
+
+        public static ArgumentException TypeNotScriptable(Type type, string argName)
+        {
+            throw new ArgumentException($"Type {type.FullName} must be decorated with a {typeof(ScriptableTypeAttribute).FullName}", nameof(type));
         }
     }
 }

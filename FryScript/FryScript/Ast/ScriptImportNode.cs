@@ -1,5 +1,4 @@
 ﻿using FryScript.Compilation;
-using FryScript.Helpers;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,16 +12,14 @@ namespace FryScript.Ast
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
             var name = ChildNodes.Skip(1).Take(1).First();
-            var nameStr = ScriptTypeHelper.NormalizeTypeName(name.ValueString);
+            var nameStr = name.ValueString;
             var alias = ChildNodes.Skip(3).Take(1).First();
 
-            var importScript = new ScriptObjectReference();
-            var scriptEngine = CompilerContext.ScriptEngine;
-            importScript.SetResolver(() => scriptEngine.Get(nameStr, CompilerContext.Name));
+            var importScript = new ScriptImport(() => CompilerContext.ScriptRuntime.Get(nameStr, CompilerContext.Uri));
 
             var importScriptExpr = Expression.Constant(importScript);
-            var aliasExpr = alias.CreateIdentifier(scope);
-            var assignAliasExpr = Expression.Assign(aliasExpr, importScriptExpr);
+            alias.CreateIdentifier(scope);
+            var assignAliasExpr = alias.SetIdentifier(scope, importScriptExpr);
 
             CompilerContext.ImportInfos.Add(new ImportInfo
             {

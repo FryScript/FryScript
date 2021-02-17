@@ -1,9 +1,11 @@
-﻿namespace FryScript.HostInterop.Operators
+﻿using System;
+
+namespace FryScript.HostInterop.Operators
 {
 
     public static class StringOperators
     {
-        public const string StringName = "[string]";
+        public const string StringName = "string";
 
         [ScriptableBinaryOperation(ScriptableBinaryOperater.Add)]
         public static object Add(this string value1, string value2)
@@ -26,7 +28,13 @@
         [ScriptableTypeOperation(ScriptableTypeOperator.Ctor)]
         public static object Ctor(this string value)
         {
-            return string.Empty;
+            return Default(value);
+        }
+
+        [ScriptableTypeOperation(ScriptableTypeOperator.Invoke)]
+        public static object Invoke(this string value, object arg)
+        {
+            return Convert.ChangeType(arg, typeof(string));
         }
 
         [ScriptableConvertOperation]

@@ -6,31 +6,34 @@ using System.Linq.Expressions;
 
 namespace FryScript.Ast
 {
-    public class ScriptNode : AstNode
+    public class ScriptNode : DebugNode, IRootNode
     {
         public override Expression GetExpression(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            var paramExpr = scope.AddKeywordMember<ScriptObject>(Keywords.This, this);
+            var paramExpr = scope.AddKeywordMember<IScriptObject>(Keywords.This, this);
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             var bodyExpr = scope.ScopeBlock(GetChildExpression(scope));
 
             if (CompilerContext.HasDebugHook)
-                bodyExpr = WrapDebugStack(scope, s => bodyExpr, DebugEvent.ScriptInitializing, DebugEvent.ScriptInitialized);
+            {
+                var wrappedExpr = bodyExpr;
+                bodyExpr = WrapDebugStack(scope, s => wrappedExpr, DebugEvent.ScriptInitializing, DebugEvent.ScriptInitialized);
+            }
 
-            var lambda = Expression.Lambda<Func<ScriptObject, object>>(bodyExpr, paramExpr);
+            var lambda = Expression.Lambda<Func<IScriptObject, object>>(bodyExpr, paramExpr);
 
             return lambda;
         }
 
-        public Func<ScriptObject, object> Compile(Scope scope)
+        public Func<IScriptObject, object> Compile(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            var expression = (Expression<Func<ScriptObject, object>>)GetExpression(scope);
+            var expression = (Expression<Func<IScriptObject, object>>)GetExpression(scope);
             var func = expression.Compile();
 
             return func;

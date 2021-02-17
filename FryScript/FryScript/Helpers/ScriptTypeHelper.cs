@@ -38,7 +38,14 @@ namespace FryScript.Helpers
 
         public static bool IsScriptType(object target, object value)
         {
-            target = target ?? throw new ArgumentNullException(nameof(target));
+            var targetType = target?.GetType();
+            var valueType = value?.GetType();
+
+            //if (targetType == null || valueType == null)
+                //return false;
+
+            return targetType == valueType;
+           /* target = target ?? throw new ArgumentNullException(nameof(target));
             value = value ?? throw new ArgumentNullException(nameof(value));
 
             var compareType = GetScriptType(value);
@@ -48,20 +55,30 @@ namespace FryScript.Helpers
 
             var isScriptType = GetScriptType(target) == compareType;
 
-            return isScriptType;
+            return isScriptType;*/
         }
 
         public static bool ExtendsScriptType(object target, object value)
         {
-            target = target ?? throw new ArgumentNullException(nameof(target));
-            value = value ?? throw new ArgumentNullException(nameof(value));
+            var subType = target.GetType();
+            var superType = value.GetType();
 
-            var compareType = GetScriptType(value);
+            if (superType.IsAssignableFrom(subType))
+                return true;
 
-            if (target is IScriptType scriptTypeTarget)
-                return scriptTypeTarget.ExtendsScriptType(compareType);
+            if (target is IScriptObject && value.GetType() == typeof(ScriptObject))
+                return true;
 
-            return GetScriptType(target) == compareType;
+            return false;
+            //target = target ?? throw new ArgumentNullException(nameof(target));
+            //value = value ?? throw new ArgumentNullException(nameof(value));
+
+            //var compareType = GetScriptType(value);
+
+            //if (target is IScriptType scriptTypeTarget)
+            //    return scriptTypeTarget.ExtendsScriptType(compareType);
+
+            //return GetScriptType(target) == compareType;
         }
 
         public static string GetPesudoScriptType(Type type)

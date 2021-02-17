@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace FryScript.HostInterop
 {
-    public class TypeProvider
+    public class TypeProvider : ITypeProvider
     {
         public static TypeProvider Current = new TypeProvider();
 
@@ -19,7 +19,6 @@ namespace FryScript.HostInterop
         private readonly ConcurrentDictionary<Type, TypeDescriptor> _typeDescriptors = new ConcurrentDictionary<Type, TypeDescriptor>();
         private readonly ConcurrentDictionary<Type, TypeExtender> _typeExtenders = new ConcurrentDictionary<Type, TypeExtender>();
         private readonly ConcurrentDictionary<Type, Func<ScriptObject, object>> _ctors = new ConcurrentDictionary<Type, Func<ScriptObject, object>>();
-        private readonly ConcurrentDictionary<Type, string> _typeNames = new ConcurrentDictionary<Type, string>();
         private readonly ConcurrentDictionary<Type, Type> _proxyTypes = new ConcurrentDictionary<Type, Type>();
 
         private readonly Type[] _numericOrder = new[]
@@ -103,7 +102,7 @@ namespace FryScript.HostInterop
 
             return GetDescriptor(type, d => d.HasMethod(name) || d.HasProperty(name))
                    || GetExtender(type, e => e.HasExtensionMethod(name))
-                   || GetExtender(typeof (object), e => e.HasExtensionMethod(name));
+                   || GetExtender(typeof(object), e => e.HasExtensionMethod(name));
         }
 
         public bool TryGetIndex(Type type, Type indexType, out PropertyInfo propertyInfo)
@@ -124,8 +123,8 @@ namespace FryScript.HostInterop
 
         public bool TryGetBinaryOperator(Type left, ScriptableBinaryOperater operation, Type right, out MethodInfo methodInfo)
         {
-            methodInfo = GetExtender(left ?? throw new ArgumentNullException(nameof(left)), 
-                e => e.GetBinaryOperator(operation, 
+            methodInfo = GetExtender(left ?? throw new ArgumentNullException(nameof(left)),
+                e => e.GetBinaryOperator(operation,
                 right ?? throw new ArgumentNullException(nameof(right))));
 
             return methodInfo != null;
@@ -156,17 +155,7 @@ namespace FryScript.HostInterop
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            if (!_typeNames.TryGetValue(type, out string name))
-            {
-                var attribute = type.GetCustomAttribute<ScriptableTypeAttribute>();
-
-                if (attribute == null)
-                    throw new ArgumentException(string.Format("Type must be decorated with a {0} attribute", typeof(ScriptableTypeAttribute).FullName), "type");
-
-                _typeNames[type] = name = attribute.Name;
-            }
-
-            return name;
+            return FindTypeDescriptor(type).Name;
         }
 
         public void RegisterPrimitive(Type type)
@@ -179,7 +168,20 @@ namespace FryScript.HostInterop
             _primitives.Add(type);
         }
 
-        public void RegisterExtensions(Type extensionType)
+        public void RegisterPrimitive<T>(ScriptPrimitive<T> primitive)
+        {
+            primitive = primitive ?? throw new ArgumentNullException(nameof(primitive));
+
+            var primitiveType = typeof(T);
+
+            if (_primitives.Contains(primitiveType))
+                return;
+
+            _primitives.Add(primitiveType);
+        }
+
+        public void
+        RegisterExtensions(Type extensionType)
         {
             extensionType = extensionType ?? throw new ArgumentNullException(nameof(extensionType));
 
@@ -232,24 +234,6 @@ namespace FryScript.HostInterop
                 ?? GetDescriptor(fromType, d => d.GetConvert(toType));
 
             return methodInfo != null;
-        }
-
-        public DynamicMetaObject GetMetaObject(Expression expression, object primitive)
-        {
-            expression = expression ?? throw new ArgumentNullException(nameof(expression));
-
-            if (primitive == null)
-                return new MetaPrimitive(expression, primitive);
-
-            if(expression.Type.IsGenericType && expression.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                var wrappedType = expression.Type.GetGenericArguments()[0];
-                expression = Expression.Convert(expression, wrappedType);
-            }
-
-            return primitive != null && _primitives.Contains(primitive.GetType())
-                ? new MetaPrimitive(expression, primitive)
-                : null;
         }
 
         public Type GetHighestNumericType(params Type[] types)
@@ -319,7 +303,7 @@ namespace FryScript.HostInterop
         {
             var parameterInfos = methodInfo.GetParameters();
 
-            if(parameterInfos.Length == 0)
+            if (parameterInfos.Length == 0)
                 throw new InvalidOperationException(string.Format("Method {0} must have 1 or more parameters to be used as type extension", methodInfo.Name));
 
             var typeExtender = FindTypeExtender(parameterInfos[0].ParameterType);

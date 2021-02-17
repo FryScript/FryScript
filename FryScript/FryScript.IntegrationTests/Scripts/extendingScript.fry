@@ -1,0 +1,3 @@
+﻿@extend "baseScript";
+
+name = "@{name} was extended!";

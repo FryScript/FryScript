@@ -17,7 +17,6 @@ namespace FryScript.Parsing
         public const string Null = "null";
         public const string True = "true";
         public const string False = "false";
-        public const string NaN = "NaN";
         public const string Return = "return";
         public const string Params = "params";
         public const string If = "if";
@@ -33,7 +32,7 @@ namespace FryScript.Parsing
         public const string Base = "base";
         public const string Is = "is";
         public const string Extends = "extends";
-        public const string Proto = "proto";
+        //public const string Proto = "proto";
         public const string Has = "has";
         public const string Try = "try";
         public const string Catch = "catch";

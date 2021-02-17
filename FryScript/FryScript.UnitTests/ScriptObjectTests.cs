@@ -12,9 +12,9 @@ namespace FryScript.UnitTests
     [TestClass]
     public class ScriptObjectTests
     {
-        private class Target
+        private class Target : ScriptObject
         {
-            public readonly Dictionary<string, object> Indexes = new Dictionary<string, object>();
+            public readonly object[] Indexes = new object[10];
 
             [ScriptableProperty("name")]
             public string Name { get; set; }
@@ -23,7 +23,7 @@ namespace FryScript.UnitTests
             public Target Child { get; set; }
 
             [ScriptableIndex]
-            public object this[string key]
+            public object this[int key]
             {
                 get { return Indexes[key]; }
                 set { Indexes[key] = value; }
@@ -63,20 +63,7 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void SetMemberTest()
-        {
-            _dynamicObj.test = 100;
-            _dynamicObj.test = 200;
-
-            MemberLookupInfo info;
-            MemberIndexLookup.Current.TryGetMemberIndex(ScriptObject.GetMemberIndex(_scriptObject), "test", out info);
-            var memberData = ScriptObject.GetMemberData(_scriptObject);
-
-            Assert.AreEqual(200, memberData[info.Index]);
-        }
-
-        [TestMethod]
-        public void GetMemberTest()
+        public void Set_Dynamic_Member_Get_Dynamic_Member()
         {
             _dynamicObj.test = 100;
 
@@ -84,87 +71,63 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FryScriptException))]
-        public void GetMemberUndefinedTest()
+        public void Set_Dynamic_Member_Get_Object_Member()
+        {
+            dynamic target = new Target();
+            
+            target.name = "test";
+
+            Assert.AreEqual("test", (target as Target).Name);
+        }
+
+        [TestMethod]
+        public void Set_Object_Member_Get_Dynamic_Member()
+        {
+            var target = new Target();
+
+            target.Name = "test";
+
+            Assert.AreEqual("test", (target as dynamic).name);
+        }
+
+        [TestMethod]
+        public void Get_Undefined_Member()
         {
             var result = _dynamicObj.test;
+
+            Assert.IsNull(result);
         }
 
         [TestMethod]
-        public void SetDynamicIndexTest()
+        public void Set_Dynamic_Index_Get_Dynamic_Index()
         {
             _dynamicObj["test"] = 100;
-
-            Assert.AreEqual(100, _dynamicObj.test);
-        }
-
-        [TestMethod]
-        public void SetTargetDynamicIndexTest()
-        {
-            var target = new Target();
-            ScriptObject.SetTarget(_scriptObject, target);
-
-            _dynamicObj["name"] = "test";
-
-            Assert.AreEqual(target.Indexes["name"], "test");
-        }
-
-        [TestMethod]
-        public void SetIndexTest()
-        {
-            _scriptObject["test"] = 100;
-            Assert.AreEqual(100, _dynamicObj.test);
-        }
-
-        [TestMethod]
-        public void SetTargetIndexTest()
-        {
-            var target = new Target();
-            ScriptObject.SetTarget(_scriptObject, target);
-
-            _scriptObject["name"] = "test";
-  
-            Assert.AreEqual("test", _dynamicObj.name);
-        }
-
-        [TestMethod]
-        public void GetIndexTest()
-        {
-            _dynamicObj.test = 100;
-            Assert.AreEqual(100, _scriptObject["test"]);
-        }
-
-        [TestMethod]
-        public void GetTargetIndexTest()
-        {
-            var target = new Target();
-            ScriptObject.SetTarget(_scriptObject, target);
-
-            _dynamicObj.name = "test";
-            Assert.AreEqual("test", _scriptObject["name"]);
-        }
-
-        [TestMethod]
-        public void GetDynamicIndexTest()
-        {
-            _dynamicObj.test = 100;
 
             Assert.AreEqual(100, _dynamicObj["test"]);
         }
 
         [TestMethod]
-        public void GetTargetDynamicIndexTest()
+        public void Set_Dynamic_Index_Get_Object_Index()
         {
-            var target = new Target();
-            ScriptObject.SetTarget(_scriptObject, target);
+            dynamic target = new Target();
 
-            target.Indexes["name"] = "test";
+            target[5] = "test";
 
-            Assert.AreEqual(_dynamicObj["name"], "test");
+            Assert.AreEqual("test", (target as Target)[5]);
         }
 
         [TestMethod]
-        public void InvokeMemberTest()
+        public void Set_Object_Index_Get_Dynamic_Index()
+        {
+            var target = new Target();
+
+            target[5]  ="test";
+
+            Assert.AreEqual("test", (target as dynamic)[5]);
+        }
+
+        [TestMethod]
+        public void Invoke_Member()
         {
             _dynamicObj.func = new ScriptFunction(new Func<int, int, int>((x, y) => x*y));
 
@@ -174,126 +137,73 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void SetTargetMemberTest()
+        public void Iternal_Member_Array_Resizes_As_Members_Are_Added()
         {
-            var target = new Target();
-            ScriptObject.SetTarget(_scriptObject, target);
-
-            _dynamicObj.name = "Test";
-
-            Assert.AreEqual(target.Name, "Test");
-        }
-
-        [TestMethod]
-        public void GetTargetMemberTest()
-        {
-            var target = new Target
+            for(var i = 0; i < 100; i++)
             {
-                Name = "Test"
-            };
-            ScriptObject.SetTarget(_scriptObject, target);
-
-            Assert.AreEqual("Test", _dynamicObj.name);
-        }
-
-        [TestMethod]
-        public void ConvertToTargetTest()
-        {
-            var target = new Target();
-
-            ScriptObject.SetTarget(_scriptObject, target);
-
-            var obj = (Target) _dynamicObj;
-
-            Assert.AreEqual(target, obj);
-        }
-
-        [TestMethod]
-        public void SetMemberThreadingTest()
-        {
-            const int numLoops = 100;
-
-            var task1 = Task.Run(() =>
-            {
-                for (var i = 0; i < numLoops; i++)
-                {
-                    _dynamicObj["i" + i] = "i" + i;
-                }
-            });
-
-            var task2 = Task.Run(() =>
-            {
-                for (var j = 0; j < numLoops; j++)
-                {
-                    _dynamicObj["j" + j] = "j" + j;
-                }
-            });
-
-            Task.WaitAll(task1, task2);
-
-            for (var x = 0; x < numLoops; x++)
-            {
-                Assert.AreEqual(_dynamicObj["i" + x], "i" + x);
-                Assert.AreEqual(_dynamicObj["j" + x], "j" + x);
+                _dynamicObj[$"member_{i}"] = i;
             }
+
+            Assert.AreEqual(112, _scriptObject.ObjectCore.MemberData.Length);
         }
 
-        [TestMethod]
-        public void GetMemberThreadingTest()
-        {
-            const int numLoops = 100;
+        // [TestMethod]
+        
+        // public void SetMemberThreadingTest()
+        // {
+        //     const int numLoops = 100;
 
-            var task1 = Task.Run(() =>
-            {
-                for (var i = 0; i < numLoops; i++)
-                {
-                    _dynamicObj["i" + i] = "i" + i;
-                    Assert.AreEqual("i" + i, _dynamicObj["i" + i]);
-                }
-            });
+        //     var task1 = Task.Run(() =>
+        //     {
+        //         for (var i = 0; i < numLoops; i++)
+        //         {
+        //             _dynamicObj["i" + i] = "i" + i;
+        //         }
+        //     });
 
-            var task2 = Task.Run(() =>
-            {
-                for (var j = 0; j < numLoops; j++)
-                {
-                    _dynamicObj["j" + j] = "j" + j;
-                    Assert.AreEqual("j" + j, _dynamicObj["j" + j]);
-                }
-            });
+        //     var task2 = Task.Run(() =>
+        //     {
+        //         for (var j = 0; j < numLoops; j++)
+        //         {
+        //             _dynamicObj["j" + j] = "j" + j;
+        //         }
+        //     });
 
-            Task.WaitAll(task1, task2);
-        }
+        //     Task.WaitAll(task1, task2);
 
-        [TestMethod]
-        public void SetMemberFloatNanTest()
-        {
-            _dynamicObj.test = float.NaN;
-            Assert.AreEqual(ScriptNaN.Value, _dynamicObj.test);
-        }
+        //     for (var x = 0; x < numLoops; x++)
+        //     {
+        //         Assert.AreEqual(_dynamicObj["i" + x], "i" + x);
+        //         Assert.AreEqual(_dynamicObj["j" + x], "j" + x);
+        //     }
+        // }
 
-        [TestMethod]
-        public void ConvertTargetImplicitTest()
-        {
-            var target = new Target();
+        // [TestMethod]
+        // [Ignore]
+        // public void GetMemberThreadingTest()
+        // {
+        //     const int numLoops = 100;
 
-            ScriptObject.SetTarget(_scriptObject, target);
+        //     var task1 = Task.Run(() =>
+        //     {
+        //         for (var i = 0; i < numLoops; i++)
+        //         {
+        //             _dynamicObj["i" + i] = "i" + i;
+        //             Assert.AreEqual("i" + i, _dynamicObj["i" + i]);
+        //         }
+        //     });
 
-            ImplicitTarget obj = _dynamicObj;
+        //     var task2 = Task.Run(() =>
+        //     {
+        //         for (var j = 0; j < numLoops; j++)
+        //         {
+        //             _dynamicObj["j" + j] = "j" + j;
+        //             Assert.AreEqual("j" + j, _dynamicObj["j" + j]);
+        //         }
+        //     });
 
-            Assert.AreEqual(typeof(ImplicitTarget), obj.GetType());
-        }
-
-        [TestMethod]
-        public void ConvertTargetExplicitTest()
-        {
-            var target = new Target();
-
-            ScriptObject.SetTarget(_scriptObject, target);
-
-            var obj = (ExplicitTarget)_dynamicObj;
-
-            Assert.AreEqual(typeof(ExplicitTarget), obj.GetType());
-        }
+        //     Task.WaitAll(task1, task2);
+        // }
 
         //[TestMethod]
         public void ScriptObjVsExpando()

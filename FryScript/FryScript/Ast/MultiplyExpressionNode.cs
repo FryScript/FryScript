@@ -30,9 +30,11 @@ namespace FryScript.Ast
                 case Operators.Divide:
                     operation = ExpressionType.Divide;
                     break;
-                default:
+                case Operators.Modulo:
                     operation = ExpressionType.Modulo;
                     break;
+                default:
+                    throw new InvalidOperationException($"Unknown operator {op}");
             }
 
             var leftExpr = left.GetExpression(scope);

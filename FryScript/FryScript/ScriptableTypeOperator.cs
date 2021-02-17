@@ -5,5 +5,6 @@
         TypeOf,
         Default,
         Ctor,
+        Invoke
     }
 }

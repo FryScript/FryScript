@@ -5,8 +5,6 @@ using System.Linq.Expressions;
 
 namespace FryScript.Ast
 {
-
-
     public class BlockStatementNode: AstNode
     {
         public override Expression GetExpression(Scope scope)
@@ -16,7 +14,7 @@ namespace FryScript.Ast
             if (ChildNodes.Length == 0)
                 return ExpressionHelper.Null();
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             return scope.ScopeBlock(GetChildExpression(scope));
         }

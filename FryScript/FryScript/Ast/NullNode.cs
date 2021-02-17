@@ -9,8 +9,6 @@ namespace FryScript.Ast
     {
         public override Expression GetExpression(Scope scope)
         {
-            scope = scope ?? throw new ArgumentNullException(nameof(scope));
-
             return ExpressionHelper.Null();
         }
     }

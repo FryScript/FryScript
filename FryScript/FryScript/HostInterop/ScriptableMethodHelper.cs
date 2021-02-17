@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using FryScript.Helpers;
 
 namespace FryScript.HostInterop
 {
@@ -44,7 +45,7 @@ namespace FryScript.HostInterop
 
             var newFuncExpr = Expression.New(
                 ScriptFunction_DelegateCtor,
-                Expression.Invoke(factoryLambdaExpr, instance));
+                Expression.Invoke(factoryLambdaExpr, ExpressionHelper.DynamicConvert(instance, factoryArgExpr.Type)));
 
             return newFuncExpr;
         }

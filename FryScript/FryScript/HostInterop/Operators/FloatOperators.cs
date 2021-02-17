@@ -1,8 +1,10 @@
-﻿namespace FryScript.HostInterop.Operators
+﻿using System;
+
+namespace FryScript.HostInterop.Operators
 {
     public static class FloatOperators
     {
-        public const string FloatName = "[float]";
+        public const string FloatName = "single";
 
         [ScriptableTypeOperation(ScriptableTypeOperator.TypeOf)]
         public static object GetScriptType(this float value)
@@ -19,7 +21,13 @@
         [ScriptableTypeOperation(ScriptableTypeOperator.Ctor)]
         public static object Ctor(this float value)
         {
-            return default(float);
+            return Default(value);
+        }
+
+        [ScriptableTypeOperation(ScriptableTypeOperator.Invoke)]
+        public static object Invoke(this float value, object arg)
+        {
+            return Convert.ChangeType(arg, typeof(float));
         }
 
         [ScriptableConvertOperation]

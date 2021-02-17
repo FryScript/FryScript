@@ -1,6 +1,7 @@
 ﻿using FryScript.Ast;
 using FryScript.Debugging;
 using FryScript.Parsing;
+using FryScript.ScriptProviders;
 using Irony.Ast;
 using System;
 using System.Collections.Generic;
@@ -9,46 +10,50 @@ namespace FryScript.Compilation
 {
     public class CompilerContext : AstContext
     {
-        private readonly ScriptEngine _scriptEngine;
-        private readonly string _name;
-
         internal HashSet<string> Extends = new HashSet<string>();
-        internal Func<ScriptObject, object> ProtoCtor;
-        internal ScriptObjectReference ProtoReference;
-        internal List<ImportInfo> ImportInfos = new List<ImportInfo>(); 
-        
-        public string Name { get { return _name; } }
+        //internal Func<ScriptObject, object> ProtoCtor;
+        //internal ScriptObjectReference ProtoReference;
+        internal List<ImportInfo> ImportInfos = new List<ImportInfo>();
 
-        public ScriptEngine ScriptEngine { get { return _scriptEngine; } }
+        public string Name { get; }
 
-        public bool HasDebugHook => _scriptEngine?.DebugHook != null;
+        public Uri Uri { get; }
 
-        public DebugHook DebugHook => _scriptEngine?.DebugHook;
+        public IScriptRuntime ScriptRuntime { get; }
 
-        public CompilerContext(ScriptEngine scriptEngine, string name)
+        public Type ScriptType { get; set; }
+
+        public IScriptParser ExpressionParser { get; set; }
+
+        public bool HasDebugHook => DebugHook != null;
+
+        public DebugHook DebugHook => ScriptRuntime.DebugHook;
+
+        public bool IsEvalMode { get; }
+
+        public bool DetailedExceptions { get; }
+
+        public Scope Scope { get; }
+
+        public IRootNode RootNode { get; set; }
+
+        public IScriptObjectBuilder ScriptObjectBuilder { get; set; }
+
+        public CompilerContext(IScriptRuntime scriptRuntime, Uri uri, bool evalMode = false)
             : base(FryScriptLanguageData.LanguageData)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
-
-            _scriptEngine = scriptEngine ?? throw new ArgumentNullException(nameof(scriptEngine));
-            _name = name;
+            ScriptRuntime = scriptRuntime ?? throw new ArgumentNullException(nameof(scriptRuntime));
+            Uri = uri;
+            IsEvalMode = evalMode;
+            DetailedExceptions = scriptRuntime.DetailedExceptions;
+            Name = Uri?.AbsoluteUri ?? "eval://global-context.fry";
 
             DefaultNodeType = typeof(DefaultNode);
             DefaultLiteralNodeType = typeof(LiteralNode);
             DefaultIdentifierNodeType = typeof(IdentifierNode);
-        }
-
-        public void Extend(ScriptObject scriptObject)
-        {
-            scriptObject = scriptObject ?? throw new ArgumentNullException(nameof(scriptObject));
-
-            Extends.Add(scriptObject.ScriptType);
-
-            foreach (var extend in scriptObject.Extends)
-            {
-                Extends.Add(extend);
-            }
+            ScriptType = typeof(ScriptObject);
+            ScriptObjectBuilder = Builder.ScriptObjectBuilder;
+            Scope = new Scope();
         }
     }
 }

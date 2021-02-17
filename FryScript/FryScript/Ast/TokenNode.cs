@@ -1,10 +1,12 @@
 ﻿using FryScript.Compilation;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace FryScript.Ast
 {
+    [ExcludeFromCodeCoverage]
     public class TokenNode : AstNode
     {
         public override object Value

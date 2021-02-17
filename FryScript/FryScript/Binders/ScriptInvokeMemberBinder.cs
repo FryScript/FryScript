@@ -2,6 +2,7 @@
 using FryScript.HostInterop;
 using System;
 using System.Dynamic;
+using System.Linq;
 
 namespace FryScript.Binders
 {
@@ -20,14 +21,14 @@ namespace FryScript.Binders
 
         public override DynamicMetaObject FallbackInvokeMember(DynamicMetaObject target, DynamicMetaObject[] args, DynamicMetaObject errorSuggestion)
         {
-            var metaObject = TypeProvider.Current.GetMetaObject(target.Expression, target.Value);
+            target = target ?? throw new ArgumentNullException(nameof(target));
+            args = args ?? throw new ArgumentNullException(nameof(args));
 
-            if (metaObject == null)
-                ExceptionHelper.NonInvokeMember(target.LimitType);
+            var getBinder = BinderCache.Current.GetMemberBinder(Name);
+            var metaobject = getBinder.Bind(target, null);
+            var invokeExpr = ExpressionHelper.DynamicInvoke(metaobject.Expression, args.Select(a => a.Expression).ToArray());
 
-            metaObject = metaObject.BindInvokeMember(this, args);
-
-            return new DynamicMetaObject(metaObject.Expression, GetDefaultRestrictions(target));
+            return new DynamicMetaObject(invokeExpr, metaobject.Restrictions);
         }
 
         private BindingRestrictions GetDefaultRestrictions(DynamicMetaObject target)

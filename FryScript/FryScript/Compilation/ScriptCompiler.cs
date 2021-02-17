@@ -1,5 +1,4 @@
-﻿using FryScript.Ast;
-using FryScript.Parsing;
+﻿using FryScript.Parsing;
 using System;
 using System.Linq;
 
@@ -14,22 +13,35 @@ namespace FryScript.Compilation
 
         public IScriptParser ExpressionParser => _expressionParser;
 
-        public ScriptCompiler(IScriptParser parser = null, IScriptParser expressionParser = null)
+        public ScriptCompiler()
+            : this(new ScriptParser(),
+                  new ScriptParser(FryScriptLanguageData.LanguageData.Grammar.SnippetRoots.Single(n => n.Name == NodeNames.Expression))
+                  )
         {
-            _parser = parser ?? new ScriptParser();
-            _expressionParser = _expressionParser ?? new ScriptParser(FryScriptLanguageData.LanguageData.Grammar.SnippetRoots.Single(n => n.Name == NodeNames.Expression));
         }
 
-        public Func<ScriptObject, object> Compile(string script, string fileName, CompilerContext compilerContext)
+        public ScriptCompiler(IScriptParser parser, IScriptParser expressionParser)
         {
+            _parser = parser ?? throw new ArgumentNullException(nameof(parser));
+            _expressionParser = expressionParser ?? throw new ArgumentNullException(nameof(expressionParser));
+        }
+
+        public Func<IScriptObject, object> Compile(string source, string name, CompilerContext compilerContext)
+        {
+            if (string.IsNullOrWhiteSpace(source))
+                throw new ArgumentNullException(nameof(source));
+
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentNullException(nameof(name));
+
             compilerContext = compilerContext ?? throw new ArgumentNullException(nameof(compilerContext));
-      
-            if (string.IsNullOrWhiteSpace(script))
-                throw new ArgumentNullException(nameof(script));
+            compilerContext.ExpressionParser = _expressionParser;
 
-            var rootNode = (ScriptNode)_parser.Parse(script, fileName, compilerContext);
+            var rootNode = _parser.Parse(source, name, compilerContext);
 
-            var func = rootNode.Compile(new Scope());
+            compilerContext.RootNode = rootNode;
+
+            var func = rootNode.Compile(compilerContext.Scope);
 
             return func;
         }

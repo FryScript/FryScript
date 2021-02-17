@@ -1,25 +1,32 @@
 ﻿using System;
 using System.Dynamic;
 using System.Linq.Expressions;
+using FryScript.Helpers;
 
 namespace FryScript
 {
-    using Helpers;
-
+    [ScriptableType("function")]
     public partial class ScriptFunction : ScriptObject
     {
-        public const string DefaultScriptType = "[function]";
+        public Delegate TargetDelegate { get; set; }
 
-        internal Delegate TargetDelegate { get { return Target as Delegate; } }
+        public ScriptFunction()
+            : this(new Action(() => { }))
+        {
+
+        }
 
         public ScriptFunction(Delegate target)
-            : base(target: target, scriptType: DefaultScriptType)
         {
+            TargetDelegate = target ?? throw new ArgumentNullException(nameof(target));
+
+            ObjectCore.Builder = Builder.ScriptFunctionBuilder;
         }
 
         internal ScriptFunction(Delegate target, string scriptType)
-            : base(target: target, scriptType: scriptType)
+            : base(scriptType: scriptType)
         {
+            TargetDelegate = target ?? throw new ArgumentNullException(nameof(target));
         }
 
         public void Invoke(params object[] args)
@@ -34,12 +41,13 @@ namespace FryScript
 
         public override DynamicMetaObject GetMetaObject(Expression parameter)
         {
-           return new MetaScriptFunction(parameter, BindingRestrictions.Empty, this);
+            return new MetaScriptFunction(parameter, BindingRestrictions.Empty, this);
         }
 
         internal static ScriptFunction Extend(object obj)
         {
             var func = obj as ScriptFunction;
+            
             if (func == null)
                 ExceptionHelper.InvalidExtendTarget();
 

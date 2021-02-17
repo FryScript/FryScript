@@ -1,0 +1,3 @@
+﻿this.name = "Base script";
+
+this.getName = () => "My name is @{this.name}";

@@ -25,63 +25,85 @@ namespace FryScript.Ast
             throw new NotImplementedException();
         }
 
-        public IEnumerable<AstNode> GetIdentifiers(Scope scope, List<AstNode> nodes = null)
+        public virtual IEnumerable<AstNode> GetIdentifiers(Scope scope, List<AstNode> nodes = null)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
             nodes = nodes ?? new List<AstNode>();
 
-            if (ChildNodes.Length == 2)
-            {
-                var firstNode = ChildNodes.First();
-                if (firstNode is TupleNamesNode tuplesNames)
-                    tuplesNames.GetIdentifiers(scope, nodes);
-                else if (firstNode.FindChild<IdentifierExpressionNode>() is IdentifierExpressionNode firstIdentifier)
-                    nodes.Add(firstIdentifier);
-                else if (firstNode is TupleOut tupleOut)
-                    nodes.Add(tupleOut);
-                else
-                    ExceptionHelper.InvalidContext(firstNode.ParseNode.Term.Name, firstNode);
-            }
+            HandleFirstNode(scope, nodes);
 
-            var secondNode = ChildNodes.Skip(1).First();
-            if(secondNode.FindChild<IdentifierExpressionNode>() is IdentifierExpressionNode secondIdentifier)
-                nodes.Add(secondNode.FindChild<IdentifierExpressionNode>());
-            else if (secondNode is TupleOut tupleOut)
-                nodes.Add(tupleOut);
-            else
-                ExceptionHelper.InvalidContext(secondNode.ParseNode.Term.Name, secondNode);
+            HandleSecondNode(nodes);
 
             return nodes;
         }
 
-        public IEnumerable<ParameterExpression> DeclareVariables(Scope scope, List<ParameterExpression> exprs = null)
+        protected internal virtual void HandleFirstNode(Scope scope, List<AstNode> nodes)
+        {
+            var firstNode = ChildNodes.First();
+            if (firstNode is TupleNamesNode tuplesNames)
+                tuplesNames.GetIdentifiers(scope, nodes);
+            else if (firstNode.FindChild<IdentifierExpressionNode>() is IdentifierExpressionNode firstIdentifier)
+                nodes.Add(firstIdentifier);
+            else if (firstNode is TupleOut tupleOut)
+                nodes.Add(tupleOut);
+            else
+                ExceptionHelper.InvalidContext(firstNode.ParseNode.Term.Name, firstNode);
+        }
+
+        protected internal virtual void HandleSecondNode(List<AstNode> nodes)
+        {
+            var secondNode = ChildNodes.Skip(1).First();
+            if (secondNode.FindChild<IdentifierExpressionNode>() is IdentifierExpressionNode identifierExpressionNode)
+                nodes.Add(identifierExpressionNode);
+            else if (secondNode is TupleOut tupleOut)
+                nodes.Add(tupleOut);
+            else
+                ExceptionHelper.InvalidContext(secondNode.ParseNode.Term.Name, secondNode);
+        }
+
+        public virtual void DeclareVariables(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            exprs = exprs ?? new List<ParameterExpression>();
-
-            if (ChildNodes.Length == 2)
-            {
-                var firstNode = ChildNodes.First();
-                if (firstNode is TupleNamesNode tuplesNames)
-                    tuplesNames.DeclareVariables(scope, exprs);
-                else if (firstNode.FindChild<IdentifierNode>() is IdentifierNode firstIdentifier)
-                    exprs.Add(firstIdentifier.CreateIdentifier(scope));
-                else if (firstNode is TupleOut tupleOut)
-                    exprs.Add(tupleOut.CreateOut(scope));
-            }
-
-            var secondNode = ChildNodes.Skip(1).First();
-            if (secondNode.FindChild<IdentifierNode>() is IdentifierNode secondIdentifier)
-                exprs.Add(secondIdentifier.CreateIdentifier(scope));
-            else if (secondNode is TupleOut tupleOut)
-                exprs.Add(tupleOut.CreateOut(scope));
-
-            return exprs; 
+            DeclareVariables(scope, new List<IdentifierNode>())
+                .ForEach(i => i.CreateIdentifier(scope));
         }
 
-        public Expression CreateTuple(Scope scope)
+        protected internal virtual List<IdentifierNode> DeclareVariables(Scope scope, List<IdentifierNode> nodes)
+        {
+            DeclareFirstNode(scope, nodes);
+            
+            DeclareSecondNode(nodes);
+
+            return nodes;
+        }
+
+        protected internal virtual void DeclareFirstNode(Scope scope, List<IdentifierNode> nodes)
+        {
+            var firstNode = ChildNodes.First();
+            if (firstNode is TupleNamesNode tuplesNames)
+                tuplesNames.DeclareVariables(scope, nodes);
+            else if (firstNode.FindChild<IdentifierNode>() is IdentifierNode firstIdentifier)
+                nodes.Add(firstIdentifier);
+            else if (firstNode is TupleOut tupleOut)
+                nodes.Add(tupleOut);
+            else
+                throw ExceptionHelper.InvalidContext(firstNode.ParseNode.Term.Name, firstNode);
+        }
+
+        protected internal virtual void DeclareSecondNode(List<IdentifierNode> nodes)
+        {
+            var secondNode = ChildNodes.Skip(1).First();
+            if (secondNode.FindChild<IdentifierNode>() is IdentifierNode identifierNode)
+                nodes.Add(identifierNode);
+            else if (secondNode is TupleOut tupleOut)
+                nodes.Add(tupleOut);
+            else
+                throw ExceptionHelper.InvalidContext(secondNode.ParseNode.Term.Name, secondNode);
+        }
+
+        public virtual Expression CreateTuple(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
@@ -94,7 +116,7 @@ namespace FryScript.Ast
             return convertTupleExpr;
         }
 
-        public List<Expression> GetTupleArgs(Scope scope, List<Expression> exprs = null)
+        protected internal virtual List<Expression> GetTupleArgs(Scope scope, List<Expression> exprs = null)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
@@ -111,8 +133,8 @@ namespace FryScript.Ast
 
             if (firstNode is TupleNamesNode tupleNames)
                 tupleNames.GetTupleArgs(scope, exprs);
-            else if (firstNode is ExpressionNode expr)
-                exprs.Add(expr.GetExpression(scope));
+            else
+                exprs.Add(firstNode.GetExpression(scope));
 
             exprs.Add(secondNode.GetExpression(scope));
 

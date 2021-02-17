@@ -18,11 +18,11 @@ namespace FryScript.Ast
 
             var conditionExpr = ExpressionHelper.DynamicConvert(ChildNodes.Skip(1).First().GetExpression(scope), typeof(bool));
 
-            var thenScope = scope.New();
+            var thenScope = scope.New(this);
             var thenExpr = ChildNodes.Skip(2).First().GetExpression(thenScope);
             var thenBlockExpr = thenScope.ScopeBlock(thenExpr);
 
-            var elseScope = scope.New();
+            var elseScope = scope.New(this);
             var elseExpr = ChildNodes.Length == 3
                 ? ExpressionHelper.Null()
                 : ChildNodes.Skip(4).First().GetExpression(elseScope);
@@ -32,18 +32,18 @@ namespace FryScript.Ast
             return ifThenElseExpr;
         }
 
-        private Expression TryMakeAwaitable(Scope scope)
+        protected internal virtual Expression TryMakeAwaitable(Scope scope)
         {
             var conditionScope = scope.Clone();
-            var conditionAwaitContexts = conditionScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
+            conditionScope.SetData(ScopeData.AwaitContexts, new List<Expression>());
 
             var conditionExpr = ExpressionHelper.DynamicConvert(ChildNodes.Skip(1).First().GetExpression(conditionScope), typeof(bool));
 
-            var thenScope = scope.New();
+            var thenScope = scope.New(this);
             var thenExpr = ChildNodes.Skip(2).First().GetExpression(thenScope);
             var thenBlockExpr = thenScope.ScopeBlock(thenExpr);
 
-            var elseScope = scope.New();
+            var elseScope = scope.New(this);
             var elseExpr = ChildNodes.Length == 3
                 ? ExpressionHelper.Null()
                 : ChildNodes.Skip(4).First().GetExpression(elseScope);

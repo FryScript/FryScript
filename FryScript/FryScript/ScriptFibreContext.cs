@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 
 namespace FryScript
 {
+    [ScriptableType("fibre-context")]
     public class ScriptFibreContext : ScriptObject
     {
         public const int PendingState = -1;
@@ -39,14 +40,17 @@ namespace FryScript
         [ScriptableProperty("hasResult")]
         public bool HasResult => _result != NoResult;
 
-        new public Func<ScriptFibreContext, object> Target => base.Target as Func<ScriptFibreContext, object>;
+        public Func<ScriptFibreContext, object> Target { get; set; }
+
+        public ScriptFibreContext()
+            : this(new Func<ScriptFibreContext, object>(o => o))
+        {
+            ObjectCore.Builder = Builder.ScriptFibreContextBuilder;
+        }
 
         public ScriptFibreContext(Func<ScriptFibreContext, object> target)
-            : base(target)
         {
-            if (target == null)
-                throw new ArgumentNullException(nameof(target));
-
+            Target = target ?? throw new ArgumentNullException(nameof(target));
             _stack.Push(this);
         }
 
@@ -68,7 +72,7 @@ namespace FryScript
         [ScriptableMethod("execute")]
         public object Execute()
         {
-            while(!Completed)
+            while (!Completed)
             {
                 Resume();
             }
@@ -88,7 +92,7 @@ namespace FryScript
 
         public override DynamicMetaObject GetMetaObject(Expression parameter)
         {
-            return new MetaScriptFibreContext(parameter, BindingRestrictions.Empty, this);
+            return new MetaScriptObject(parameter, BindingRestrictions.Empty, this);
         }
 
         public static ScriptFibreContext New(Func<ScriptFibreContext, object> target)

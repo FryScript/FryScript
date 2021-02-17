@@ -14,28 +14,26 @@ namespace FryScript.Ast
             if (ChildNodes.Length == 1)
                 return GetChildExpression(scope);
 
-            var left = ChildNodes.Skip(2).First();
+            var values = ChildNodes.First();
+            
+            var identifiers = ChildNodes.Skip(2).First();
 
-            var right = ChildNodes.First();
+            if (values is TupleNamesNode tuplesNames)
+                values = Transform<AssignTupleExpressionNode>(values);
 
-            if (right is TupleNamesNode tuplesNames)
-                right = Transform<AssignTupleExpressionNode>(right);
-
-            if (left is IdentifierNode identifier)
+            if (identifiers is IdentifierNode identifier)
             {
-                var paramExpr = identifier.CreateIdentifier(scope);
-                var assignExpr = Expression.Assign(paramExpr, right.GetExpression(scope));
+                identifier.CreateIdentifier(scope);
+                var assignExpr = identifier.SetIdentifier(scope, values.GetExpression(scope));
 
                 return assignExpr;
             }
 
-            var tupleNames = left as TupleNamesNode;
-
             var declareTuple = Transform<TupleDeclarationNode>(new[]{
                 null,
-                left,
+                identifiers,
                 null,
-                right
+                values
             }) as TupleDeclarationNode;
             declareTuple.AllowOut = true;
 

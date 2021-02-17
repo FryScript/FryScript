@@ -17,11 +17,10 @@ namespace FryScript.Ast
             return GetTryCatchFinally(scope);
         }
 
-        private Expression GetTwoPartTry(Scope scope)
+        protected internal virtual Expression GetTwoPartTry(Scope scope)
         {
             var tryBlock = ChildNodes.First() as TryStatementNode;
             var secondBlock = ChildNodes.Skip(1).First();
-
 
             if (secondBlock is CatchStatementNode catchBlock)
                 return GetTryCatch(tryBlock, catchBlock, scope);
@@ -31,7 +30,7 @@ namespace FryScript.Ast
             return GetTryFinally(tryBlock, finallyblock, scope);
         }
 
-        private Expression GetTryCatch(TryStatementNode tryBlock, CatchStatementNode catchBlock, Scope scope)
+        protected internal virtual Expression GetTryCatch(TryStatementNode tryBlock, CatchStatementNode catchBlock, Scope scope)
         {
             var tryExpr = tryBlock.GetExpression(scope);
             var catchBlockExpr = catchBlock.GetCatchBlock(scope);
@@ -43,7 +42,7 @@ namespace FryScript.Ast
             return tryCatchExpr;
         }
 
-        private Expression GetTryFinally(TryStatementNode tryBlock, FinallyStatementNode finallyBlock, Scope scope)
+        protected internal virtual Expression GetTryFinally(TryStatementNode tryBlock, FinallyStatementNode finallyBlock, Scope scope)
         {
             var tryExpr = tryBlock.GetExpression(scope);
             var finallyExpr = finallyBlock.GetExpression(scope);
@@ -53,7 +52,7 @@ namespace FryScript.Ast
             return tryFinallyExpr;
         }
 
-        private Expression GetTryCatchFinally(Scope scope)
+        protected internal virtual Expression GetTryCatchFinally(Scope scope)
         {
             var tryBlock = ChildNodes.First();
             var catchBlock = ChildNodes.Skip(1).First() as CatchStatementNode;

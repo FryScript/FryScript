@@ -17,7 +17,9 @@ namespace FryScript.HostInterop
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            return CreateNativeCtor(type);
+            //return CreateNativeCtor(type);
+
+            return new Func<ScriptObject, object>(s => s);
         }
 
         public static Func<ScriptObject, object> GetCtor<T>()
@@ -79,7 +81,7 @@ namespace FryScript.HostInterop
         private static Expression WrapNativeType(Type type, Expression thisExpr, Expression newTypeExpr)
         {
             var targetExpr = Expression.Convert(
-                Expression.Field(thisExpr, "Target"),
+                Expression.PropertyOrField(thisExpr, "Target"),
                 type
                 );
 
@@ -93,7 +95,7 @@ namespace FryScript.HostInterop
         private static IEnumerable<Expression> WrapMethods(Type type, Expression thisExpr)
         {
             var targetExpr = Expression.Convert(
-                Expression.Field(thisExpr, "Target"),
+                Expression.PropertyOrField(thisExpr, "Target"),
                 type
                 );
 

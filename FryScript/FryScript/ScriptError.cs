@@ -1,18 +1,23 @@
-﻿namespace FryScript
+﻿using System;
+
+namespace FryScript
 {
-    [ScriptableType("[error]")]
-    public class ScriptError : IScriptable
+    [ScriptableType("error")]
+    public class ScriptError : ScriptObject
     {
-        public dynamic Script { get; set; }
+        public ScriptError()
+        {
+            ObjectCore.Builder = Builder.ScriptErrorBuilder;
+        }
 
         [ScriptableProperty("message")]
         public string Message { get; set; }
 
         [ScriptableProperty("innerObject")]
-        public dynamic InnerObject { get; set; }
+        public object InnerObject { get; set; }
 
         [ScriptableMethod("ctor")]
-        public void Ctor(string message, object innerObject)
+        public void Constructor(string message, object innerObject)
         {
             Message = message;
             InnerObject = innerObject;

@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace FryScript.Ast
 {
-    public class FunctionExpressionNode: AstNode
+    public class FunctionExpressionNode: DebugNode
     {
         private static readonly ConstructorInfo ScriptFunction_DelegateCtor =
             typeof (ScriptFunction).GetConstructor(new[] {typeof (Delegate)});
@@ -19,13 +19,16 @@ namespace FryScript.Ast
             var parameters = ChildNodes.First() as FunctionParametersNode;
             var block = ChildNodes.Skip(1).First();
 
-            scope = scope.New(resetDataBag: true);
+            scope = scope.New(this, resetDataBag: true);
 
             parameters.DeclareParameters(scope);
 
             var parameterExprs = scope.GetLocalExpressions().ToArray();
 
-            scope = scope.New();
+            if(parameterExprs.Length > 16)
+                throw CompilerException.FromAst("A function cannot declare more than 16 parameters", parameters);
+
+            scope = scope.New(this);
             var returnTarget = scope.SetData(ScopeData.ReturnTarget, Expression.Label(typeof (object), scope.GetTempName(TempPrefix.ReturnTarget)));
 
             var blockExpr = block.ChildNodes.Length == 0
@@ -36,10 +39,7 @@ namespace FryScript.Ast
 
             if (CompilerContext.HasDebugHook)
             {
-                var span = ParseNode.Span;
-                var location = span.Location;
-
-                returnExpr = DebugExpressionHelper.GetCallStackExpression(scope, s => returnExpr, CompilerContext.Name, location.Line, location.Column, span.Length, CompilerContext.DebugHook);
+                returnExpr = WrapDebugStack(scope, s => returnExpr);
             }
 
             var lambdaType =

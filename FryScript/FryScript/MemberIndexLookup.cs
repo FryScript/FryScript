@@ -38,8 +38,7 @@
         {
             lock (_cache)
             {
-                int index;
-                if (memberIndex.TryGetValue(name, out index))
+                if (memberIndex.TryGetValue(name, out int index))
                 {
                     memberLookupInfo = new MemberLookupInfo
                     {

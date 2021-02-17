@@ -1,34 +1,35 @@
 ﻿using FryScript.Compilation;
-using FryScript.Helpers;
 using System;
 using System.Linq.Expressions;
 
 namespace FryScript.Ast
 {
-    public class ObjectLiteralExpressionNode: AstNode
+    public class ObjectLiteralExpressionNode : AstNode
     {
         public override Expression GetExpression(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            scope = scope.New();
+            var newObjExpr = Expression.New(typeof(ScriptObject));
 
-            var paramExpr = Expression.Parameter(typeof(ScriptObject), scope.GetTempName(TempPrefix.ObjectLiteral));
+            if (ChildNodes.Length == 0)
+                return newObjExpr;
+
+            scope = scope.New(this);
+
+            var paramExpr = scope.AddMember(scope.GetTempName(TempPrefix.ObjectLiteral), this, typeof(ScriptObject));
             scope.SetData(ScopeData.ObjectLiteralContext, paramExpr);
 
-            if(ChildNodes.Length == 0)
-                return Expression.New(typeof(ScriptObject));
+            var assignParamExpr = Expression.Assign(paramExpr, newObjExpr);
 
             var bodyExpr = GetChildExpression(scope);
 
             if (bodyExpr == null)
-                return Expression.New(typeof(ScriptObject));
+                return newObjExpr;
 
-            var lambdaExpr = Expression.Lambda<Func<ScriptObject, object>>(bodyExpr, paramExpr);
+            var initObjExpr = scope.ScopeBlock(assignParamExpr, bodyExpr, paramExpr);
 
-            var newObjExpr = ExpressionHelper.NewScriptObject(ctor: lambdaExpr);
-
-            return newObjExpr;
+            return initObjExpr;
         }
     }
 }

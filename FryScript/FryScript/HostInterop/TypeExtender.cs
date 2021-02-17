@@ -59,7 +59,7 @@ namespace FryScript.HostInterop
             
             EnsureExtendedType(methodInfo, parameterInfos);
             EnsureReturnType(methodInfo);
-            EnsureParameterCount(methodInfo, parameterInfos, 1);
+            //EnsureParameterCount(methodInfo, parameterInfos, 1);
 
             if (_typeOperators.TryGetValue(operation, out MethodInfo existingMethod))
                 throw new InvalidOperationException(

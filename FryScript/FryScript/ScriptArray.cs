@@ -4,10 +4,11 @@ using System.Collections.Generic;
 namespace FryScript
 {
     using System.Collections;
+    using System.Dynamic;
     using Helpers;
     using HostInterop;
 
-    [ScriptableType("[array]")]
+    [ScriptableType("array")]
     public class ScriptArray : ScriptObject, IEnumerable<object>
     {
         private static readonly string ScriptTypeName = TypeProvider.Current.GetTypeName(typeof(ScriptArray));
@@ -47,6 +48,8 @@ namespace FryScript
         public ScriptArray(params object[] items)
             : base(scriptType: ScriptTypeName)
         {
+            ObjectCore.Builder = Builder.ScriptArrayBuilder;
+
             _items = items == null
                 ? new List<object>()
                 : new List<object>(items);
@@ -55,6 +58,20 @@ namespace FryScript
         public ScriptArray()
             : this(null)
         {
+        }
+
+        public ScriptArray(int capacity)
+        {
+            _items = new List<object>(new object[capacity]);
+        }
+
+        [ScriptableMethod("ctor")]
+        public void Constructor(int capacity)
+        {
+            _items.Clear();
+
+            for (var i = 0; i < capacity; i++)
+                _items.Add(null);
         }
 
         [ScriptableMethod("add")]
@@ -133,7 +150,7 @@ namespace FryScript
 
         public static List<object> GetItems(ScriptArray scriptArray)
         {
-            if (scriptArray == null) 
+            if (scriptArray == null)
                 throw new ArgumentNullException("scriptArray");
 
             return scriptArray._items;

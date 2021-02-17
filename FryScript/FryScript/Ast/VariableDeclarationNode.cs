@@ -14,11 +14,11 @@ namespace FryScript.Ast
 
             var identifierNode = ChildNodes.Skip(1).First();
 
-            var identifierExpr = identifierNode.CreateIdentifier(scope);
+            identifierNode.CreateIdentifier(scope);
             var valueExpr = ChildNodes.Length == 2
                 ? ExpressionHelper.Null()
                 : ChildNodes.Skip(3).First().GetExpression(scope);
-            var assignExpr = Expression.Assign(identifierExpr, valueExpr);
+            var assignExpr = identifierNode.SetIdentifier(scope, valueExpr);
 
             return assignExpr;
         }

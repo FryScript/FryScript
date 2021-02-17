@@ -29,27 +29,28 @@ namespace FryScript.Helpers
                     Expression.Convert(Expression.Constant(target.Value), target.LimitType)));
         }
 
-        public static BindingRestrictions GetScriptTypeRestriction(DynamicMetaObject target)
-        {
-            target = target ?? throw new ArgumentNullException(nameof(target));
+        //public static BindingRestrictions GetScriptTypeRestriction(DynamicMetaObject target)
+        //{
+        //    target = target ?? throw new ArgumentNullException(nameof(target));
+        //    //target = target ?? throw new ArgumentNullException(nameof(target));
 
-            if (target.Value is IScriptType scriptObject)
-            {
-                var scriptObjectExpr = Expression.Convert(target.Expression, target.LimitType);
-                return BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
-                    .Merge(BindingRestrictions.GetExpressionRestriction(
-                        Expression.Equal(
-                            Expression.Call(scriptObjectExpr, "GetScriptType", null),
-                            Expression.Constant(scriptObject.GetScriptType())
-                            )
-                        )
-                    );
-            }
+        //    //if (target.Value is IScriptType scriptObject)
+        //    //{
+        //    //    var scriptObjectExpr = Expression.Convert(target.Expression, target.LimitType);
+        //    //    return BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
+        //    //        .Merge(BindingRestrictions.GetExpressionRestriction(
+        //    //            Expression.Equal(
+        //    //                Expression.Call(scriptObjectExpr, "GetScriptType", null),
+        //    //                Expression.Constant(scriptObject.GetScriptType())
+        //    //                )
+        //    //            )
+        //    //        );
+        //    //}
 
-            if (!TypeProvider.Current.IsPrimitive(target.LimitType))
-                throw new ArgumentException(string.Format("Cannot create script type restriction for type {0}", target.LimitType.FullName));
+        //    //if (!TypeProvider.Current.IsPrimitive(target.LimitType))
+        //    //    throw new ArgumentException(string.Format("Cannot create script type restriction for type {0}", target.LimitType.FullName));
 
-            return BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType);
-        }
+        //    //return BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType);
+        //}
     }
 }

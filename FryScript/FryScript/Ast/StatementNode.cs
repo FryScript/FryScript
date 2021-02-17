@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace FryScript.Ast
 {
-    public class StatementNode : AstNode
+    public class StatementNode : DebugNode
     {
         public override Expression GetExpression(Scope scope)
         {

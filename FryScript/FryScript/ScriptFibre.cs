@@ -6,13 +6,19 @@ using System.Linq.Expressions;
 
 namespace FryScript
 {
+    [ScriptableType("fibre")]
     public class ScriptFibre : ScriptFunction
     {
-        new public const string DefaultScriptType = "[fibre]";
+        public ScriptFibre()
+            : base(new Action(() => {}))
+        {
+            ObjectCore.Builder = Builder.ScriptFibreBuilder;
+        }
 
         public ScriptFibre(Delegate target)
-            : base(target, DefaultScriptType)
+            : base(target)
         {
+            ObjectCore.Builder = Builder.ScriptFibreBuilder;
         }
 
         internal static ScriptFibre New(Delegate target)
@@ -31,87 +37,87 @@ namespace FryScript
         }
     }
 
-    public class FunkyFibre : PseudoFibre
-    {
-        protected override IEnumerable<YieldState> Fibre(ScriptParams args)
-        {
-            yield return Pause("Pause 1");
-            yield return Pause("Pause 2");
-            yield return Pause("Pause 3");
-            yield return Pause("Pause 4");
-        }
-    }
+    //public class FunkyFibre : PseudoFibre
+    //{
+    //    protected override IEnumerable<YieldState> Fibre(ScriptParams args)
+    //    {
+    //        yield return Pause("Pause 1");
+    //        yield return Pause("Pause 2");
+    //        yield return Pause("Pause 3");
+    //        yield return Pause("Pause 4");
+    //    }
+    //}
 
 
-    public abstract class PseudoFibre : ScriptFibre
-    {
-        protected enum YieldType
-        { 
-            Yield,
-            YieldReturn
-        }
+    //public abstract class PseudoFibre : ScriptFibre
+    //{
+    //    protected enum YieldType
+    //    { 
+    //        Yield,
+    //        YieldReturn
+    //    }
 
-        protected struct YieldState
-        {
-            public YieldType YieldType;
+    //    protected struct YieldState
+    //    {
+    //        public YieldType YieldType;
 
-            public object Value;
+    //        public object Value;
 
-            public YieldState(YieldType yieldType, object value = null)
-            {
-                YieldType = yieldType;
-                Value = value;
-            }
-        }
+    //        public YieldState(YieldType yieldType, object value = null)
+    //        {
+    //            YieldType = yieldType;
+    //            Value = value;
+    //        }
+    //    }
 
-        public PseudoFibre()
-            : base(null)
-        {
-            Target = new Func<ScriptParams, ScriptFibreContext>(Invoke);
-        }
+    //    public PseudoFibre()
+    //        : base(null)
+    //    {
+    //        Target = new Func<ScriptParams, ScriptFibreContext>(Invoke);
+    //    }
 
-        private ScriptFibreContext Invoke(ScriptParams args)
-        {
-            var state = Fibre(args).GetEnumerator();
+    //    private ScriptFibreContext Invoke(ScriptParams args)
+    //    {
+    //        var state = Fibre(args).GetEnumerator();
 
-            var context = new ScriptFibreContext(c =>
-            {
-                c.YieldState = 0;
+    //        var context = new ScriptFibreContext(c =>
+    //        {
+    //            c.YieldState = 0;
 
-                if (!state.MoveNext())
-                    ExceptionHelper.FibreContextCompleted();
+    //            if (!state.MoveNext())
+    //                ExceptionHelper.FibreContextCompleted();
 
-                if (state.Current.YieldType == YieldType.YieldReturn)
-                    c.YieldState = ScriptFibreContext.CompletedState;
+    //            if (state.Current.YieldType == YieldType.YieldReturn)
+    //                c.YieldState = ScriptFibreContext.CompletedState;
 
-                return state.Current.Value;
-            });
+    //            return state.Current.Value;
+    //        });
 
-            return context;
-        }
+    //        return context;
+    //    }
 
-        protected YieldState Pause()
-        {
-            return new YieldState(YieldType.Yield, ScriptFibreContext.NoResult);
-        }
+    //    protected YieldState Pause()
+    //    {
+    //        return new YieldState(YieldType.Yield, ScriptFibreContext.NoResult);
+    //    }
 
-        protected YieldState Pause(object value)
-        {
-            return new YieldState(YieldType.Yield, value);
-        }
+    //    protected YieldState Pause(object value)
+    //    {
+    //        return new YieldState(YieldType.Yield, value);
+    //    }
 
-        protected YieldState Complete()
-        {
-            return new YieldState(YieldType.YieldReturn, ScriptFibreContext.NoResult);
-        }
+    //    protected YieldState Complete()
+    //    {
+    //        return new YieldState(YieldType.YieldReturn, ScriptFibreContext.NoResult);
+    //    }
 
-        protected YieldState Complete(object value)
-        {
-            return new YieldState(YieldType.YieldReturn, value);
-        }
+    //    protected YieldState Complete(object value)
+    //    {
+    //        return new YieldState(YieldType.YieldReturn, value);
+    //    }
 
-        protected abstract IEnumerable<YieldState> Fibre(ScriptParams args);
-    }
+    //    protected abstract IEnumerable<YieldState> Fibre(ScriptParams args);
+    //}
 
     //public abstract class NativeFibre : ScriptFibre
     //{

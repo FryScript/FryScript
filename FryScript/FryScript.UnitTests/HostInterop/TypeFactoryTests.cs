@@ -46,6 +46,12 @@ namespace FryScript.UnitTests.HostInterop
         public abstract void Method(object a, int b, string c);
     }
 
+    [ScriptableType("[test]", IgnoreTypeFactory = true)]
+    public class IgnoreTypeFactoryScriptableType
+    { 
+    }
+
+
     [TestClass]
     public class TypeFactoryTests
     {
@@ -133,6 +139,14 @@ namespace FryScript.UnitTests.HostInterop
             AssertMethods(baseMethod, overrideMethod);
             AssertMethods(baseMethod, proxyMethod);
             Assert.IsNotNull(proxyMethod.GetCustomAttribute<RuntimeOverrideAttribute>());
+        }
+
+        [TestMethod]
+        public void CreateScriptableTypeIgnoresTypeFactory()
+        {
+            var type = _typeFactory.CreateScriptableType(typeof(IgnoreTypeFactoryScriptableType));
+
+            Assert.AreEqual(typeof(IgnoreTypeFactoryScriptableType), type);
         }
 
         private static void AssertMethods(MethodInfo baseMethod, MethodInfo proxyMethod)

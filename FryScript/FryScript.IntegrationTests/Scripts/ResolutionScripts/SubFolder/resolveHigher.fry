@@ -1,0 +1,3 @@
+﻿@import "toResolve" as toResolve;
+
+this.toResolve = toResolve;

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FryScript.CallSites;
+using FryScript.Helpers;
+using System;
 
 namespace FryScript
 {
-    using System.Collections;
-    using Ast;
-    using Helpers;
-    using CallSites;
     public class FryScriptException : Exception
     {
         public string Name { get; set; }
@@ -20,13 +14,12 @@ namespace FryScript
 
         public object ScriptData { get; set; }
 
+        public int? TokenLength { get; set; }
+
+        public object InternalData { get; set; }
+
         public FryScriptException(string message)
             : base(message)
-        {
-        }
-
-        public FryScriptException(string message, Exception innerException)
-            : base(message, innerException)
         {
         }
 
@@ -46,7 +39,7 @@ namespace FryScript
             var fryEx = ex as FryScriptException;
 
             if (fryEx == null)
-                fryEx = ExceptionHelper.NativeInteropException(ex, name, line, column);
+                fryEx = new FryScriptException("Native interop exception see inner exception for details", ex, name, line, column);
 
             if (!fryEx.Line.HasValue)
                 fryEx.Line = line;
@@ -57,11 +50,12 @@ namespace FryScript
             return fryEx;
         }
 
-        public static object Throw(object data, Exception ex, string name, int line, int column)
+        public static object Throw(object data, Exception ex, string name, int line, int column, bool rethrow)
         {
-            var stringData = data as string;
+            if (rethrow)
+                return ex;
 
-            if (stringData != null)
+            if (data is string stringData)
                 return new FryScriptException(stringData, ex, name, line, column);
 
             string message = data != null && CallSiteCache.Current.HasMember("message", data)
@@ -78,8 +72,8 @@ namespace FryScript
         {
             var fryEx = ex as FryScriptException;
 
-            if(fryEx == null || fryEx.ScriptData == null)
-                return ex.Message ?? string.Empty;
+            if (fryEx == null || fryEx.ScriptData == null)
+                return ex.Message;
 
             return fryEx.ScriptData;
         }

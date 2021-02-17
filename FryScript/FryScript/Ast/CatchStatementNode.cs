@@ -12,27 +12,27 @@ namespace FryScript.Ast
             throw new NotImplementedException();
         }
 
-        public CatchBlock GetCatchBlock(Scope scope)
+        public virtual CatchBlock GetCatchBlock(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            scope = scope.New();
+            scope = scope.New(this);
 
             var identifier = ChildNodes.Skip(1).First() as IdentifierNode;
             var block = ChildNodes.Skip(2).First();
 
-            var identifierExpr = identifier.CreateIdentifier(scope);
+            identifier.CreateIdentifier(scope);
             var exceptionExpr = Expression.Parameter(typeof(Exception), scope.GetTempName(TempPrefix.Exception));
             scope.SetData(ScopeData.CurrentException, exceptionExpr);
 
             var exMessageExpr = Expression.Call(typeof(FryScriptException),
-                "GetCatchObject",
+                nameof(FryScriptException.GetCatchObject),
                 null,
                 exceptionExpr);
 
             var assignIdentifierExpr = identifier.SetIdentifier(scope, exMessageExpr);
 
-            var newScope = scope.New();
+            var newScope = scope.New(this);
             var blockExpr = block.GetExpression(newScope);
 
             var catchBlockExpr = scope.ScopeBlock(

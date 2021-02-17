@@ -1,0 +1,9 @@
+﻿@import "importScript" as toExport;
+@import member1, member2 from "importScript";
+@import member1 as alias1, member2 as alias2 from "importScript";
+
+importedScript = toExport;
+importedMember1 = member1;
+importedMember2 = member2;
+aliasedMember1 = alias1;
+aliasedMember2 = alias2;

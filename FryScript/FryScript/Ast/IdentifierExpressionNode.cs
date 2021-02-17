@@ -38,11 +38,10 @@ namespace FryScript.Ast
             {
                 var getIndexExpr = ExpressionHelper.DynamicGetIndex(leftExpr, right.GetExpression(scope));
 
-
                 return getIndexExpr;
             }
 
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Unexpected right hand node");
         }
 
         public override Expression SetIdentifier(Scope scope, Expression value)
@@ -74,7 +73,7 @@ namespace FryScript.Ast
                 return setIndexExpr;
             }
 
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Unexpected right hand node");
         }
     }
 }

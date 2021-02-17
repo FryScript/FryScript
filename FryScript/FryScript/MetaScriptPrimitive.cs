@@ -1,5 +1,6 @@
 ﻿namespace FryScript
 {
+    using System;
     using System.Dynamic;
     using System.Linq;
     using System.Linq.Expressions;
@@ -16,7 +17,7 @@
             get { return Expression.Convert(Expression, typeof (ScriptPrimitive<T>)); }
         }
 
-        private Expression ScriptObjectTargetExpr { get { return Expression.Convert(Expression.Field(ScriptObjectExpr, "Target"), typeof(T)); } }
+        private Expression ScriptObjectTargetExpr { get { return Expression.Convert(Expression.PropertyOrField(ScriptObjectExpr, "Target"), typeof(T)); } }
 
         public MetaScriptPrimitive(Expression expression, BindingRestrictions restrictions, object value)
             : base(expression, restrictions, value)
@@ -48,16 +49,16 @@
         public override DynamicMetaObject BindCreateInstance(CreateInstanceBinder binder, DynamicMetaObject[] args)
         {
             if(!TypeProvider.Current.TryGetTypeOperator(ScriptObject.TargetType, ScriptableTypeOperator.Ctor, out MethodInfo ctorInfo))
-                throw new FryScriptException(string.Format("Type {0} does not have a scriptable constructor defined", typeof(T).FullName));
+               throw new FryScriptException(string.Format("Type {0} does not have a scriptable constructor defined", typeof(T).FullName));
 
             var parameterTypes = ctorInfo.GetParameters().Select(p => p.ParameterType).ToArray();
             var argExprs = parameterTypes.Select(
-                (t, i) => i == 0
-                    ? ScriptObjectTargetExpr
-                    : i > 0 && i < args.Length
-                        ? ExpressionHelper.DynamicConvert(args[i].Expression, t)
-                        : Expression.Default(t)
-                ).ToArray();
+               (t, i) => i == 0
+                   ? ScriptObjectTargetExpr
+                   : i > 0 && i < args.Length
+                       ? ExpressionHelper.DynamicConvert(args[i].Expression, t)
+                       : Expression.Default(t)
+               ).ToArray();
 
             var invokeExpr = Expression.Call(ctorInfo, argExprs);
 

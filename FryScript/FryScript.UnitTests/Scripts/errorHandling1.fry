@@ -1,4 +1,4 @@
-﻿@import "[error]" as error;
+﻿@import "error" as error;
 
 try
 {

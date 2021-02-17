@@ -18,13 +18,16 @@ namespace FryScript.Ast
             var body = functionNode.ChildNodes.Skip(1).First();
             body = Transform<FibreBlockNode>(body.ChildNodes);
 
-            var paramametersScope = scope.New(true, false);
+            var paramametersScope = scope.New(this, true, false);
 
             parameters.DeclareParameters(paramametersScope);
 
-            var fibreScope = paramametersScope.New(true, true);
+            var fibreScope = paramametersScope.New(this, true, true);
 
             var parameterExprs = paramametersScope.GetLocalExpressions().ToArray();
+
+            if(parameterExprs.Length > 16)
+                throw CompilerException.FromAst("A fibre cannot declare more than 16 parameters", parameters);
 
             var newFibreContextExpr = GetFibreContextExpression(fibreScope, body);
             newFibreContextExpr = fibreScope.ScopeBlock(typeof(ScriptFibreContext), newFibreContextExpr);
@@ -38,9 +41,9 @@ namespace FryScript.Ast
             return newFibreExpr;
         }
 
-        private Expression GetFibreContextExpression(Scope scope, AstNode body)
+        protected internal virtual Expression GetFibreContextExpression(Scope scope, AstNode body)
         {
-            var contextScope = scope.New();
+            var contextScope = scope.New(this);
 
             var contextParam = contextScope.SetData(ScopeData.FibreContext, Expression.Parameter(typeof(ScriptFibreContext), scope.GetTempName(TempPrefix.FibreContext)));
             var yieldLabels = contextScope.SetData(ScopeData.YieldLabels, new List<LabelTarget>());
@@ -59,7 +62,7 @@ namespace FryScript.Ast
             return initContextExpr;
         }
 
-        private Expression AddYieldSwitchExpression(Scope scope, ParameterExpression contextParam, Expression bodyExpr, List<LabelTarget> yieldLabels)
+        protected internal virtual Expression AddYieldSwitchExpression(Scope scope, ParameterExpression contextParam, Expression bodyExpr, List<LabelTarget> yieldLabels)
         {
             if (yieldLabels.Count == 0)
                 return bodyExpr;
@@ -72,7 +75,7 @@ namespace FryScript.Ast
             return scope.ScopeBlock(switchExpr, bodyExpr);
         }
 
-        private Expression AddReturnExpression(LabelTarget yieldTarget, Expression bodyExpr)
+        protected internal virtual Expression AddReturnExpression(LabelTarget yieldTarget, Expression bodyExpr)
         {
             var returnExpr = Expression.Label(yieldTarget, bodyExpr);
 

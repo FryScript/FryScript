@@ -13,16 +13,22 @@ namespace FryScript.Helpers
 {
     public static class ExpressionHelper
     {
-        private static readonly ConstructorInfo ScriptObjectCtor =
-                (from c in typeof(ScriptObject).GetTypeInfo().DeclaredConstructors
-                 let p = c.GetParameters()
-                 where p.Length == 5
-                       && p[0].ParameterType == typeof(object)
-                       && p[1].ParameterType == typeof(string)
-                       && p[2].ParameterType == typeof(Func<ScriptObject, object>)
-                       && p[3].ParameterType == typeof(HashSet<string>)
-                       && p[4].ParameterType == typeof(bool)
-                 select c).Single();
+        private static readonly ConstructorInfo ScriptObjectCtor = typeof(ScriptObject).GetTypeInfo().GetConstructor(new[]
+        {
+            typeof(string)//,
+            //typeof(Func<ScriptObject, object>),
+            //typeof(HashSet<string>),
+            //typeof(bool)
+        });
+        //(from c in typeof(ScriptObject).GetTypeInfo().DeclaredConstructors
+        // let p = c.GetParameters()
+        // where p.Length == 4
+        //       && p[0].ParameterType == typeof(object)
+        //       && p[1].ParameterType == typeof(string)
+        //       && p[2].ParameterType == typeof(Func<ScriptObject, object>)
+        //       && p[3].ParameterType == typeof(HashSet<string>)
+        //       && p[4].ParameterType == typeof(bool)
+        // select c).Single();
 
         public static Expression Null(Type type)
         {
@@ -37,11 +43,6 @@ namespace FryScript.Helpers
         public static Expression Null()
         {
             return Null(typeof(object));
-        }
-
-        public static Expression ScriptNaN()
-        {
-            return Expression.Constant(FryScript.ScriptNaN.Value, typeof(object));
         }
 
         public static Expression DynamicConvert(Expression expression, Type type)
@@ -152,24 +153,6 @@ namespace FryScript.Helpers
             return Expression.Dynamic(binder, typeof(object), instance, value);
         }
 
-        public static Expression DynamicExtendsOperation(Expression instance, Expression value)
-        {
-            instance = instance ?? throw new ArgumentNullException(nameof(instance));
-            value = value ?? throw new ArgumentNullException(nameof(value));
-
-            var binder = BinderCache.Current.ExtendsOperationBinder();
-            return Expression.Dynamic(binder, typeof(object), instance, value);
-        }
-
-        public static Expression DynamicHasOperation(string name, Expression instance)
-        {
-            name = name ?? throw new ArgumentNullException(nameof(name));
-            instance = instance ?? throw new ArgumentNullException(nameof(instance));
-
-            var binder = BinderCache.Current.HasOperationBinder(name);
-            return Expression.Dynamic(binder, typeof(object), instance);
-        }
-
         public static bool TryGetMethodExpression(Expression instance, string name, out Expression expression)
         {
             instance = instance ?? throw new ArgumentNullException(nameof(instance));
@@ -188,49 +171,33 @@ namespace FryScript.Helpers
             return expression != null;
         }
 
-        public static Expression WrapNativeCall(Expression expression, AstNode astNode, Scope scope)
-        {
-            expression = expression ?? throw new ArgumentNullException(nameof(expression));
-            astNode = astNode ?? throw new ArgumentNullException(nameof(astNode));
-            scope = scope ?? throw new ArgumentNullException(nameof(scope));
+        // public static Expression NewScriptObject(
+        //     Expression scriptType = null,
+        //     Expression ctor = null,
+        //     Expression extends = null,
+        //     Expression autoConstruct = null)
+        // {
+        //     var objExpr = Expression.Parameter(typeof(ScriptObject));
+        //     var newExpr = Expression.New(
+        //         ScriptObjectCtor,
+        //         scriptType ?? Null(typeof(string)));//,
+        //                                             //ctor ?? Null(typeof(Func<ScriptObject, object>)),
+        //                                             //extends ?? Null(typeof(HashSet<string>)),
+        //                                             //autoConstruct ?? Expression.Constant(true));
+        //     var assignObjExpr = Expression.Assign(objExpr, newExpr);
+        //     var invokeExpr = Expression.Invoke(ctor, objExpr);
 
-            var location = astNode.ParseNode.Span.Location;
-
-            var exceptionExpr = Expression.Parameter(typeof(Exception), scope.GetTempName(TempPrefix.Exception));
-            var wrapExpr = Expression.Call(typeof(FryScriptException),
-                "FormatException",
-                null,
-                exceptionExpr,
-                Expression.Constant(astNode.CompilerContext.Name),
-                Expression.Constant(location.Line),
-                Expression.Constant(location.Column));
-
-            var scriptExExpr = Expression.Parameter(typeof(FryScriptException), scope.GetTempName(TempPrefix.Exception));
-            var scriptExCatchExpr = Expression.Catch(scriptExExpr, Expression.Rethrow(expression.Type));
-
-            var throwExpr = Expression.Throw(wrapExpr, expression.Type);
-            var catchAllBlock = Expression.Catch(exceptionExpr, throwExpr);
-
-            var tryCatchExpr = Expression.TryCatch(expression, scriptExCatchExpr, catchAllBlock);
-
-            return tryCatchExpr;
-        }
-
-        public static Expression NewScriptObject(
-            Expression target = null,
-            Expression scriptType = null,
-            Expression ctor = null,
-            Expression extends = null,
-            Expression autoConstruct = null)
-        {
-            return Expression.New(
-                ScriptObjectCtor,
-                target ?? Null(typeof(object)),
-                scriptType ?? Null(typeof(string)),
-                ctor ?? Null(typeof(Func<ScriptObject, object>)),
-                extends ?? Null(typeof(HashSet<string>)),
-                autoConstruct ?? Expression.Constant(true));
-        }
+        //     return Expression.Block(typeof(object), new[]
+        //     {
+        //         objExpr
+        //     },
+        //     new Expression[]
+        //     {
+        //             assignObjExpr,
+        //             invokeExpr,
+        //             objExpr
+        //     });
+        // }
 
         public static Expression AwaitExpression(AstNode node, Scope scope)
         {
@@ -270,7 +237,7 @@ namespace FryScript.Helpers
 
             scope.TryGetData(ScopeData.AwaitContexts, out List<Expression> awaitContexts);
 
-            if(statementExpr != null)
+            if (statementExpr != null)
                 awaitContexts.Add(statementExpr);
 
             var awaitingExprs = awaitContexts.ToArray();
@@ -302,24 +269,24 @@ namespace FryScript.Helpers
             return yieldBlock;
         }
 
-        private static Expression GetExtensionCtor(Expression targetExpr, Type extensionType, MethodInfo methodInfo)
-        {
-            var paramExpr = Expression.Parameter(extensionType);
-            var newExtensionExpr = Expression.New(extensionType.GetConstructor(new Type[0]));
-            var assignParamExpr = Expression.Assign(paramExpr, newExtensionExpr);
-            var getTargetExpr = Expression.Field(paramExpr, "Target");
-            var setTargetExpr = Expression.Assign(getTargetExpr, Expression.Convert(targetExpr, typeof(object)));
+        // private static Expression GetExtensionCtor(Expression targetExpr, Type extensionType, MethodInfo methodInfo)
+        // {
+        //     var paramExpr = Expression.Parameter(extensionType);
+        //     var newExtensionExpr = Expression.New(extensionType.GetConstructor(new Type[0]));
+        //     var assignParamExpr = Expression.Assign(paramExpr, newExtensionExpr);
+        //     var getTargetExpr = Expression.PropertyOrField(paramExpr, "Target");
+        //     var setTargetExpr = Expression.Assign(getTargetExpr, Expression.Convert(targetExpr, typeof(object)));
 
-            var newFuncExpr = ScriptableMethodHelper.CreateMethod(paramExpr, methodInfo);
+        //     var newFuncExpr = ScriptableMethodHelper.CreateMethod(paramExpr, methodInfo);
 
-            var blockExpr = Expression.Block(
-                typeof(object),
-                new[] { paramExpr },
-                assignParamExpr,
-                setTargetExpr,
-                newFuncExpr);
+        //     var blockExpr = Expression.Block(
+        //         typeof(object),
+        //         new[] { paramExpr },
+        //         assignParamExpr,
+        //         setTargetExpr,
+        //         newFuncExpr);
 
-            return blockExpr;
-        }
+        //     return blockExpr;
+        // }
     }
 }

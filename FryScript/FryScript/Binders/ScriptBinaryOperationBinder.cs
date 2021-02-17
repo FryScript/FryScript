@@ -1,11 +1,13 @@
-﻿using FryScript.HostInterop;
+﻿using FryScript.Helpers;
+using FryScript.HostInterop;
+using System;
 using System.Dynamic;
 using System.Linq.Expressions;
 
 namespace FryScript.Binders
 {
 
-    class ScriptBinaryOperationBinder : BinaryOperationBinder
+    public class ScriptBinaryOperationBinder : BinaryOperationBinder
     {
         public ScriptBinaryOperationBinder(ExpressionType operation)
             : base(operation)
@@ -14,11 +16,10 @@ namespace FryScript.Binders
 
         public override DynamicMetaObject FallbackBinaryOperation(DynamicMetaObject target, DynamicMetaObject arg, DynamicMetaObject errorSuggestion)
         {
-            var left = target;
-            var right = arg;
-           
-            var metaObject = TypeProvider.Current.GetMetaObject(left.Expression, left.Value);
-            return metaObject.BindBinaryOperation(this, right);
+            return BindHelper.BindBinaryOperation(
+                this , 
+                target ?? throw new ArgumentNullException(nameof(target)), 
+                arg ?? throw new ArgumentNullException(nameof(arg)));
         }
     }
 }

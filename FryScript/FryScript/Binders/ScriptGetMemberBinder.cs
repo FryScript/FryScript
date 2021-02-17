@@ -1,6 +1,7 @@
 ﻿using FryScript.Helpers;
 using FryScript.HostInterop;
 using System.Dynamic;
+using System.Linq.Expressions;
 
 namespace FryScript.Binders
 {
@@ -14,14 +15,14 @@ namespace FryScript.Binders
 
         public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
         {
-            var metaObject = TypeProvider.Current.GetMetaObject(target.Expression, target.Value);
+            if(target.Value == null)
+                ExceptionHelper.MemberUndefined(Name);
 
-            if (metaObject == null)
-                ExceptionHelper.NonGetMember(target.LimitType);
+            var restrictions = RestrictionsHelper.TypeOrNullRestriction(target);
+            if (ExpressionHelper.TryGetMethodExpression(Expression.Convert(target.Expression, target.LimitType), Name, out Expression expression))
+                return new DynamicMetaObject(expression, restrictions);
 
-            metaObject = metaObject.BindGetMember(this);
-
-            return new DynamicMetaObject(metaObject.Expression, GetDefaultRestrictions(target));
+            return new DynamicMetaObject(ExpressionHelper.Null(), restrictions);
         }
 
         private BindingRestrictions GetDefaultRestrictions(DynamicMetaObject target)

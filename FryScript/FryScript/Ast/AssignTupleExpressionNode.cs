@@ -24,7 +24,7 @@ namespace FryScript.Ast
             }
 
             var originalScope = scope;
-            scope = scope.New();
+            scope = scope.New(this);
 
             var identifierNodes = (ChildNodes.First() as TupleNamesNode).GetIdentifiers(scope);
 

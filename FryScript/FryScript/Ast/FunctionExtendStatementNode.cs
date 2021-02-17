@@ -15,14 +15,14 @@ namespace FryScript.Ast
             var identifier = ChildNodes.First();
             var function = ChildNodes.Skip(2).First();
 
-            scope = scope.New(hoisted: false);
+            scope = scope.New(this, hoisted: false);
 
             var baseExpr = scope.AddKeywordMember<ScriptFunction>(Keywords.Base, this);
             var assignBaseExpr = Expression.Assign(
                 baseExpr,
                 Expression.Call(
                     typeof (ScriptFunction),
-                    "Extend",
+                    nameof(ScriptFunction.Extend),
                     null,
                     identifier.GetIdentifier(scope)
                     )

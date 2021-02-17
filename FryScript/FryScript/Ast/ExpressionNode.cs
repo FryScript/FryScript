@@ -1,13 +1,11 @@
 ﻿using FryScript.Compilation;
 using FryScript.Debugging;
-using FryScript.Helpers;
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace FryScript.Ast
 {
-    public class ExpressionNode : AstNode
+    public class ExpressionNode : DebugNode
     {
         public override Expression GetExpression(Scope scope)
         {
@@ -16,8 +14,8 @@ namespace FryScript.Ast
             if (CompilerContext.HasDebugHook)
                 return WrapDebugExpression(DebugEvent.Expression, scope, s => GetChildExpression(s));
 
-            Expression expr = CompilerContext?.ScriptEngine?.DetailedExceptions == true
-                ? ExpressionHelper.WrapNativeCall(GetChildExpression(scope), this, scope)
+            Expression expr = CompilerContext.DetailedExceptions == true
+                ? GetDetailedExceptionExpression(GetChildExpression(scope), this, scope)
                 : GetChildExpression(scope);
 
             return expr;

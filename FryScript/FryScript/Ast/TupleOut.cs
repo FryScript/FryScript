@@ -7,21 +7,25 @@ using FryScript.Helpers;
 
 namespace FryScript.Ast
 {
-    public class TupleOut : AstNode
+    public class TupleOut : IdentifierNode
     {
         public override Expression GetExpression(Scope scope)
         {
-            return CreateOut(scope);
+            throw new NotImplementedException();
         }
-
 
         public override Expression SetIdentifier(Scope scope, Expression value)
         {
-            scope.TryGetData(ScopeData.TupleOut, out ParameterExpression tupleOut);
+            scope = scope ?? throw new ArgumentNullException(nameof(scope));
+            value = value ?? throw new ArgumentNullException(nameof(value));
+
+            if (!scope.TryGetData(ScopeData.TupleOut, out ParameterExpression tupleOut))
+                throw new InvalidOperationException("Missing tuple out scope data");
+
             return Expression.Assign(tupleOut, value);
         }
 
-        public ParameterExpression CreateOut(Scope scope)
+        public override void CreateIdentifier(Scope scope)
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
@@ -30,8 +34,6 @@ namespace FryScript.Ast
 
             var tupleOutExpr = scope.AddTempMember(TempPrefix.TupleOut, this);
             scope.SetData(ScopeData.TupleOut, tupleOutExpr);
-
-            return tupleOutExpr;
         }
     }
 }

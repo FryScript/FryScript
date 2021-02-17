@@ -18,6 +18,8 @@
         public const string ScriptExtend = "ScriptExtend";
         public const string ScriptImport = "ScriptImport";
         public const string ScriptImportFrom = "ScriptImportFrom";
+        public const string ImportAlias = "Import Alias";
+        public const string ImportAliasList = "IportAliasList";
         public const string Statements = "Statements";
         public const string Statement = "Statement";
         public const string BlockStatement = "BlockStatement";
