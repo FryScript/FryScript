@@ -1,15 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netstandard2.1;net452</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net5.0;net48;net472;net471;net47;net462;net461;net46;net452</TargetFrameworks>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
-    <Version>0.0.2</Version>
+    <Version>0.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>FryScript-Experimental</PackageId>
-    <Version>1.0.0</Version>
-    <Authors>FryScript Contributors</Authors>
-    <Company>FryScript</Company>
+    <Authors>FryScript contributors</Authors>
+    <Description>FryScript is a dynamic scripting language built upon the .NET DLR that can be used to expose a scriptable API from within .NET applications.</Description>
+    <Copyright>2021 FryScript contributors</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
