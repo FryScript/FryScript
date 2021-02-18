@@ -13,7 +13,6 @@ namespace FryScript
         public ScriptFunction()
             : this(new Action(() => { }))
         {
-
         }
 
         public ScriptFunction(Delegate target)
@@ -21,12 +20,6 @@ namespace FryScript
             TargetDelegate = target ?? throw new ArgumentNullException(nameof(target));
 
             ObjectCore.Builder = Builder.ScriptFunctionBuilder;
-        }
-
-        internal ScriptFunction(Delegate target, string scriptType)
-            : base(scriptType: scriptType)
-        {
-            TargetDelegate = target ?? throw new ArgumentNullException(nameof(target));
         }
 
         public void Invoke(params object[] args)

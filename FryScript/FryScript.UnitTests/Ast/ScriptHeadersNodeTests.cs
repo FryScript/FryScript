@@ -22,9 +22,9 @@ namespace FryScript.UnitTests.Ast
         {
             Node.SetChildren(new AstNode[0]);
 
-            var result = Node.GetExpression(Scope);
+            var result = Node.GetExpression(Scope) as ConstantExpression;
 
-            Assert.IsNull(result);
+            Assert.IsNull(result.Value);
         }
 
         [TestMethod]

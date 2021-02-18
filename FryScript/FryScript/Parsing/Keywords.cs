@@ -11,7 +11,7 @@ namespace FryScript.Parsing
         public const string This = "this";
         public const string ScriptExtend = "@extend";
         public const string ScriptImport = "@import";
-        public const string ScriptProto = "@proto";
+        //public const string ScriptProto = "@proto";
         public const string As = "as";
         public const string Var = "var";
         public const string Null = "null";

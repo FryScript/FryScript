@@ -13,23 +13,6 @@ namespace FryScript.Helpers
 {
     public static class ExpressionHelper
     {
-        private static readonly ConstructorInfo ScriptObjectCtor = typeof(ScriptObject).GetTypeInfo().GetConstructor(new[]
-        {
-            typeof(string)//,
-            //typeof(Func<ScriptObject, object>),
-            //typeof(HashSet<string>),
-            //typeof(bool)
-        });
-        //(from c in typeof(ScriptObject).GetTypeInfo().DeclaredConstructors
-        // let p = c.GetParameters()
-        // where p.Length == 4
-        //       && p[0].ParameterType == typeof(object)
-        //       && p[1].ParameterType == typeof(string)
-        //       && p[2].ParameterType == typeof(Func<ScriptObject, object>)
-        //       && p[3].ParameterType == typeof(HashSet<string>)
-        //       && p[4].ParameterType == typeof(bool)
-        // select c).Single();
-
         public static Expression Null(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
@@ -170,34 +153,6 @@ namespace FryScript.Helpers
 
             return expression != null;
         }
-
-        // public static Expression NewScriptObject(
-        //     Expression scriptType = null,
-        //     Expression ctor = null,
-        //     Expression extends = null,
-        //     Expression autoConstruct = null)
-        // {
-        //     var objExpr = Expression.Parameter(typeof(ScriptObject));
-        //     var newExpr = Expression.New(
-        //         ScriptObjectCtor,
-        //         scriptType ?? Null(typeof(string)));//,
-        //                                             //ctor ?? Null(typeof(Func<ScriptObject, object>)),
-        //                                             //extends ?? Null(typeof(HashSet<string>)),
-        //                                             //autoConstruct ?? Expression.Constant(true));
-        //     var assignObjExpr = Expression.Assign(objExpr, newExpr);
-        //     var invokeExpr = Expression.Invoke(ctor, objExpr);
-
-        //     return Expression.Block(typeof(object), new[]
-        //     {
-        //         objExpr
-        //     },
-        //     new Expression[]
-        //     {
-        //             assignObjExpr,
-        //             invokeExpr,
-        //             objExpr
-        //     });
-        // }
 
         public static Expression AwaitExpression(AstNode node, Scope scope)
         {

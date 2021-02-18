@@ -141,5 +141,13 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
             Assert.AreEqual(9, result.m9);
             Assert.AreEqual(10, result.m10);
         }
+
+        [TestMethod]
+        public void Object_Literal_ToString()
+        {
+            var result = Eval("({}).toString();");
+
+            Assert.AreEqual("object", result);
+        }
     }
 }

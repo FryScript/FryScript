@@ -9,8 +9,6 @@ namespace FryScript
     [ScriptableType("[params]")]
     public sealed class ScriptParams : ScriptObject, IEnumerable<object>
     {
-        private static readonly string ScriptTypeName = TypeProvider.Current.GetTypeName(typeof(ScriptParams));
-
         private readonly object[] _items;
 
         [ScriptableProperty("count")]
@@ -29,7 +27,6 @@ namespace FryScript
         }
 
         public ScriptParams(params object[] items)
-            : base(scriptType: ScriptTypeName)
         {
             if(items == null)
                 throw new ArgumentNullException("items");

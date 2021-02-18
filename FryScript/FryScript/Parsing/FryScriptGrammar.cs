@@ -354,7 +354,7 @@ namespace FryScript.Parsing
             NonGrammarTerminals.Add(new CommentTerminal("Comment", "//", "\r\n", "\n"));
             NonGrammarTerminals.Add(new CommentTerminal("Block comment", "/*", "*/"));
 
-            MarkReservedWords(Keywords.This, Keywords.ScriptExtend, Keywords.ScriptImport, Keywords.ScriptProto, Keywords.As, Keywords.Var, Keywords.Null, Keywords.Params, Keywords.Return, Keywords.If, Keywords.Else, Keywords.For, Keywords.New, Keywords.While, Keywords.ForEach, Keywords.In, Keywords.FunctionExtend, Keywords.Base, /*Keywords.Proto*/ Keywords.Has, Keywords.Try, Keywords.Catch, Keywords.Finally, Keywords.Throw, Keywords.Fibre, Keywords.Yield, /*Keywords.Begin,*/ Keywords.Yield, Keywords.Await, Keywords.From, Keywords.Out);
+            MarkReservedWords(Keywords.This, Keywords.ScriptExtend, Keywords.ScriptImport, Keywords.As, Keywords.Var, Keywords.Null, Keywords.Params, Keywords.Return, Keywords.If, Keywords.Else, Keywords.For, Keywords.New, Keywords.While, Keywords.ForEach, Keywords.In, Keywords.FunctionExtend, Keywords.Base, /*Keywords.Proto*/ Keywords.Has, Keywords.Try, Keywords.Catch, Keywords.Finally, Keywords.Throw, Keywords.Fibre, Keywords.Yield, /*Keywords.Begin,*/ Keywords.Yield, Keywords.Await, Keywords.From, Keywords.Out);
             MarkTransient(scriptHeader, semiStatement, literal, factor, unaryExpression, tupleName);
             MarkPunctuation(";", ":", ".", ",", "[", "]", "{", "}", "(", ")", "=>", "@", "?");
 

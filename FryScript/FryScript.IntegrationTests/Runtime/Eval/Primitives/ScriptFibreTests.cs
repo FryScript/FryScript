@@ -5,7 +5,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
     [TestClass]
     public class ScriptFibreTests : IntegrationTestBase
     {
-         [TestMethod]
+        [TestMethod]
         public void New_Fibre_Context()
         {
             Eval("@import \"fibre\" as f;");
@@ -15,6 +15,16 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
 
             Assert.IsInstanceOfType(result, typeof(ScriptFibre));
             Assert.AreNotEqual(f, result);
+        }
+
+        [TestMethod]
+        public void Fibre_ToString()
+        {
+            Eval("@import \"fibre\" as f;");
+
+            var result = Eval("f.toString();");
+
+            Assert.AreEqual("fibre", result);
         }
     }
 }

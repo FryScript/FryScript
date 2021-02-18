@@ -14,5 +14,15 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
 
             Assert.AreEqual(10, result.count);
         }
+
+        [TestMethod]
+        public void Array_ToString()
+        {
+            Eval("@import \"array\" as array;");
+
+            var result = Eval("(new array()).toString();");
+
+            Assert.AreEqual("array", result);
+        }
     }
 }

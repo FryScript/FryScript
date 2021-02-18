@@ -1,4 +1,5 @@
 ﻿using FryScript.Compilation;
+using FryScript.Helpers;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,7 +13,7 @@ namespace FryScript.Ast
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
             if (ChildNodes.Length == 0)
-                return null;
+                return ExpressionHelper.Null();
 
             ChildNodes = ChildNodes.OrderBy(n => n is ScriptExtendNode ? 0 : 1)
                 .ThenBy(n => n is ScriptImportNode ? 0 : 1)

@@ -18,7 +18,9 @@ namespace FryScript.UnitTests.Ast
         [TestMethod]
         public void GetExpression_No_Child_Nodes_Returns_Null()
         {
-            Assert.IsNull(Node.GetExpression(Scope));
+            var result = Node.GetExpression(Scope) as ConstantExpression;
+
+            Assert.IsNull(result.Value);
         }
 
         [TestMethod]

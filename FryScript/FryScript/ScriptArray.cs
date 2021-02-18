@@ -1,24 +1,20 @@
-﻿using System;
+﻿using FryScript.Helpers;
+using FryScript.HostInterop;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace FryScript
 {
-    using System.Collections;
-    using System.Dynamic;
-    using Helpers;
-    using HostInterop;
-
     [ScriptableType("array")]
     public class ScriptArray : ScriptObject, IEnumerable<object>
     {
-        private static readonly string ScriptTypeName = TypeProvider.Current.GetTypeName(typeof(ScriptArray));
-
         private readonly List<object> _items;
 
         [ScriptableProperty("count")]
         public int Count { get { return _items.Count; } }
 
-        [ScriptableIndexAttribute]
+        [ScriptableIndex]
         public object this[int index]
         {
             get
@@ -46,7 +42,6 @@ namespace FryScript
         }
 
         public ScriptArray(params object[] items)
-            : base(scriptType: ScriptTypeName)
         {
             ObjectCore.Builder = Builder.ScriptArrayBuilder;
 

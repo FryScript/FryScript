@@ -140,7 +140,7 @@ namespace FryScript.Ast
                 var location = ParseNode.Token.Location;
                 ex.Line = location.Line;
                 ex.Column = location.Column + ex.Column + interpolation.Start + Operators.Format.Length + 1;
-                throw ex;
+                throw;
             }
         } 
 

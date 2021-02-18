@@ -16,5 +16,15 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
             Assert.IsInstanceOfType(result, typeof(ScriptFunction));
             Assert.AreNotEqual(func, result);
         }
+
+        [TestMethod]
+        public void Function_ToString()
+        {
+            Eval("@import \"function\" as func;");
+
+            var result = Eval("func.toString();");
+
+            Assert.AreEqual("function", result);
+        }
     }
 }

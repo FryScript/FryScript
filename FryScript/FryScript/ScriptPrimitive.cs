@@ -12,6 +12,8 @@ namespace FryScript
 
         public Type TargetType => typeof(T);
 
+        public string ScriptType { get; }
+
         public ScriptPrimitive()
         {
             Target = (T)typeof(T).GetDefaultValue();

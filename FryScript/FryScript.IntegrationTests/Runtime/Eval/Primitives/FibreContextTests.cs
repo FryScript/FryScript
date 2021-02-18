@@ -16,5 +16,15 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
             Assert.IsInstanceOfType(result, typeof(ScriptFibreContext));
             Assert.AreNotEqual(fc, result);
         }
+
+        [TestMethod]
+        public void Fibre_Context_ToString()
+        {
+            Eval("@import \"fibre-context\" as fc;");
+
+            var result = Eval("fc.toString();");
+
+            Assert.AreEqual("fibre-context", result);
+        }
     }
 }

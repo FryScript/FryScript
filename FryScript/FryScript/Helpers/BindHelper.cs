@@ -153,19 +153,6 @@ namespace FryScript.Helpers
 
                 return new DynamicMetaObject(isTypeExpr, restrictions);
             }
-            // binder = binder ?? throw new ArgumentNullException(nameof(binder));
-            // target = target ?? throw new ArgumentNullException(nameof(target));
-            // arg = arg ?? throw new ArgumentNullException(nameof(arg));
-
-            // var isScriptType = ScriptTypeHelper.IsScriptType(target.Value, arg.Value);
-
-            // var restrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
-            //     .Merge(BindingRestrictions.GetTypeRestriction(arg.Expression, arg.LimitType));
-
-            // return new DynamicMetaObject(
-            //     Expression.Constant(isScriptType, typeof(object)),
-            //     restrictions
-            //     );
         }
 
         public static DynamicMetaObject BindExtendsOperation(ScriptExtendsOperationBinder binder, DynamicMetaObject target, DynamicMetaObject arg)
@@ -226,19 +213,6 @@ namespace FryScript.Helpers
             }
 
             throw new NotImplementedException();
-            // binder = binder ?? throw new ArgumentNullException(nameof(binder));
-            // target = target ?? throw new ArgumentNullException(nameof(target));
-            // arg = arg ?? throw new ArgumentNullException(nameof(arg));
-
-            // var extendsScriptType = ScriptTypeHelper.ExtendsScriptType(target.Value, arg.Value);
-
-            // var restrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
-            //     .Merge(BindingRestrictions.GetTypeRestriction(arg.Expression, arg.LimitType));
-
-            // return new DynamicMetaObject(
-            //     Expression.Constant(extendsScriptType, typeof(object)),
-            //     restrictions
-            //     );
         }
 
         public static DynamicMetaObject BindHasOperation(ScriptHasOperationBinder binder, DynamicMetaObject target)
