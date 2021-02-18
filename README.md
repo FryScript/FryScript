@@ -1,20 +1,24 @@
 # Introduction 
-FryScript is a dynamic scripting language built upon the .NET DLR that can be used to expose a scriptable API from within .NET applications. 
+FryScript is a dynamic scripting language built upon the .NET DLR that can be used to expose a scriptable API from within .NET applications.
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+You'll need the latest version of the dotnet sdk installed.
+
+All versions of the .NET framework and dotnet core are supported from version 4.5.2 of the .NET framework onwards. You may need to install the necessary targeting packages to ensure the build completes correctly.
 
 # Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Build
+Set CWD to the FryScript directory containg the FryScript.sln file. Then run the following command:
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+```
+dotnet build
+```
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+## Test
+There are currently two test projects. One for unit testing individual classes, and integration tests that test against the full script runtime.
+
+To run all tests set CWD to the FryScript directory containg the FryScript.sln file. Then run the following command:
+
+```
+dotnet test
+```
