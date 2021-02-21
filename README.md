@@ -24,4 +24,4 @@ dotnet test
 ```
 
 # Hello World
-A simple hello world tutorial can be found [here](HELLOWORLD.md)
+A simple hello world tutorial can be found [here](HELLO_WORLD.md)
