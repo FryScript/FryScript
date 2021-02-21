@@ -22,3 +22,6 @@ To run all tests set CWD to the FryScript directory containg the FryScript.sln f
 ```
 dotnet test
 ```
+
+# Hello World
+A simple hello world tutorial can be found [here](HELLOWORLD.md)
