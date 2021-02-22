@@ -5,7 +5,7 @@ FryScript is designed to make exposing a scriptable API layer within a .NET appl
 - The .NET 5.0 SDK.
 - Visual Studio Code.
 
-# let's get started!
+# Let's get started!
 ## Setting up the API
 Firstly let's spin up a new C# project in a new directory named "FryHelloWorld" in the working directory of your choice.
 
