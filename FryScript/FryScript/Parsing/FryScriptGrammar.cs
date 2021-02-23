@@ -21,7 +21,6 @@ namespace FryScript.Parsing
             var identifier = new IdentifierTerminal(NodeNames.Identifier);
             var @this = new NonTerminal(NodeNames.This, typeof (ThisNode));
             var @base = new NonTerminal(NodeNames.Base, typeof (BaseNode));
-            //var proto = new NonTerminal(NodeNames.Proto, typeof(ProtoNode));
             var script = new NonTerminal(NodeNames.Script, typeof (ScriptNode));
             var scriptHeaders = new NonTerminal(NodeNames.ScriptHeaders, typeof (ScriptHeadersNode));
             var scriptHeader = new NonTerminal(NodeNames.ScriptHeader);
@@ -30,7 +29,6 @@ namespace FryScript.Parsing
             var scriptImportFrom = new NonTerminal(NodeNames.ScriptImportFrom, typeof(ScriptImportFromNode));
             var importAlias = new NonTerminal(NodeNames.ImportAlias, typeof(ImportAliasNode));
             var importAliasList = new NonTerminal(NodeNames.ImportAliasList, typeof(ImportAliasListNode));
-            //var scriptProto = new NonTerminal(NodeNames.ScriptProto, typeof(ScriptProtoNode));
             var statements = new NonTerminal(NodeNames.Statements, typeof (StatementsNode));
             var statement = new NonTerminal(NodeNames.Statement, typeof(StatementNode));
             var semiStatement = new NonTerminal(NodeNames.SemiStatement);
@@ -111,7 +109,7 @@ namespace FryScript.Parsing
             scriptHeader.Rule = scriptExtend
                                 | scriptImport
                                 | scriptImportFrom;
-                                //| scriptProto;
+
             importAlias.Rule = identifier + Keywords.As + identifier
                 | identifier;
 
@@ -120,7 +118,6 @@ namespace FryScript.Parsing
             scriptExtend.Rule = ToTerm(Keywords.ScriptExtend) + stringLiteral + ";";
             scriptImport.Rule = ToTerm(Keywords.ScriptImport) + stringLiteral + Keywords.As + identifier + ";";
             scriptImportFrom.Rule = ToTerm(Keywords.ScriptImport) + importAliasList + Keywords.From + stringLiteral + ";";
-            //scriptProto.Rule = ToTerm(Keywords.ScriptProto) + blockStatement;
 
             statements.Rule = MakeStarRule(statements, statement);
 
@@ -310,7 +307,6 @@ namespace FryScript.Parsing
                           | @this
                           | @params
                           | @base;
-                          //| @proto;
 
             parenExpression.Rule = ToTerm("(") + expression + PreferShiftHere() + ")" + PreferShiftHere();
 
@@ -347,7 +343,6 @@ namespace FryScript.Parsing
             @this.Rule = ToTerm(Keywords.This);
             @params.Rule = ToTerm(Keywords.Params);
             @base.Rule = ToTerm(Keywords.Base);
-            //proto.Rule = ToTerm(Keywords.Proto);
 
             Root = script;
 

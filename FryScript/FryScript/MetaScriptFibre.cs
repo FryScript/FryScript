@@ -24,19 +24,5 @@ namespace FryScript
 
             return BindHelper.BindInvoke(binder, this, delegateTarget, args);
         }
-
-        //public override DynamicMetaObject BindAwaitOperation(ScriptAwaitOperationBinder binder, DynamicMetaObject target, DynamicMetaObject[] args)
-        //{
-        //    var delegateTarget = new DynamicMetaObject(ScriptObjectTargetExpr, BindingRestrictions.Empty, ScriptObject.Target);
-
-        //    return BindHelper.BindInvoke(binder, this, delegateTarget, args);
-        //}
-
-        //public override DynamicMetaObject BindBeginOperation(ScriptBeginOperationBinder binder, DynamicMetaObject target, DynamicMetaObject[] args)
-        //{
-        //    var delegateTarget = new DynamicMetaObject(ScriptObjectTargetExpr, BindingRestrictions.Empty, ScriptObject.Target);
-
-        //    return BindHelper.BindInvoke(binder, this, delegateTarget, args);
-        //}
     }
 }

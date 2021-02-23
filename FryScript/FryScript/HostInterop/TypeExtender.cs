@@ -16,7 +16,7 @@ namespace FryScript.HostInterop
 
         public TypeExtender(Type extendedType)
         {
-            _extendedType = extendedType ?? throw new ArgumentNullException("extendedType");
+            _extendedType = extendedType ?? throw new ArgumentNullException(nameof(extendedType));
         }
 
         public void RegisterBinaryOperator(ScriptableBinaryOperater operation, MethodInfo methodInfo)
@@ -59,7 +59,6 @@ namespace FryScript.HostInterop
             
             EnsureExtendedType(methodInfo, parameterInfos);
             EnsureReturnType(methodInfo);
-            //EnsureParameterCount(methodInfo, parameterInfos, 1);
 
             if (_typeOperators.TryGetValue(operation, out MethodInfo existingMethod))
                 throw new InvalidOperationException(
@@ -156,7 +155,7 @@ namespace FryScript.HostInterop
                 throw new ArgumentException($"Method {methodInfo.Name} declared by {methodInfo.DeclaringType.FullName} must be an extension method to use it as a script extension", nameof(methodInfo));
         }
 
-        private void EnsureParameterCount(MethodInfo methodInfo, ParameterInfo[] parameterInfos, int count)
+        private static void EnsureParameterCount(MethodInfo methodInfo, ParameterInfo[] parameterInfos, int count)
         {
             if (parameterInfos.Length != count)
                 throw new ArgumentException($"Method {methodInfo.Name} of type {methodInfo.DeclaringType.FullName} must have exactly {count} parameters",nameof(methodInfo));

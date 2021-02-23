@@ -11,8 +11,6 @@ namespace FryScript.Compilation
     public class CompilerContext : AstContext
     {
         internal HashSet<string> Extends = new HashSet<string>();
-        //internal Func<ScriptObject, object> ProtoCtor;
-        //internal ScriptObjectReference ProtoReference;
         internal List<ImportInfo> ImportInfos = new List<ImportInfo>();
 
         public string Name { get; }

@@ -291,7 +291,7 @@ namespace FryScript.UnitTests
         [ExpectedException(typeof(ArgumentException))]
         public void Import_Name_Already_Imported()
         {
-            _registry.TryGetObject(_name, out IScriptObject obj).Returns(true);
+            _registry.TryGetObject(_name, out _).Returns(true);
 
             _runtime.Import(_name, _obj);
         }
@@ -299,7 +299,7 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Import_Instance_Imported_Successfully()
         {
-            _registry.TryGetObject(_name, out IScriptObject obj).Returns(false);
+            _registry.TryGetObject(_name, out _).Returns(false);
 
             var result = _runtime.Import(_name, _obj);
 

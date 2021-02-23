@@ -60,7 +60,11 @@ namespace FryScript.Helpers
         {
             instance = instance ?? throw new ArgumentNullException(nameof(instance));
             value = value ?? throw new ArgumentNullException(nameof(value));
-            indexes = indexes ?? new Expression[0];
+#if NET452
+            indexes ??= new Expression[0];
+#else
+            indexes ??= Array.Empty<Expression>();
+#endif
 
             var binder = BinderCache.Current.SetIndexBinder(indexes.Length);
             var args = new List<Expression> { instance };
@@ -72,7 +76,11 @@ namespace FryScript.Helpers
         public static Expression DynamicGetIndex(Expression instance, params Expression[] indexes)
         {
             instance = instance ?? throw new ArgumentNullException(nameof(instance));
-            indexes = indexes ?? new Expression[0];
+#if NET452
+            indexes ??= new Expression[0];
+#else
+            indexes ??= Array.Empty<Expression>();
+#endif
 
             var binder = BinderCache.Current.GetIndexBinder(indexes.Length);
             var args = new List<Expression> { instance };
@@ -83,7 +91,11 @@ namespace FryScript.Helpers
         public static Expression DynamicInvoke(Expression instance, params Expression[] args)
         {
             instance = instance ?? throw new ArgumentNullException(nameof(instance));
-            args = args ?? new Expression[0];
+#if NET452
+            args ??= new Expression[0];
+#else
+            args ??= Array.Empty<Expression>();
+#endif
 
             var count = args == null
                 ? 0
@@ -108,7 +120,11 @@ namespace FryScript.Helpers
         {
             instance = instance ?? throw new ArgumentNullException(nameof(instance));
             name = name ?? throw new ArgumentNullException(nameof(name));
-            args = args ?? new Expression[0];
+#if NET452
+            args ??= new Expression[0];
+#else
+            args ??= Array.Empty<Expression>();
+#endif
 
             var binder = BinderCache.Current.InvokeMemberBinder(name, args.Length);
             var args2 = new List<Expression> { instance };
@@ -119,7 +135,11 @@ namespace FryScript.Helpers
         public static Expression DynamicCreateInstance(Expression instance, params Expression[] args)
         {
             instance = instance ?? throw new ArgumentNullException(nameof(instance));
-            args = args ?? new Expression[0];
+#if NET452
+            args ??= new Expression[0];
+#else
+            args ??= Array.Empty<Expression>();
+#endif
 
             var binder = BinderCache.Current.CreateInstanceBinder(args.Length);
             var args2 = new List<Expression> { instance };
@@ -223,25 +243,5 @@ namespace FryScript.Helpers
             yieldLabels.Add(yieldLabel);
             return yieldBlock;
         }
-
-        // private static Expression GetExtensionCtor(Expression targetExpr, Type extensionType, MethodInfo methodInfo)
-        // {
-        //     var paramExpr = Expression.Parameter(extensionType);
-        //     var newExtensionExpr = Expression.New(extensionType.GetConstructor(new Type[0]));
-        //     var assignParamExpr = Expression.Assign(paramExpr, newExtensionExpr);
-        //     var getTargetExpr = Expression.PropertyOrField(paramExpr, "Target");
-        //     var setTargetExpr = Expression.Assign(getTargetExpr, Expression.Convert(targetExpr, typeof(object)));
-
-        //     var newFuncExpr = ScriptableMethodHelper.CreateMethod(paramExpr, methodInfo);
-
-        //     var blockExpr = Expression.Block(
-        //         typeof(object),
-        //         new[] { paramExpr },
-        //         assignParamExpr,
-        //         setTargetExpr,
-        //         newFuncExpr);
-
-        //     return blockExpr;
-        // }
     }
 }

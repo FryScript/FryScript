@@ -276,7 +276,7 @@ namespace FryScript.Helpers
 
         public static ArgumentException TypeNotScriptable(Type type, string argName)
         {
-            throw new ArgumentException($"Type {type.FullName} must be decorated with a {typeof(ScriptableTypeAttribute).FullName}", nameof(type));
+            throw new ArgumentException($"Type {type.FullName} must be decorated with a {typeof(ScriptableTypeAttribute).FullName}", argName);
         }
     }
 }

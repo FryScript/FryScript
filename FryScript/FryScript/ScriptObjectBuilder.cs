@@ -18,12 +18,12 @@ namespace FryScript
 
             var parent = instance?.ObjectCore?.Builder;
 
-            var builder = method.Invoke(null, new object[] { name, instance, parent }) as IScriptObjectBuilder;
+            var builder = method.Invoke(null, new object[] { name, parent }) as IScriptObjectBuilder;
 
             return builder;
         }
 
-        private static ScriptObjectBuilder<T> InternalGetInstanceBuilder<T>(string name, T instance, IScriptObjectBuilder parent)
+        private static ScriptObjectBuilder<T> InternalGetInstanceBuilder<T>(string name, IScriptObjectBuilder parent)
             where T : IScriptObject, new()
         {
             var uri = RuntimeUri.GetRuntimeUri(name);

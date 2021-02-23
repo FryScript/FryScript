@@ -22,7 +22,7 @@ namespace FryScript.Helpers
                   && p.PropertyType == typeof(object)
             select p).Single();
 
-        private static DynamicMetaObject GetBindBinaryOperation(MethodInfo opInfo, DynamicMetaObject left, ScriptableBinaryOperater op, DynamicMetaObject right)
+        private static DynamicMetaObject GetBindBinaryOperation(MethodInfo opInfo, DynamicMetaObject left, DynamicMetaObject right)
         {
             var parameters = opInfo.GetParameters();
             var leftExpr = Expression.Convert(left.Expression, parameters[0].ParameterType);
@@ -50,9 +50,7 @@ namespace FryScript.Helpers
             if (leftType == rightType)
             {
                 if (TypeProvider.Current.TryGetBinaryOperator(target.LimitType, scriptableOp, arg.LimitType, out opInfo))
-                    return GetBindBinaryOperation(opInfo, target, scriptableOp, arg);
-
-                var convertType = leftType;
+                    return GetBindBinaryOperation(opInfo, target, arg);
 
                 var leftExpr = Expression.Convert(target.Expression, target.LimitType);
                 var rightExpr = Expression.Convert(arg.Expression, arg.LimitType);
@@ -69,7 +67,7 @@ namespace FryScript.Helpers
             if (leftType != rightType && TypeProvider.Current.IsNumericType(leftType) && TypeProvider.Current.IsNumericType(rightType))
             {
                 if (TypeProvider.Current.TryGetBinaryOperator(target.LimitType, scriptableOp, arg.LimitType, out opInfo))
-                    return GetBindBinaryOperation(opInfo, target, scriptableOp, arg);
+                    return GetBindBinaryOperation(opInfo, target, arg);
 
                 var convertType = TypeProvider.Current.GetHighestNumericType(leftType, rightType);
 
@@ -92,14 +90,14 @@ namespace FryScript.Helpers
             }
 
             if (TypeProvider.Current.TryGetBinaryOperator(typeof(object), (ScriptableBinaryOperater)binder.Operation, typeof(object), out opInfo))
-                return GetBindBinaryOperation(opInfo, target, scriptableOp, arg);
+                return GetBindBinaryOperation(opInfo, target, arg);
 
             throw ExceptionHelper.InvalidBinaryOperation(binder.Operation, target.LimitType, arg.LimitType);
         }
 
         public static DynamicMetaObject BindIsOperation(ScriptIsOperationBinder binder, DynamicMetaObject target, DynamicMetaObject arg)
         {
-            binder = binder ?? throw new ArgumentNullException(nameof(binder));
+            _ = binder ?? throw new ArgumentNullException(nameof(binder));
             target = target ?? throw new ArgumentNullException(nameof(target));
             arg = arg ?? throw new ArgumentNullException(nameof(arg));
 
@@ -157,7 +155,7 @@ namespace FryScript.Helpers
 
         public static DynamicMetaObject BindExtendsOperation(ScriptExtendsOperationBinder binder, DynamicMetaObject target, DynamicMetaObject arg)
         {
-            binder = binder ?? throw new ArgumentNullException(nameof(binder));
+            _ = binder ?? throw new ArgumentNullException(nameof(binder));
             target = target ?? throw new ArgumentNullException(nameof(target));
             arg = arg ?? throw new ArgumentNullException(nameof(arg));
 
@@ -220,9 +218,7 @@ namespace FryScript.Helpers
             binder = binder ?? throw new ArgumentNullException(nameof(binder));
             target = target ?? throw new ArgumentNullException(nameof(target));
 
-            var hasMember = target.Value != null
-                ? TypeProvider.Current.HasMember(target.LimitType, binder.Name) :
-                false;
+            var hasMember = target.Value != null && TypeProvider.Current.HasMember(target.LimitType, binder.Name);
 
             return new DynamicMetaObject(
                     Expression.Constant(hasMember, typeof(object)),

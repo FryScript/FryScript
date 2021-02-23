@@ -31,18 +31,19 @@ namespace FryScript.UnitTests
 
             public static implicit operator ImplicitTarget(Target target)
             {
+                _ = target ?? throw new ArgumentNullException(nameof(target));
                 return new ImplicitTarget();
             }
 
             public static explicit operator ExplicitTarget(Target target)
             {
+                _ = target ?? throw new ArgumentNullException(nameof(target));
                 return new ExplicitTarget();
             }
         }
 
         private class ImplicitTarget
         {
-            
         }
 
         private class ExplicitTarget
@@ -83,9 +84,10 @@ namespace FryScript.UnitTests
         [TestMethod]
         public void Set_Object_Member_Get_Dynamic_Member()
         {
-            var target = new Target();
-
-            target.Name = "test";
+            var target = new Target
+            {
+                Name = "test"
+            };
 
             Assert.AreEqual("test", (target as dynamic).name);
         }
@@ -145,105 +147,6 @@ namespace FryScript.UnitTests
             }
 
             Assert.AreEqual(112, _scriptObject.ObjectCore.MemberData.Length);
-        }
-
-        // [TestMethod]
-        
-        // public void SetMemberThreadingTest()
-        // {
-        //     const int numLoops = 100;
-
-        //     var task1 = Task.Run(() =>
-        //     {
-        //         for (var i = 0; i < numLoops; i++)
-        //         {
-        //             _dynamicObj["i" + i] = "i" + i;
-        //         }
-        //     });
-
-        //     var task2 = Task.Run(() =>
-        //     {
-        //         for (var j = 0; j < numLoops; j++)
-        //         {
-        //             _dynamicObj["j" + j] = "j" + j;
-        //         }
-        //     });
-
-        //     Task.WaitAll(task1, task2);
-
-        //     for (var x = 0; x < numLoops; x++)
-        //     {
-        //         Assert.AreEqual(_dynamicObj["i" + x], "i" + x);
-        //         Assert.AreEqual(_dynamicObj["j" + x], "j" + x);
-        //     }
-        // }
-
-        // [TestMethod]
-        // [Ignore]
-        // public void GetMemberThreadingTest()
-        // {
-        //     const int numLoops = 100;
-
-        //     var task1 = Task.Run(() =>
-        //     {
-        //         for (var i = 0; i < numLoops; i++)
-        //         {
-        //             _dynamicObj["i" + i] = "i" + i;
-        //             Assert.AreEqual("i" + i, _dynamicObj["i" + i]);
-        //         }
-        //     });
-
-        //     var task2 = Task.Run(() =>
-        //     {
-        //         for (var j = 0; j < numLoops; j++)
-        //         {
-        //             _dynamicObj["j" + j] = "j" + j;
-        //             Assert.AreEqual("j" + j, _dynamicObj["j" + j]);
-        //         }
-        //     });
-
-        //     Task.WaitAll(task1, task2);
-        // }
-
-        //[TestMethod]
-        public void ScriptObjVsExpando()
-        {
-            dynamic expando = new ExpandoObject();
-            //IDictionary<string, object> expando = new ExpandoObject();
-            expando.init = 100;
-
-            dynamic so = new ScriptObject();
-            so.init = 100;
-
-            for(var x = 0; x < 100; x++)
-            {
-                const int numLoops = 100;
-
-                var expandoSw = new Stopwatch();
-                expandoSw.Start();
-                for (var i = 0; i < numLoops; i++)
-                {
-                    //expando.init = 100;
-                    var y = expando.init;
-                    //expando.test = i;
-                    //expando[i.ToString()] = i;
-                }
-                expandoSw.Stop();
-
-                var objectSw = new Stopwatch();
-                objectSw.Start();
-                for (var i = 0; i < numLoops; i++)
-                {
-                    //so.init = 100;
-                    var p = so.init;
-                    //so.test = i;
-                    //so[i.ToString()] = i;
-                }
-                objectSw.Stop();
-
-                expandoSw.Reset();
-                objectSw.Reset();
-            }
         }
     }
 }

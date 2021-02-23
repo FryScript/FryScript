@@ -5,17 +5,29 @@ namespace FryScript
 {
     public static class RuntimeUri
     {
-        public static Uri ScriptObjectUri = GetRuntimeUri(typeof(ScriptObject));
+        private readonly static Uri _scriptObjectUri = GetRuntimeUri(typeof(ScriptObject));
 
-        public static Uri ScriptArrayUri = GetRuntimeUri(typeof(ScriptArray));
+        private readonly static Uri _scriptArrayUri = GetRuntimeUri(typeof(ScriptArray));
 
-        public static Uri ScriptErrorUri = GetRuntimeUri(typeof(ScriptError));
+        private readonly static Uri _scriptErrorUri = GetRuntimeUri(typeof(ScriptError));
 
-        public static Uri ScriptFibreUri = GetRuntimeUri(typeof(ScriptFibre));
+        private readonly static Uri _scriptFibreUri = GetRuntimeUri(typeof(ScriptFibre));
         
-        public static Uri ScriptFibreContextUri = GetRuntimeUri(typeof(ScriptFibreContext));
+        private readonly  static Uri _scriptFibreContextUri = GetRuntimeUri(typeof(ScriptFibreContext));
 
-        public static Uri ScriptFunctionUri = GetRuntimeUri(typeof(ScriptFunction));
+        private readonly static Uri _scriptFunctionUri = GetRuntimeUri(typeof(ScriptFunction));
+
+        public static Uri ScriptObjectUri => _scriptObjectUri;
+
+        public static Uri ScriptArrayUri => _scriptArrayUri;
+
+        public static Uri ScriptErrorUri => _scriptErrorUri;
+
+        public static Uri ScriptFibreUri => _scriptFibreUri;
+
+        public static Uri ScriptFibreContextUri => _scriptFibreContextUri;
+
+        public static Uri ScriptFunctionUri => _scriptFunctionUri;
 
         public static Uri GetRuntimeUri(Type type)
         {

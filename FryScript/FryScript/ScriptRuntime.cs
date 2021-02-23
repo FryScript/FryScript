@@ -152,8 +152,7 @@ namespace FryScript
                 throw new ArgumentNullException(nameof(name));
 
             instance = instance ?? throw new ArgumentNullException(nameof(instance));
-
-            if (_registry.TryGetObject(name, out IScriptObject obj))
+            if (_registry.TryGetObject(name, out _))
                 throw new ArgumentException($"A script named '{name}' already exists", nameof(name));
 
             instance.ObjectCore.Builder = ScriptObjectBuilder.GetInstanceBuilder(name, instance);

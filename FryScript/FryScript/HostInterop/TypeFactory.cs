@@ -78,8 +78,6 @@ namespace FryScript.HostInterop
 
             var newType = context.NewType.CreateTypeInfo().AsType();
 
-            //_assemblyBuilder.Save("FryScript.Runtime.dll");
-
             return newType;
         }
 
@@ -223,10 +221,7 @@ namespace FryScript.HostInterop
             var invokeTargetField = invokeField.FieldType.GetField("Target");
             il.Emit(OpCodes.Ldfld, invokeTargetField);
             il.Emit(OpCodes.Ldsfld, invokeField);
-
-            //il.Emit(OpCodes.Ldarg_0);
             il.Emit(OpCodes.Ldarg_0);
-            //il.Emit(OpCodes.Call, context.NewProperties["Script"].GetGetMethod());
 
             baseParameters
                 .Select((p, i) => new
@@ -372,7 +367,11 @@ namespace FryScript.HostInterop
             if (context.NewType.GetTypeInfo().ImplementedInterfaces.Any(i => i == typeof(IScriptObject)))
             {
                 il.Emit(OpCodes.Ldarg_0);
+#if NET452
                 il.Emit(OpCodes.Newobj, typeof(ObjectCore).GetTypeInfo().GetConstructor(new Type[0]));
+#else
+                il.Emit(OpCodes.Newobj, typeof(ObjectCore).GetTypeInfo().GetConstructor(Array.Empty<Type>()));
+#endif
                 il.Emit(OpCodes.Stfld, context.NewFields.First(f => f.Value.FieldType == typeof(ObjectCore)).Value);
             }
             if (paramterlessCtor != null)

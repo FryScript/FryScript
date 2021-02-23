@@ -17,8 +17,6 @@ namespace FryScript.HostInterop
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            //return CreateNativeCtor(type);
-
             return new Func<ScriptObject, object>(s => s);
         }
 
@@ -41,33 +39,6 @@ namespace FryScript.HostInterop
             var invokeCtorExpr = Expression.Invoke(ctorExpr);
 
             var exprs = new List<Expression> { WrapNativeType(type, thisExpr, invokeCtorExpr) };
-            exprs.AddRange(WrapMethods(type, thisExpr));
-            exprs.Add(thisExpr);
-
-            var bodyExpr = Expression.Block(exprs);
-
-            var lambdaExpr = Expression.Lambda<Func<ScriptObject, object>>(bodyExpr, thisExpr);
-
-            return lambdaExpr.Compile();
-        }
-
-        private static Func<ScriptObject, object> CreateNativeCtor(Type type)
-        {
-            if (type.GetTypeInfo().ImplementedInterfaces.All(i => i != typeof(IScriptable)))
-                throw new ArgumentException(string.Format("Type {0} must implement interface {1}", type.FullName, typeof(IScriptable).FullName), "type");
-
-            var typeCtor =
-                type.GetTypeInfo()
-                    .DeclaredConstructors.SingleOrDefault(c => c.GetParameters().Length == 0 && c.IsPublic);
-
-            if (typeCtor == null)
-                throw new ArgumentException(string.Format("Type {0} must have a public parameterless constructor", type.FullName), "type");
-
-            var thisExpr = Expression.Parameter(typeof(ScriptObject), Keywords.This);
-
-            var newTypeExpr = Expression.New(typeCtor);
-
-            var exprs = new List<Expression> { WrapNativeType(type, thisExpr, newTypeExpr) };
             exprs.AddRange(WrapMethods(type, thisExpr));
             exprs.Add(thisExpr);
 

@@ -60,11 +60,6 @@ namespace FryScript
         {
             var members = TypeProvider.Current.GetMemberNames(source.GetType());
 
-            //if (HasTarget)
-            //{
-            //    members = members.Union(TypeProvider.Current.GetMemberNames(TargetType));
-            //}
-
             members = members.Union(source.ObjectCore.MemberIndex.Keys);
 
             return members;

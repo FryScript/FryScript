@@ -18,17 +18,11 @@ namespace FryScript.Ast
             ChildNodes = ChildNodes.OrderBy(n => n is ScriptExtendNode ? 0 : 1)
                 .ThenBy(n => n is ScriptImportNode ? 0 : 1)
                 .ThenBy(n => n is ScriptImportFromNode ? 0 : 1).ToArray();
-                //.ThenBy(n => n is ScriptProtoNode ? 0 : 1).ToArray();
 
             var extendNodes = ChildNodes.Where(c => c is ScriptExtendNode).ToList();
 
             if (extendNodes.Count > 1)
                 throw CompilerException.FromAst("Headers can only include one extend statement", extendNodes.Last());
-
-            //var protoNodes = ChildNodes.Where(n => n.GetType() == typeof (ScriptProtoNode)).ToList();
-
-            //if (protoNodes.Count > 1)
-            //    throw CompilerException.FromAst("Headers can only include one proto statement", protoNodes.Last());
 
             return GetChildExpression(scope);
         }

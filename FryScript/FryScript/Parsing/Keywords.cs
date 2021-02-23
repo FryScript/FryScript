@@ -11,7 +11,6 @@ namespace FryScript.Parsing
         public const string This = "this";
         public const string ScriptExtend = "@extend";
         public const string ScriptImport = "@import";
-        //public const string ScriptProto = "@proto";
         public const string As = "as";
         public const string Var = "var";
         public const string Null = "null";
@@ -32,7 +31,6 @@ namespace FryScript.Parsing
         public const string Base = "base";
         public const string Is = "is";
         public const string Extends = "extends";
-        //public const string Proto = "proto";
         public const string Has = "has";
         public const string Try = "try";
         public const string Catch = "catch";
@@ -40,8 +38,6 @@ namespace FryScript.Parsing
         public const string Throw = "throw";
         public const string Fibre = "fibre";
         public const string Yield = "yield";
-        //public const string Begin = "begin";
-        //public const string Resume = "resume";
         public const string Await = "await";
         public const string From = "from";
         public const string Out = "out";
