@@ -2,6 +2,57 @@
 
 The following document provides information the available features of Fry Script.
 
+# Primitive types
+Fry Script supports the following primitive types.
+
+## Int32
+A 32 bit integer. Can be used in scripts via numeric constants and also imported for the purposes of type comparison.
+
+```
+// import the int 32 type into a script
+@import "int" as int;
+
+// numeric constant examples
+100;
+500;
+```
+
+## Float
+A single-precision floating point number. Can be used in scripts via float constants defined using a decimal point and also imported for the purposes of type comparison.
+
+```
+// import the float type into a script
+@import "float" as float;
+
+// float constant examples
+1.5;
+99.9;
+```
+
+## Boolean
+A true or false value. Can be used in scripts via boolean constants ```true``` and ```false``` and also imported for the purposes of type comparison.
+
+```
+// import the boolean type into a script
+@import "boolean" as bool;
+
+// boolean constants
+true;
+false;
+```
+
+## String
+A string of characters. Can be used in scripts via string constants represented by a collection of words enclosed in double quotes, and also imported for the purposes of type comparison;
+
+```
+// import the string type into a script
+@import "string" as string;
+
+// string contant examples
+"i am a string";
+"yes you are!"
+```
+
 # Operators
 
 ## Mathematical operators
@@ -82,4 +133,38 @@ Fry Script supports the following conditional operators. They are used with a le
 
 // Equates to false
 8 <= 10;
+```
+
+## Logical operators
+
+The following logical operators are supported. They are used with a left and right operand, both operands typically be boolean values.
+
+* && logical and.
+* || logical or.
+
+```
+// && will be true when both the left and right operands are true
+
+condition1 = true;
+condition2 = true;
+
+// equates to true
+condition1 && condition2;
+
+// || will be true if either the left or right operands are true
+condition1 = false;
+condition2 = true;
+
+// equates to true
+condition1 || condition2;
+```
+
+As well as working against boolean types the logical operators will also treat ```null``` as being false.
+
+```
+// equates false
+null && true;
+
+// equates to true
+null || true;
 ```
