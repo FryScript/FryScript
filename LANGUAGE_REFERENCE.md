@@ -1,58 +1,93 @@
 # Introduction
 
-The following document provides information the available features of Fry Script.
+The following document provides information about the available features of Fry Script.
 
 # Primitive types
 Fry Script supports the following primitive types.
 
 ## Int32
-A 32 bit integer. Can be used in scripts via numeric constants and also imported for the purposes of type comparison.
+A 32 bit integer. Can be used in scripts via numeric literals and also imported for the purposes of type comparison.
 
 ```
 // import the int 32 type into a script
 @import "int" as int;
 
-// numeric constant examples
+// numeric literals examples
 100;
 500;
 ```
 
 ## Float
-A single-precision floating point number. Can be used in scripts via float constants defined using a decimal point and also imported for the purposes of type comparison.
+A single-precision floating point number. Can be used in scripts via float literals defined using a decimal point and also imported for the purposes of type comparison.
 
 ```
 // import the float type into a script
 @import "float" as float;
 
-// float constant examples
+// float literal examples
 1.5;
 99.9;
 ```
 
 ## Boolean
-A true or false value. Can be used in scripts via boolean constants ```true``` and ```false``` and also imported for the purposes of type comparison.
+A true or false value. Can be used in scripts via boolean literals ```true``` and ```false``` and also imported for the purposes of type comparison.
 
 ```
 // import the boolean type into a script
 @import "boolean" as bool;
 
-// boolean constants
+// boolean literal examples
 true;
 false;
 ```
 
 ## String
-A string of characters. Can be used in scripts via string constants represented by a collection of words enclosed in double quotes, and also imported for the purposes of type comparison;
+A string of characters. Can be used in scripts via string literals represented by a collection of words enclosed in double quotes, and also imported for the purposes of type comparison;
 
 ```
 // import the string type into a script
 @import "string" as string;
 
-// string contant examples
+// string literal examples
 "i am a string";
 "yes you are!"
 ```
 
+## Object
+A grouping of related data and functionality. Can be used in scripts via object literals that contain named properties, and also imported for the purposes of type comparison. An object literal defines properties as a collection of key value pairs seperated be a colon, with each pair seperated by a comma.
+
+```
+// import the object type into a script
+@import "object" as object;
+
+// object literal examples
+
+// empty object
+{};
+
+// object with properties
+{
+    name: "The obeject",
+    power: 100
+};
+```
+
+## Array
+A collection of items. Can be used in scripts via array literals and also imported for the purposes of type comparison.
+
+```
+// import the array type into a script
+@import "array" as array;
+
+// array literal examples
+
+// empty array
+[];
+
+// array with items
+[1, 2, 3, 4];
+
+```
 # Operators
 
 ## Mathematical operators
@@ -137,14 +172,14 @@ Fry Script supports the following conditional operators. They are used with a le
 
 ## Logical operators
 
-The following logical operators are supported. They are used with a left and right operand, both operands typically be boolean values.
+The following logical operators are supported. They are used with a left and right operand, both operands are typically boolean values.
 
 * && logical and.
 * || logical or.
+* ! logial not.
 
 ```
 // && will be true when both the left and right operands are true
-
 condition1 = true;
 condition2 = true;
 
@@ -157,6 +192,10 @@ condition2 = true;
 
 // equates to true
 condition1 || condition2;
+
+// equates to false
+condition1 = true;
+!condition1;
 ```
 
 As well as working against boolean types the logical operators will also treat ```null``` as being false.
