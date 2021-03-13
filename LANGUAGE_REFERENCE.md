@@ -88,6 +88,53 @@ A collection of items. Can be used in scripts via array literals and also import
 [1, 2, 3, 4];
 
 ```
+
+## Function
+A block of reusable code than can be executed, functions can accept arguments that can be operated on by the function. Can be used in scripts via function literals and also imported for the purposes of type comparison.
+
+```
+// import the function type into a script
+@import "function" as function;
+
+// function literal examples.
+
+// empty function
+() => {};
+
+// empty functiom with a single argument
+arg => {};
+
+// empty function with two arguments
+(arg1, arg2) => {};
+
+// function with a single argument and a return value
+arg1 => arg1 + 1;
+
+// function with body block with two arguments and a return value
+(arg1, arg2) => {
+    return arg1 + arg2;
+};
+```
+
+## Fibre
+A block of reusable code that can be executed, fibres can accept arguments that can be operated on by the fibre. Cab be used in scripts via fibre literals and also imported for the purposes of type comparison.
+```
+// import the fibre type into a script
+@import "fibre" as f;
+
+// fibre literal examples
+
+// empty fibre
+fibre () => {};
+
+// empty fibre with a single argument
+fibre arg => {};
+
+// fibre with body block with one argument and a yield return value
+fibre arg => {
+    yield return arg;
+};
+```
 # Operators
 
 ## Mathematical operators
@@ -114,6 +161,7 @@ All of the mathematical operators have corresponding assignment operators.
 * \-= subtraction assignment.
 * \*= multiplication assignment.
 * \/= division assignment.
+* %= modulo assignment.
 
 These operators must be used with an indentifier as the left hand operand.
 
@@ -206,4 +254,27 @@ null && true;
 
 // equates to true
 null || true;
+```
+
+## Object interrogation operators
+
+Fry Script provides the following operators for querying the type and properties of an object.
+
+* has. 
+* is.
+
+```
+@import "object" as object;
+
+var obj = {
+    name: "the object"
+};
+
+// has operator examples
+
+// equates to true
+obj has name;
+
+// equate to false
+obj has age;
 ```

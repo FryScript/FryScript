@@ -16,7 +16,7 @@ namespace FryScript.IntegrationTests.Runtime.Eval.BinaryOperations
         {
             Eval("this.member = 90;");
 
-            Assert.IsTrue(Eval("this has member;"));
+            Assert.IsTrue(Eval("this has z;"));
         }
 
         [TestMethod]

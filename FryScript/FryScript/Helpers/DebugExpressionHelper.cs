@@ -1,11 +1,13 @@
 ﻿using FryScript.Compilation;
 using FryScript.Debugging;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace FryScript.Helpers
 {
+    [ExcludeFromCodeCoverage]
     public static class DebugExpressionHelper
     {
         public static Expression GetCallStackExpression(Scope scope, Func<Scope, Expression> func, string name, int line, int column, int length, DebugHook debugHook, DebugEvent pushEvent = DebugEvent.PushStackFrame, DebugEvent popEvent = DebugEvent.PopStackFrame)

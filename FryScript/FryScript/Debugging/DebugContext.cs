@@ -1,5 +1,8 @@
-﻿namespace FryScript.Debugging
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace FryScript.Debugging
 {
+    [ExcludeFromCodeCoverage]
     public struct DebugContext
     {
         public DebugEvent DebugEvent;
