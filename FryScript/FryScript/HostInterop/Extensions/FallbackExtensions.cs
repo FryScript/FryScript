@@ -15,5 +15,11 @@ namespace FryScript.HostInterop.Extensions
         {
             return CallSiteCache.Current.HasMember(name, source);
         }
+
+        [ScriptableMethod("getMembers")]
+        public static object GetMembers(this object source)
+        {
+            return CallSiteCache.Current.GetMembers(source);
+        }
     }
 }
