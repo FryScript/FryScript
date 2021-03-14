@@ -1,5 +1,4 @@
 ﻿using FryScript.CallSites;
-using FryScript.HostInterop;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -58,11 +57,7 @@ namespace FryScript
 
         public static IEnumerable<string> GetMembers(this IScriptObject source)
         {
-            var members = TypeProvider.Current.GetMemberNames(source.GetType());
-
-            members = members.Union(source.ObjectCore.MemberIndex.Keys);
-
-            return members;
+            return CallSiteCache.Current.GetMembers(source).Cast<string>();
         }
 
         public static bool HasMemberOfType(this IScriptObject source, string name, Type type)
@@ -90,17 +85,6 @@ namespace FryScript
         public static MetaScriptObject GetMetaScriptObject(this IScriptObject source, Expression expression)
         {
             return new MetaScriptObject(expression, BindingRestrictions.Empty, source);
-        }
-
-        public static bool Extends(this IScriptObject source, IScriptObject target)
-        {
-            var sourceBuilder = source?.ObjectCore?.Builder;
-            var targetBuilder = target.ObjectCore.Builder;
-
-            if(sourceBuilder == null || targetBuilder == null)
-                return false;
-
-            throw new NotImplementedException();
         }
     }
 }

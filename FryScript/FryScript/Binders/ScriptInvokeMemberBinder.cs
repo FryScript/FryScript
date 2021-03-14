@@ -1,12 +1,10 @@
 ﻿using FryScript.Helpers;
-using FryScript.HostInterop;
 using System;
 using System.Dynamic;
 using System.Linq;
 
 namespace FryScript.Binders
 {
-
     public class ScriptInvokeMemberBinder : InvokeMemberBinder
     {
         public ScriptInvokeMemberBinder(string name, int argCount)

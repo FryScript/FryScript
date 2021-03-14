@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FryScript
+﻿namespace FryScript
 {
     [ScriptableType("error")]
     public class ScriptError : ScriptObject

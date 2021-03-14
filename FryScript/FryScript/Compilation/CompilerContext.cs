@@ -1,7 +1,6 @@
 ﻿using FryScript.Ast;
 using FryScript.Debugging;
 using FryScript.Parsing;
-using FryScript.ScriptProviders;
 using Irony.Ast;
 using System;
 using System.Collections.Generic;

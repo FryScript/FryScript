@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace FryScript
 {
-    using System.Collections;
-    using HostInterop;
 
-    [ScriptableType("[params]")]
+    [ScriptableType("params")]
     public sealed class ScriptParams : ScriptObject, IEnumerable<object>
     {
         private readonly object[] _items;
@@ -19,7 +18,7 @@ namespace FryScript
         {
             get
             {
-                if(index >= _items.Length)
+                if (index >= _items.Length)
                     throw new FryScriptException(string.Format("Index value {0} is out of bounds", index));
 
                 return _items[index];
@@ -28,7 +27,7 @@ namespace FryScript
 
         public ScriptParams(params object[] items)
         {
-            if(items == null)
+            if (items == null)
                 throw new ArgumentNullException("items");
 
             _items = items;
@@ -39,14 +38,14 @@ namespace FryScript
             var value = this[index];
 
             if (value is T)
-                return (T) value;
+                return (T)value;
 
             throw new InvalidCastException(string.Format("Cannot cast value to type {0}", typeof(T).FullName));
         }
 
         public override IEnumerator<object> GetEnumerator()
         {
-            return ((IEnumerable<object>) _items).GetEnumerator();
+            return ((IEnumerable<object>)_items).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

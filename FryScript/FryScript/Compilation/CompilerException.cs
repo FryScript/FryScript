@@ -1,5 +1,4 @@
 ﻿using FryScript.Ast;
-using System;
 
 namespace FryScript.Compilation
 {

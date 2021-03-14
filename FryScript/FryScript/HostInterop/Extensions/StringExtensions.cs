@@ -2,7 +2,6 @@
 
 namespace FryScript.HostInterop.Extensions
 {
-
     public static class StringExtensions
     {
         [ScriptableMethod("toString")]

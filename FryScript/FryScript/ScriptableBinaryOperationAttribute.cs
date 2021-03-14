@@ -1,6 +1,7 @@
-﻿namespace FryScript
+﻿using System;
+
+namespace FryScript
 {
-    using System;
 
     [AttributeUsage(AttributeTargets.Method)]
     public class ScriptableBinaryOperationAttribute : ScriptableBaseAttribute

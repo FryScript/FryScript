@@ -1,7 +1,6 @@
 ﻿using FryScript.Helpers;
 using System;
 using System.Dynamic;
-using System.Linq.Expressions;
 
 namespace FryScript.Binders
 {

@@ -146,6 +146,11 @@ namespace FryScript.HostInterop
             return _extensionMethods.Keys;
         }
 
+        public IDictionary<string, MethodInfo> GetExtensionMethods()
+        {
+            return _extensionMethods;
+        }
+
         private void EnsureExtendedType(MethodInfo methodInfo, ParameterInfo[] parameterInfos)
         {
             if (parameterInfos[0].ParameterType != _extendedType)

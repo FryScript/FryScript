@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
-using FryScript.Compilation;
+﻿using FryScript.Compilation;
 using FryScript.Helpers;
+using System;
+using System.Linq.Expressions;
 
 namespace FryScript.Ast
 {

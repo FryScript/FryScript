@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FryScript.HostInterop.Operators
+﻿namespace FryScript.HostInterop.Operators
 {
     public static class ScriptFibreContextOperators
     {

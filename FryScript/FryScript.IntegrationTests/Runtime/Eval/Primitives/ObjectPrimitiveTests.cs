@@ -11,9 +11,9 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
         {
             Eval("@import \"object\" as object;");
 
-            var result = Eval("new object();") as ScriptObject;
+            var result = Eval("new object();");
 
-            Assert.AreEqual(0, result.GetMembers().Count());
+            Assert.IsInstanceOfType(result, typeof(ScriptObject));
         }
 
         [TestMethod]

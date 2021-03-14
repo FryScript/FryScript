@@ -1,5 +1,4 @@
-﻿using FryScript.Binders;
-using FryScript.Helpers;
+﻿using FryScript.Helpers;
 using System.Dynamic;
 using System.Linq.Expressions;
 

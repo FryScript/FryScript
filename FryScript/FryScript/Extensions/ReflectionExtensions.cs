@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace FryScript.Extensions
 {
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
-
     public static class ReflectionExtensions
     {
         private const string Implicit = "op_Implicit";

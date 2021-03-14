@@ -1,14 +1,11 @@
-﻿namespace FryScript
+﻿using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+
+namespace FryScript
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using Binders;
-    using Helpers;
-    using HostInterop;
 
     public class MetaScriptObject : MetaScriptObjectBase
     {
@@ -258,11 +255,11 @@
 
             var hasCtorExpr = Expression.IfThen(
                 Expression.Call(
-                    typeof(ScriptObjectExtensions), 
-                    nameof(ScriptObjectExtensions.HasMemberOfType), 
-                    null, 
+                    typeof(ScriptObjectExtensions),
+                    nameof(ScriptObjectExtensions.HasMemberOfType),
+                    null,
                     ScriptObjectExpr,
-                    Expression.Constant("ctor"), 
+                    Expression.Constant("ctor"),
                     Expression.Constant(typeof(ScriptFunction))),
                 ExpressionHelper.DynamicInvokeMember(
                     newInstanceExpr,
@@ -293,7 +290,7 @@
                 return new DynamicMetaObject(expr, restrictions);
             }
 
-            
+
             if (TypeProvider.Current.TryGetConvertOperator(LimitType, binder.Type, out MethodInfo convertMethod))
             {
                 var callExpr = Expression.Call(
@@ -340,11 +337,11 @@
 
         private BindingRestrictions GetDefaultRestrictions()
         {
-            return BindingRestrictions.GetTypeRestriction(Expression, LimitType)
-                .Merge(
-                    RestrictionsHelper.TypeOrNullRestriction(
-                        new DynamicMetaObject(Expression,
-                            BindingRestrictions.Empty, Value))
+            return RestrictionsHelper.TypeOrNullRestriction(
+                    new DynamicMetaObject(
+                        Expression,
+                        BindingRestrictions.Empty,
+                        Value)
                 );
         }
 

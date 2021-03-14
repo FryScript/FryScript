@@ -1,10 +1,8 @@
 ﻿using FryScript.Helpers;
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq.Expressions;
-using System.Collections;
-using FryScript.CallSites;
 
 namespace FryScript
 {
@@ -26,19 +24,6 @@ namespace FryScript
             ObjectCore.Builder = Builder.ScriptObjectBuilder;
         }
 
-        public IEnumerable<string> GetMembers()
-        {
-            return ScriptObjectExtensions.GetMembers(this);
-        }
-
-        public bool HasMember(string name)
-        {
-            lock(_lock)
-            {
-                return CallSiteCache.Current.HasMember(name, this);
-            }
-        }
-
         public virtual DynamicMetaObject GetMetaObject(Expression parameter)
         {
             return this.GetMetaScriptObject(parameter);
@@ -46,7 +31,7 @@ namespace FryScript
 
         public virtual IEnumerator<object> GetEnumerator()
         {
-            return GetMembers().GetEnumerator();
+            return this.GetMembers().GetEnumerator();
         }
 
         public override string ToString()

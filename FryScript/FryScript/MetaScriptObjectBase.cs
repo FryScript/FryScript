@@ -1,9 +1,9 @@
-﻿namespace FryScript
+﻿using System;
+using System.Dynamic;
+using System.Linq.Expressions;
+
+namespace FryScript
 {
-    using System.Dynamic;
-    using System.Linq.Expressions;
-    using Binders;
-    using System;
 
     public abstract class MetaScriptObjectBase : DynamicMetaObject
     {
@@ -32,6 +32,13 @@
             binder = binder ?? throw new ArgumentNullException(nameof(binder));
 
             return binder.FallbackIs(this, value);
+        }
+
+        public virtual DynamicMetaObject BindGetMembers(ScriptGetMembersBinder binder)
+        {
+            binder = binder ?? throw new ArgumentNullException(nameof(binder));
+
+            return binder.FallbackGetMembers(this);
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿namespace FryScript
-{
-    using System;
+﻿using System;
 
+namespace FryScript
+{
     [AttributeUsage(AttributeTargets.Method)]
     public class ScriptableTypeOperationAttribute : ScriptableBaseAttribute
     {

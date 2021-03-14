@@ -1,5 +1,4 @@
 ﻿using FryScript.CallSites;
-using FryScript.Helpers;
 using System;
 
 namespace FryScript

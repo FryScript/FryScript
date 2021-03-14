@@ -4,7 +4,6 @@ using System.Reflection;
 
 namespace FryScript.Helpers
 {
-
     public static class ScriptTypeHelper
     {
         public static string GetScriptType(object target)

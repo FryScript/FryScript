@@ -4,11 +4,6 @@ using System;
 
 namespace FryScript.UnitTests
 {
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Dynamic;
-    using System.Threading.Tasks;
-
     [TestClass]
     public class ScriptObjectTests
     {
@@ -139,7 +134,7 @@ namespace FryScript.UnitTests
         }
 
         [TestMethod]
-        public void Iternal_Member_Array_Resizes_As_Members_Are_Added()
+        public void Internal_Member_Array_Resizes_As_Members_Are_Added()
         {
             for(var i = 0; i < 100; i++)
             {
@@ -147,6 +142,10 @@ namespace FryScript.UnitTests
             }
 
             Assert.AreEqual(112, _scriptObject.ObjectCore.MemberData.Length);
+        }
+        public class Jimborb : ScriptArray
+        {
+
         }
     }
 }

@@ -23,6 +23,7 @@ namespace FryScript.Binders
         private readonly ConcurrentDictionary<string, DynamicMetaObjectBinder> _hasBinders = new ConcurrentDictionary<string, DynamicMetaObjectBinder>();
         private readonly DynamicMetaObjectBinder _isOperationBinder = new ScriptIsOperationBinder();
         private readonly DynamicMetaObjectBinder _extendsOperationBinder = new ScriptExtendsOperationBinder();
+        private readonly DynamicMetaObjectBinder _getMembersBinder = new ScriptGetMembersBinder();
 
         public SetMemberBinder SetMemberBinder(string name)
         {
@@ -137,6 +138,11 @@ namespace FryScript.Binders
         public DynamicMetaObjectBinder ExtendsOperationBinder()
         {
             return _extendsOperationBinder;
+        }
+
+        public DynamicMetaObjectBinder GetMembersBinder()
+        {
+            return _getMembersBinder;
         }
     }
 }

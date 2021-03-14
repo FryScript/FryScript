@@ -1,8 +1,8 @@
-﻿using System.Dynamic;
-using System.Linq.Expressions;
+﻿using FryScript.Extensions;
 using FryScript.Helpers;
-using FryScript.Extensions;
 using System;
+using System.Dynamic;
+using System.Linq.Expressions;
 
 namespace FryScript
 {

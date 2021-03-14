@@ -9,7 +9,6 @@ using System.Reflection;
 
 namespace FryScript.Helpers
 {
-
     public static class BindHelper
     {
         private static readonly ConstructorInfo ScriptParamsObjArrayCtor =
@@ -21,6 +20,14 @@ namespace FryScript.Helpers
             where i.ParameterType == typeof(int)
                   && p.PropertyType == typeof(object)
             select p).Single();
+
+        private static readonly ConstructorInfo ScriptArray_ObjectArrayCtor =
+            typeof(ScriptArray).GetConstructor(
+                BindingFlags.Instance | BindingFlags.Public,
+                null,
+                CallingConventions.Any,
+                new[] { typeof(object[]) },
+                null);
 
         private static DynamicMetaObject GetBindBinaryOperation(MethodInfo opInfo, DynamicMetaObject left, DynamicMetaObject right)
         {
@@ -240,6 +247,35 @@ namespace FryScript.Helpers
             return TryWrapParams(binder, target, delegateTarget, args, paramTypes)
                 ?? TryUnwrapParams(binder, target, delegateTarget, args, paramTypes)
                 ?? GetInvokeExpression(target, delegateTarget, args, paramTypes);
+        }
+
+        public static DynamicMetaObject BindGetMembers(DynamicMetaObject target)
+        {
+            target = target ?? throw new ArgumentNullException(nameof(target));
+
+            var scriptObj = target.Value as IScriptObject;
+
+            var typeMembers = TypeProvider.Current.GetMemberNames(target.LimitType);
+            var dynamicMembers = scriptObj.ObjectCore.MemberIndex.Keys;
+
+            var members = typeMembers.Union(dynamicMembers).Distinct().OrderBy(n => n).ToArray();
+
+            var membersExpr = Expression.Constant(members);
+            var newScriptArryExpr = Expression.New(ScriptArray_ObjectArrayCtor, new[] { membersExpr });
+            var convertNewScriptArrayExpr = Expression.Convert(newScriptArryExpr, typeof(object));
+
+            var scriptObjExpr = Expression.Convert(target.Expression, typeof(IScriptObject));
+            var objectCoreExpr = Expression.Property(scriptObjExpr, nameof(IScriptObject.ObjectCore));
+            var memberIndexExpr = Expression.Field(objectCoreExpr, nameof(ObjectCore.MemberIndex));
+
+            var curMemberIndexExpr = Expression.Constant(scriptObj.ObjectCore.MemberIndex);
+
+            var compareIndexExpr = Expression.Equal(memberIndexExpr, curMemberIndexExpr);
+
+            var restrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType)
+                .Merge(BindingRestrictions.GetExpressionRestriction(compareIndexExpr));
+
+            return new DynamicMetaObject(convertNewScriptArrayExpr, restrictions);
         }
 
         private static DynamicMetaObject GetInvokeExpression(DynamicMetaObject target, DynamicMetaObject delegateTarget, DynamicMetaObject[] args, Type[] paramTypes)

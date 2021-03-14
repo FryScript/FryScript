@@ -1,5 +1,4 @@
 ﻿using FryScript.Helpers;
-using FryScript.HostInterop;
 using System.Dynamic;
 
 namespace FryScript.Binders

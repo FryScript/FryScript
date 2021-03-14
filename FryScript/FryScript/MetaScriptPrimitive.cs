@@ -1,27 +1,25 @@
-﻿namespace FryScript
+﻿using System.Dynamic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+
+namespace FryScript
 {
-    using System;
-    using System.Dynamic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using Helpers;
-    using HostInterop;
 
     public class MetaScriptPrimitive<T> : DynamicMetaObject
     {
-        private ScriptPrimitive<T> ScriptObject { get { return Value as ScriptPrimitive<T>; } } 
+        private ScriptPrimitive<T> ScriptObject { get { return Value as ScriptPrimitive<T>; } }
 
         private Expression ScriptObjectExpr
         {
-            get { return Expression.Convert(Expression, typeof (ScriptPrimitive<T>)); }
+            get { return Expression.Convert(Expression, typeof(ScriptPrimitive<T>)); }
         }
 
         private Expression ScriptObjectTargetExpr { get { return Expression.Convert(Expression.PropertyOrField(ScriptObjectExpr, "Target"), typeof(T)); } }
 
         public MetaScriptPrimitive(Expression expression, BindingRestrictions restrictions, object value)
             : base(expression, restrictions, value)
-        { 
+        {
         }
 
         public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
@@ -48,8 +46,8 @@
 
         public override DynamicMetaObject BindCreateInstance(CreateInstanceBinder binder, DynamicMetaObject[] args)
         {
-            if(!TypeProvider.Current.TryGetTypeOperator(ScriptObject.TargetType, ScriptableTypeOperator.Ctor, out MethodInfo ctorInfo))
-               throw new FryScriptException(string.Format("Type {0} does not have a scriptable constructor defined", typeof(T).FullName));
+            if (!TypeProvider.Current.TryGetTypeOperator(ScriptObject.TargetType, ScriptableTypeOperator.Ctor, out MethodInfo ctorInfo))
+                throw new FryScriptException(string.Format("Type {0} does not have a scriptable constructor defined", typeof(T).FullName));
 
             var parameterTypes = ctorInfo.GetParameters().Select(p => p.ParameterType).ToArray();
             var argExprs = parameterTypes.Select(

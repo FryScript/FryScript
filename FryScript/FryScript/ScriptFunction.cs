@@ -1,7 +1,7 @@
-﻿using System;
+﻿using FryScript.Helpers;
+using System;
 using System.Dynamic;
 using System.Linq.Expressions;
-using FryScript.Helpers;
 
 namespace FryScript
 {

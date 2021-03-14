@@ -1,11 +1,9 @@
 ﻿using FryScript.Helpers;
-using FryScript.HostInterop;
 using System.Dynamic;
 using System.Linq.Expressions;
 
 namespace FryScript.Binders
 {
-
     public class ScriptGetMemberBinder : GetMemberBinder
     {
         public ScriptGetMemberBinder(string name)

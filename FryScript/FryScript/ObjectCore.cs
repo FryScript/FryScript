@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FryScript
+﻿namespace FryScript
 {
     public class ObjectCore
     {

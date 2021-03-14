@@ -1,11 +1,9 @@
-﻿using FryScript.HostInterop;
-using System;
+﻿using System;
 using System.Dynamic;
 using System.Linq.Expressions;
 
 namespace FryScript.Helpers
 {
-
     public static class RestrictionsHelper
     {
         public static BindingRestrictions TypeOrNullRestriction(DynamicMetaObject target)

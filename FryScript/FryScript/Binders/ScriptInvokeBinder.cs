@@ -7,7 +7,6 @@ using System.Reflection;
 
 namespace FryScript.Binders
 {
-
     public class ScriptInvokeBinder : InvokeBinder
     {
         public ScriptInvokeBinder(int argCount)

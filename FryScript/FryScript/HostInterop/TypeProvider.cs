@@ -4,9 +4,7 @@ using FryScript.HostInterop.Operators;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace FryScript.HostInterop
@@ -59,7 +57,7 @@ namespace FryScript.HostInterop
         public IEnumerable<ScriptableMethodInfo> GetMethods(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
-
+           
             return FindTypeDescriptor(type).GetMethods();
         }
 
@@ -86,23 +84,55 @@ namespace FryScript.HostInterop
             return GetDescriptor(type, d => d.HasProperty(name));
         }
 
+        public IEnumerable<string> GetExtensionMethodNames(Type type)
+        {
+            while(type != null)
+            {
+                var extensionMethods = GetExtender(type, e => e.GetExtensionMethods());
+
+                foreach(var kvp in extensionMethods)
+                {
+                    yield return kvp.Key;
+                }
+
+                type = type.BaseType;
+            }
+        }
+
         public bool TryGetExtensionMethod(Type type, string name, out MethodInfo methodInfo)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            methodInfo = GetExtender(type, e => e.GetExtensionMethod(name))
-                ?? GetExtender(typeof(object), e => e.GetExtensionMethod(name));
+            while (type != null)
+            {
+                methodInfo = GetExtender(type, e => e.GetExtensionMethod(name));
 
-            return methodInfo != null;
+                if (methodInfo != null)
+                    return true;
+
+                type = type.BaseType;
+            }
+
+            methodInfo = null;
+            return false;
         }
 
         public bool HasMember(Type type, string name)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            return GetDescriptor(type, d => d.HasMethod(name) || d.HasProperty(name))
-                   || GetExtender(type, e => e.HasExtensionMethod(name))
-                   || GetExtender(typeof(object), e => e.HasExtensionMethod(name));
+            if (GetDescriptor(type, d => d.HasMethod(name) || d.HasProperty(name)))
+                return true;
+
+            while(type != null)
+            {
+                if (GetExtender(type, e => e.HasExtensionMethod(name)))
+                    return true;
+
+                type = type.BaseType;
+            }
+
+            return false;
         }
 
         public bool TryGetIndex(Type type, Type indexType, out PropertyInfo propertyInfo)
@@ -221,7 +251,7 @@ namespace FryScript.HostInterop
             type = type ?? throw new ArgumentNullException(nameof(type));
 
             return GetDescriptor(type, d => d.GetProperties().Union(d.GetMethodNames()))
-                .Union(GetExtender(type, e => e.GetExtensionMethodsNames()));
+                .Union(GetExtensionMethodNames(type));
         }
 
         public bool TryGetConvertOperator(Type fromType, Type toType, out MethodInfo methodInfo)

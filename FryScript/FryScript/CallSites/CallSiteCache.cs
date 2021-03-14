@@ -4,12 +4,12 @@ using System.Runtime.CompilerServices;
 
 namespace FryScript.CallSites
 {
-
     public class CallSiteCache
     {
         private readonly ItemCache<string, CallSite<Func<CallSite, object, object>>> _getMember = new ItemCache<string, CallSite<Func<CallSite, object, object>>>(1000);
         private readonly ItemCache<string, CallSite<Func<CallSite, object, object, object>>> _setMember = new ItemCache<string, CallSite<Func<CallSite, object, object, object>>>(1000);
         private readonly ItemCache<string, CallSite<Func<CallSite, object, object>>> _hasMember = new ItemCache<string, CallSite<Func<CallSite, object, object>>>(1000);
+        private readonly CallSite<Func<CallSite, object, object>> _getMembers = (CallSite<Func<CallSite, object, object>>)CallSite.Create(typeof(Func<CallSite, object, object>), BinderCache.Current.GetMembersBinder());
 
         public static CallSiteCache Current = new CallSiteCache();
 
@@ -54,6 +54,11 @@ namespace FryScript.CallSites
             }
 
             return (bool)callSite.Target(callSite, instance);
+        }
+
+        public ScriptArray GetMembers(object instance)
+        {
+            return _getMembers.Target(_getMembers, instance) as ScriptArray;
         }
     }
 }

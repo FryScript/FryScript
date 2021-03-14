@@ -1,5 +1,4 @@
 ﻿using FryScript.Helpers;
-using FryScript.HostInterop;
 using System;
 using System.Collections;
 using System.Collections.Generic;
