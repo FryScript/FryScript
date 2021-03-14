@@ -1,6 +1,6 @@
-using System;
 using FryScript.Ast;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FryScript.UnitTests.Ast
 {

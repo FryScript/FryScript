@@ -1,8 +1,8 @@
-﻿using System;
+﻿using FryScript.HostInterop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FryScript.HostInterop;
-using System.Reflection;
+using System;
 using System.Linq;
+using System.Reflection;
 
 namespace FryScript.UnitTests.HostInterop
 {

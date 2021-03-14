@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using FryScript.Ast;
 using FryScript.Compilation;
 using FryScript.Debugging;
 using Irony.Parsing;
 using NSubstitute;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace FryScript.UnitTests.Ast
 {

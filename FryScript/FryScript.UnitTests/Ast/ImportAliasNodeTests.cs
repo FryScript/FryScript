@@ -1,7 +1,6 @@
 ﻿using FryScript.Ast;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
-using NSubstitute.Extensions;
 using System;
 using System.Linq.Expressions;
 

@@ -1,11 +1,11 @@
 ﻿using FryScript.Ast;
+using FryScript.Compilation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
 using NSubstitute.Extensions;
 using System;
 using System.Collections.Generic;
-using NSubstitute;
 using System.Linq;
-using FryScript.Compilation;
 using System.Linq.Expressions;
 
 namespace FryScript.UnitTests.Ast

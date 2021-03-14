@@ -1,7 +1,5 @@
 using FryScript.Ast;
 using FryScript.Compilation;
-using FryScript.Debugging;
-using Irony.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.Extensions;

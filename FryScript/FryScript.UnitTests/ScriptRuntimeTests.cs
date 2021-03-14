@@ -4,9 +4,7 @@ using FryScript.ScriptProviders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
-using System.Dynamic;
 using System.IO;
-using System.Linq.Expressions;
 
 namespace FryScript.UnitTests
 {

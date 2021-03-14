@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using FryScript.Binders;
+using FryScript.Helpers;
+using FryScript.HostInterop;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;

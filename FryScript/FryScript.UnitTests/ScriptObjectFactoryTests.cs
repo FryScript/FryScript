@@ -1,7 +1,7 @@
-﻿using System;
-using FryScript.HostInterop;
+﻿using FryScript.HostInterop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using System;
 
 namespace FryScript.UnitTests
 {

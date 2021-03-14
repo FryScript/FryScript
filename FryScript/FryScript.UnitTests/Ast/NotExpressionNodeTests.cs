@@ -1,6 +1,5 @@
 ﻿using FryScript.Ast;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Linq.Expressions;
 
 namespace FryScript.UnitTests.Ast

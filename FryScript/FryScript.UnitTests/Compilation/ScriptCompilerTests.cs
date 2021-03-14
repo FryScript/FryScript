@@ -1,10 +1,10 @@
-﻿using System;
-using FryScript.Ast;
+﻿using FryScript.Ast;
 using FryScript.Compilation;
 using FryScript.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.Core;
+using System;
 
 namespace FryScript.UnitTests.Compilation
 {

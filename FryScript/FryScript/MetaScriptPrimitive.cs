@@ -1,4 +1,6 @@
-﻿using System.Dynamic;
+﻿using FryScript.Helpers;
+using FryScript.HostInterop;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
