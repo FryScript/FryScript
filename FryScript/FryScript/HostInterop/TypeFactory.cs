@@ -70,7 +70,6 @@ namespace FryScript.HostInterop
                 TypeInfo = typeInfo
             };
 
-            ImplementInterface<IScriptable>(context);
             ImplementInterface<IScriptObject>(context);
             OverrideVirtualMethods(context);
             DefineStaticCtor(context);

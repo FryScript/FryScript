@@ -86,14 +86,6 @@ namespace FryScript.UnitTests.HostInterop
         }
 
         [TestMethod]
-        public void CreateScriptableTypeAutoImplementsIScriptable()
-        {
-            var type = _typeFactory.CreateScriptableType(typeof(ScriptableType));
-
-            Assert.IsTrue(type.GetTypeInfo().ImplementedInterfaces.Any(i => i == typeof(IScriptable)));
-        }
-
-        [TestMethod]
         public void CreateScriptableTypeOverridesVirtualMethod()
         {
             var type = _typeFactory.CreateScriptableType(typeof(VirtualScriptableType));
