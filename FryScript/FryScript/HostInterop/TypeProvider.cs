@@ -169,18 +169,6 @@ namespace FryScript.HostInterop
             return methodInfo != null;
         }
 
-        public Func<ScriptObject, object> GetCtor(Type type)
-        {
-            type = type ?? throw new ArgumentNullException(nameof(type));
-
-            if (!_ctors.TryGetValue(type, out Func<ScriptObject, object> ctor))
-            {
-                _ctors[type] = ctor = ScriptableCtorHelper.GetCtor(type);
-            }
-
-            return ctor;
-        }
-
         public string GetTypeName(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));

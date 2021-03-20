@@ -98,15 +98,6 @@ namespace FryScript.Binders
                 }
             }
 
-            if (target.Value is IScriptable)
-            {
-                var convertExpr = Expression.Convert(target.Expression, typeof(IScriptable));
-                var scriptProperty = Expression.Property(convertExpr, "Script");
-                var restrictions = RestrictionsHelper.TypeOrNullRestriction(target);
-
-                return new DynamicMetaObject(scriptProperty, restrictions);
-            }
-
             if (Type.IsAssignableFrom(target.LimitType))
             {
                 var convertExpr = Expression.Convert(target.Expression, Type);
