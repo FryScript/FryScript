@@ -252,7 +252,9 @@ namespace FryScript
                 ExceptionHelper.InvalidCreateInstance(ScriptObject.GetType().FullName);
 
             var newInstanceExpr = Expression.Parameter(typeof(IScriptObject));
-            var builderExpr = Expression.Constant(ScriptObject.ObjectCore.Builder);
+            var objectCoreExpr = Expression.Property(ScriptObjectExpr, nameof(IScriptObject.ObjectCore));
+            var builderExpr = Expression.Field(objectCoreExpr, nameof(ObjectCore.Builder));
+            //var builderExpr = Expression.Constant(ScriptObject.ObjectCore.Builder);
             var buildExpr = Expression.Call(builderExpr, nameof(IScriptObjectBuilder.Build), null);
             var assignNewInstanceExpr = Expression.Assign(newInstanceExpr, buildExpr);
 
