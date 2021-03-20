@@ -24,6 +24,25 @@ namespace FryScript.IntegrationTests.Runtime.Import
             }
         }
 
+        [ScriptableType("importable-ctor", IgnoreTypeFactory = true)]
+        public class ImportableWithCtor : IScriptObject
+        {
+            public ObjectCore ObjectCore { get; } = new ObjectCore();
+
+            [ScriptableMethod("ctor")]
+            public void Ctor(object arg1, object arg2)
+            {
+                dynamic dThis = this;
+                dThis.value1 = arg1;
+                dThis.value2 = arg2;
+            }
+
+            public DynamicMetaObject GetMetaObject(Expression parameter)
+            {
+                return this.GetMetaScriptObject(parameter);
+            }
+        }
+
         [TestMethod]
         public void Imported_Type_Is_Sub_Class_Of_Base()
         {
@@ -57,6 +76,24 @@ namespace FryScript.IntegrationTests.Runtime.Import
             Assert.AreEqual(instance, imported);
 
             Assert.AreEqual(new Uri("runtime://instance.fry"), imported.ObjectCore.Builder.Uri);
+        }
+
+        [TestMethod]
+        public void Import_Multiple_Derived_Scripts_Bind_Constructor_Correctly()
+        {
+            ScriptRuntime.Import<ImportableWithCtor>();
+
+            Eval("@import \"Scripts/importableCtorDerived1\" as derived1;");
+            Eval("@import \"Scripts/importableCtorDerived2\" as derived2;");
+
+            var derived1 = Eval("new derived1();");
+            var derived2 = Eval("new derived2();");
+
+            Assert.AreEqual("derived1Arg1", derived1.value1);
+            Assert.AreEqual("derived1Arg2", derived1.value2);
+
+            Assert.AreEqual("derived2Arg1", derived2.value1);
+            Assert.AreEqual("derived2Arg2", derived2.value2);
         }
     }
 }

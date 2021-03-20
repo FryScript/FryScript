@@ -1,0 +1,5 @@
+﻿@extend "importable-ctor";
+
+ctor extend () => {
+	base("derived1Arg1", "derived1Arg2");
+};
