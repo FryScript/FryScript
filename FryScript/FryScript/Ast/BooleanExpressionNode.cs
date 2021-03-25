@@ -35,9 +35,9 @@ namespace FryScript.Ast
             switch (op)
             {
                 case Operators.And:
-                    return Expression.Convert(Expression.And(leftExpr, rightExpr), typeof(object));
+                    return Expression.Convert(Expression.MakeBinary(ExpressionType.AndAlso, leftExpr, rightExpr), typeof(object));
                 default:
-                    return Expression.Convert(Expression.Or(leftExpr, rightExpr), typeof(object));
+                    return Expression.Convert(Expression.MakeBinary(ExpressionType.OrElse, leftExpr, rightExpr), typeof(object));
             }
         }
 

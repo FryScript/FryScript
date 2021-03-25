@@ -35,5 +35,13 @@ namespace FryScript.IntegrationTests.Runtime.Eval
                 Assert.Fail("Comment block should not cause a parser exception");
             }
         }
+
+        [TestMethod]
+        public void MyTestMethod()
+        {
+            Eval("crunk = null;");
+
+            var r = Eval("crunk == null || crunk.completed;");
+        }
     }
 }

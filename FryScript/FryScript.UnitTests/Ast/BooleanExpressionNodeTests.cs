@@ -52,8 +52,8 @@ namespace FryScript.UnitTests.Ast
         }
 
         [DataTestMethod]
-        [DataRow(Operators.And, ExpressionType.And)]
-        [DataRow(Operators.Or, ExpressionType.Or)]
+        [DataRow(Operators.And, ExpressionType.AndAlso)]
+        [DataRow(Operators.Or, ExpressionType.OrElse)]
         public void GetExpression_Operators(string op, ExpressionType expectedExpressionType)
         {
             SetOperator(op);

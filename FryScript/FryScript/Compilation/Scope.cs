@@ -180,7 +180,7 @@ namespace FryScript.Compilation
 
         public IEnumerable<ParameterExpression> GetExpressions()
         {
-            return _members.Values.Select(m => m.Parameter);
+            return _members.Values.Where(v => !v.Name.StartsWith(TempPrefix)).Select(m => m.Parameter);
         }
 
         public Expression ScopeBlock(params Expression[] expressions)
