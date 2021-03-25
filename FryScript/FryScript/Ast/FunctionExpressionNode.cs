@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace FryScript.Ast
 {
-    public class FunctionExpressionNode: DebugNode
+    public class FunctionExpressionNode: AstNode
     {
         private static readonly ConstructorInfo ScriptFunction_DelegateCtor =
             typeof (ScriptFunction).GetConstructor(new[] {typeof (Delegate)});
@@ -36,11 +36,6 @@ namespace FryScript.Ast
                 : block.GetExpression(scope);
 
             Expression returnExpr = Expression.Label(returnTarget, blockExpr);
-
-            if (CompilerContext.HasDebugHook)
-            {
-                returnExpr = WrapDebugStack(scope, s => returnExpr);
-            }
 
             var lambdaType =
                 Expression.GetFuncType(parameterExprs.Select(p => p.Type).Concat(new[] {typeof (object)}).ToArray());

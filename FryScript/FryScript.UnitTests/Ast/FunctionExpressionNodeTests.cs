@@ -107,40 +107,6 @@ namespace FryScript.UnitTests.Ast
         }
 
         [TestMethod]
-        public void GetExpression_Wraps_Debug_Stack()
-        {
-            Node.CompilerContext.ScriptRuntime.DebugHook = o => { };
-
-            var expectedDebugExpr = Expression.Constant("debug", typeof(object));
-
-            Node.Configure()
-                .WrapDebugStack(
-                    Arg.Is<Scope>(s => s.Parent.Parent == Scope),
-                    Arg.Any<Func<Scope, Expression>>())
-                .Returns(expectedDebugExpr);
-
-            Expression expectedreturnExpr = null;
-            Node.Configure()
-                .When(n => n.WrapDebugStack(Arg.Any<Scope>(), Arg.Any<Func<Scope, Expression>>()))
-                .Do(c =>
-                {
-                    var func = c[1] as Func<Scope, Expression>;
-                    expectedreturnExpr = func(Scope);
-                });
-
-            var result = Node.GetExpression(Scope) as NewExpression;
-
-            Assert.AreEqual(typeof(ScriptFunction), result.Constructor.DeclaringType);
-            Assert.AreEqual(1, result.Arguments.Count);
-
-            var lambdaExpr = result.Arguments[0] as LambdaExpression;
-            Assert.AreEqual(typeof(object), lambdaExpr.ReturnType);
-            Assert.AreEqual(expectedDebugExpr, lambdaExpr.Body);
-
-            Assert.IsInstanceOfType(expectedreturnExpr, typeof(LabelExpression));
-        }
-
-        [TestMethod]
         public void GetExpression_Generates_Function_Parameters()
         {
             var expectedParams = new List<ParameterExpression>();

@@ -1,7 +1,10 @@
 ﻿using FryScript.Ast;
 using FryScript.Binders;
+using FryScript.Compilation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using NSubstitute.Extensions;
+using System;
 using System.Linq.Expressions;
 
 namespace FryScript.UnitTests.Ast
@@ -9,6 +12,12 @@ namespace FryScript.UnitTests.Ast
     [TestClass]
     public class InvokeMemberExpressionTests : AstNodeTestBase<InvokeMemberExpressionNode>
     {
+        public override void OnTestInitialize()
+        {
+            Node.StubCompilerContext();
+            Node.StubParseNode();
+        }
+
         [TestMethod]
         public override void GetExpression_Null_Scope()
         {
@@ -49,6 +58,50 @@ namespace FryScript.UnitTests.Ast
 
             var binder = result.Binder as ScriptInvokeMemberBinder;
             Assert.AreEqual(2, binder.CallInfo.ArgumentCount);
+            Assert.AreEqual("member", binder.Name);
+        }
+
+        [TestMethod]
+        public void GetExpression_Wraps_Debug_Stack()
+        {
+            Node.CompilerContext.ScriptRuntime.DebugHook = o => { };
+
+            var expectedTargetExpr = Expression.Constant(new object());
+            var targetNode = Node<AstNode>.Empty;
+            targetNode.GetExpression(expectedTargetExpr, Scope);
+
+            var argsNode = Node<AstNode>.Empty;
+
+            var memberNode = Node<AstNode>.Empty;
+            memberNode.ValueString.Returns("member");
+
+            Node.SetChildren(targetNode, memberNode, argsNode);
+
+            var expectedDebugExpr = Expression.Constant("debug", typeof(object));
+
+            Node.Configure()
+                .WrapDebugStack(
+                    Arg.Is<Scope>(s => s.Parent.Parent == Scope),
+                    Arg.Any<Func<Scope, Expression>>())
+                .Returns(expectedDebugExpr);
+
+            Expression expectedReturnExpr = null;
+            Node.Configure()
+                .When(n => n.WrapDebugStack(Arg.Any<Scope>(), Arg.Any<Func<Scope, Expression>>()))
+                .Do(c =>
+                {
+                    var func = c[1] as Func<Scope, Expression>;
+                    expectedReturnExpr = func(Scope);
+                });
+
+            Node.GetExpression(Scope);
+
+            var result = expectedReturnExpr as DynamicExpression;
+
+            Assert.AreEqual(ExpressionType.Dynamic, result.NodeType);
+
+            var binder = result.Binder as ScriptInvokeMemberBinder;
+            Assert.AreEqual(0, binder.CallInfo.ArgumentCount);
             Assert.AreEqual("member", binder.Name);
         }
     }
