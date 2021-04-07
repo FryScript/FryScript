@@ -24,7 +24,7 @@ namespace FryScript.Compilation
 
         public bool HasDebugHook => DebugHook != null;
 
-        public DebugHook DebugHook => ScriptRuntime.DebugHook;
+        public DebugHook2 DebugHook => ScriptRuntime.DebugHook;
 
         public bool IsEvalMode { get; }
 

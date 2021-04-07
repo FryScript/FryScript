@@ -25,7 +25,7 @@ namespace FryScript
 
         public bool DetailedExceptions { get; set; }
 
-        public DebugHook DebugHook { get; set; }
+        public DebugHook2 DebugHook { get; set; }
 
 #if NETSTANDARD2_0
         public ScriptRuntime()

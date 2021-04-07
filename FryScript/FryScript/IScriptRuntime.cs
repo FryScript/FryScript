@@ -7,7 +7,7 @@ namespace FryScript
     {
         bool DetailedExceptions { get; set; }
 
-        DebugHook DebugHook { get; set; }
+        DebugHook2 DebugHook { get; set; }
 
         IScriptObject Get(string name, Uri relativeTo = null);
 

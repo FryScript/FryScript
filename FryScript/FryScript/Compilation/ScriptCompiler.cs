@@ -43,6 +43,9 @@ namespace FryScript.Compilation
 
             var func = rootNode.Compile(compilerContext.Scope);
 
+            if (compilerContext.HasDebugHook)
+                compilerContext.DebugHook.SourceLoaded(compilerContext.Uri);
+
             return func;
         }
     }

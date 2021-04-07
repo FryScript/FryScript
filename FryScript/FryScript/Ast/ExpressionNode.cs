@@ -11,8 +11,8 @@ namespace FryScript.Ast
         {
             scope = scope ?? throw new ArgumentNullException(nameof(scope));
 
-            if (CompilerContext.HasDebugHook)
-                return WrapDebugExpression(DebugEvent.Expression, scope, s => GetChildExpression(s));
+            //if (CompilerContext.HasDebugHook)
+                //return WrapDebugExpression(DebugEvent.Expression, scope, s => GetChildExpression(s));
 
             Expression expr = CompilerContext.DetailedExceptions == true
                 ? GetDetailedExceptionExpression(GetChildExpression(scope), this, scope)
