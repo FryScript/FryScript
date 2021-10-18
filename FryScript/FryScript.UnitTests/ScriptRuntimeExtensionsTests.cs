@@ -14,7 +14,8 @@ namespace FryScript.UnitTests
 
         private IScriptRuntime _runtime;
         private IScriptObject _obj;
-        private string _enumName;
+        private string _enumName, _newName;
+        private object[] _newArgs;
 
         [TestInitialize]
         public void TestInitialize()
@@ -22,6 +23,8 @@ namespace FryScript.UnitTests
             _runtime = Substitute.For<IScriptRuntime>();
             _obj = Substitute.For<IScriptObject>();
             _enumName = "enum";
+            _newName = "newName";
+            _newArgs = new object[2];
         }
 
         [TestMethod]
@@ -37,6 +40,23 @@ namespace FryScript.UnitTests
             _runtime.Import(typeof(object)).Returns(_obj);
 
             var result = _runtime.Import<object>();
+
+            Assert.AreEqual(_obj, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void New_Null_Source()
+        {
+            ScriptRuntimeExtensions.New<object>(null, _newName);
+        }
+
+        [TestMethod]
+        public void New_Success()
+        {
+            _runtime.New(_newName, _newArgs).Returns(_obj);
+
+            var result = _runtime.New<IScriptObject>(_newName, _newArgs);
 
             Assert.AreEqual(_obj, result);
         }
