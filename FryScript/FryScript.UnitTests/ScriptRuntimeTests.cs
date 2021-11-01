@@ -40,6 +40,7 @@ namespace FryScript.UnitTests
         private IScriptProvider _scriptProvider;
         private IScriptObjectBuilder _objBuilder;
         private ITypeProvider _typeProvider;
+        private ObjectCore _objectCore;
         private string _name;
 
         [TestInitialize]
@@ -53,7 +54,10 @@ namespace FryScript.UnitTests
             _runtime = new ScriptRuntime(_scriptProvider, _compiler, _registry, _objectFactory, _typeProvider);
 
             _obj = Substitute.For<IScriptObject>();
+            _objectCore = new ObjectCore();
             _objBuilder = Substitute.For<IScriptObjectBuilder>();
+
+            _obj.ObjectCore.Returns(_objectCore);
 
             _name = "test";
         }
