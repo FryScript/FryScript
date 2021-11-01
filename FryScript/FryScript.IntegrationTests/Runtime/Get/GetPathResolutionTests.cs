@@ -18,8 +18,8 @@ namespace FryScript.IntegrationTests.Runtime.Get
         {
             dynamic toResolve = ScriptRuntime.Get("Scripts/ResolutionScripts/toResolve");
             dynamic resolveHigher = ScriptRuntime.Get("Scripts/ResolutionScripts/SubFolder/resolveHigher");
-
-            Assert.AreEqual(toResolve, resolveHigher.toResolve);
+            var imported = resolveHigher.toResolve as ScriptImport;
+            Assert.AreEqual(toResolve, imported.Target);
         }
     }
 }

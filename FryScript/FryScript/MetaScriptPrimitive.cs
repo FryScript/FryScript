@@ -34,6 +34,12 @@ namespace FryScript
             return GetMetaObject(ExpressionHelper.DynamicSetMember(binder.Name, ScriptObjectTargetExpr, value.Expression));
         }
 
+        public override DynamicMetaObject BindInvoke(InvokeBinder binder, DynamicMetaObject[] args)
+        {
+            return
+                GetMetaObject(ExpressionHelper.DynamicInvoke(ScriptObjectTargetExpr, args.Select(a => a.Expression).ToArray()));
+        }
+
         public override DynamicMetaObject BindInvokeMember(InvokeMemberBinder binder, DynamicMetaObject[] args)
         {
             return

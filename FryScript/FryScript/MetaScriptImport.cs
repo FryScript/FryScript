@@ -1,4 +1,5 @@
 ﻿using FryScript.Binders;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq.Expressions;
 
@@ -99,6 +100,11 @@ namespace FryScript
                 return GetReferenceMetaObject(metaScriptObjectBase.BindHasOperation(binder));
 
             return base.BindHasOperation(binder);
+        }
+
+        public override IEnumerable<string> GetDynamicMemberNames()
+        {
+            return Reference.Target.GetMembers();
         }
 
         private DynamicMetaObject GetReferenceMetaObject(DynamicMetaObject metaObject)
