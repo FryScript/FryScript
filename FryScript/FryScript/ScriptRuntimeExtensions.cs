@@ -10,6 +10,12 @@ namespace FryScript
             return (source ?? throw new ArgumentNullException(nameof(source))).Import(typeof(T));
         }
 
+        public static T New<T>(this IScriptRuntime source, string name, params object[] args)
+            where T : class
+        {
+            return (T)(source ?? throw new ArgumentNullException(nameof(source))).New(name, args);
+        }
+
         public static IScriptObject ImportEnum<TEnum>(this IScriptRuntime source, string name)
         {
             if (!typeof(TEnum).IsEnum)

@@ -1,10 +1,13 @@
-﻿namespace FryScript
+﻿using System;
+
+namespace FryScript
 {
-    public class ObjectCore
+    public sealed class ObjectCore
     {
         public object[] MemberData;
         public MemberIndex MemberIndex;
         public IScriptObjectBuilder Builder;
+        public Uri Uri => Builder?.Uri;
 
         public ObjectCore()
         {

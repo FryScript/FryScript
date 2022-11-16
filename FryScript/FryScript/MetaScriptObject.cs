@@ -44,7 +44,7 @@ namespace FryScript
                 null,
                 convertExpr,
                 Expression.Constant(info.Index),
-                ExpressionHelper.DynamicConvert(value.Expression, typeof(object))
+                Expression.Convert(value.Expression, typeof(object))
                 );
 
             var restrictions = GetDefaultRestrictions().Merge(

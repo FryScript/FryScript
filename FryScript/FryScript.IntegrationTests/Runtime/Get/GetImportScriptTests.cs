@@ -12,7 +12,11 @@ namespace FryScript.IntegrationTests.Runtime.Get
 
             var actual = Get("Scripts/importingScript");
 
-            Assert.AreEqual(expected, actual.importedScript);
+            var importedScript = actual.importedScript as ScriptImport;
+            dynamic i = importedScript;
+            var mems= i.getMembers();
+
+            Assert.AreEqual(expected, importedScript.Target);
         }
 
         [TestMethod]
