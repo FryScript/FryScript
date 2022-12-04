@@ -27,7 +27,6 @@ namespace FryScript
 
         public DebugHook DebugHook { get; set; }
 
-#if NETSTANDARD2_0
         public ScriptRuntime()
             : this(new DirectoryScriptProvider(Environment.CurrentDirectory),
                   new ScriptCompiler(),
@@ -36,16 +35,6 @@ namespace FryScript
                   TypeProvider.Current)
         {
         }
-#else
-        public ScriptRuntime()
-            : this(new DirectoryScriptProvider(AppDomain.CurrentDomain.BaseDirectory),
-                  new ScriptCompiler(),
-                  new ObjectRegistry(),
-                  new ScriptObjectFactory(),
-                  TypeProvider.Current)
-        {
-        }
-#endif
 
         public ScriptRuntime(
             IScriptProvider scriptProvider,
