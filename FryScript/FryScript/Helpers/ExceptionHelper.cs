@@ -10,11 +10,11 @@ namespace FryScript.Helpers
 {
     public static class ExceptionHelper
     {
-        public static FryScriptException MemberUndefined(string name)
+        public static FryScriptException MemberUndefined(string name, object obj)
         {
             name = name ?? throw new ArgumentNullException(nameof(name));
 
-            throw new FryScriptException(string.Format("Member \"{0}\" is undefined", name.ToDisplayString()));
+            throw new FryScriptException($"Member {name.ToDisplayString()} is undefined on type {ScriptTypeHelper.GetScriptType(obj)}");
         }
 
         public static FryScriptException InvalidIndexes()
@@ -26,7 +26,7 @@ namespace FryScript.Helpers
         {
             value = value ?? throw new ArgumentNullException(nameof(value));
 
-            throw new FryScriptException(string.Format("Invalid index value {0}", value.ToDisplayString()));
+            throw new FryScriptException($"Invalid index value {value.ToDisplayString()}");
         }
 
         public static FryScriptException InvalidConvert(Type from, Type to)
@@ -34,7 +34,7 @@ namespace FryScript.Helpers
             from = from ?? throw new ArgumentNullException(nameof(from));
             to = to ?? throw new ArgumentNullException(nameof(to));
 
-            throw new FryScriptException(string.Format("Unable to convert type {0} to type {1}", from.Name.ToDisplayString(), to.Name.ToDisplayString()));
+            throw new FryScriptException($"Unable to convert type {from.Name.ToDisplayString()} to type {to.Name.ToDisplayString()}");
         }
 
         public static FryScriptException InvalidConvert(Type from, Type to, object value)
@@ -43,35 +43,33 @@ namespace FryScript.Helpers
             to = to ?? throw new ArgumentNullException(nameof(to));
             value = value ?? throw new ArgumentNullException(nameof(value));
 
-            throw new FryScriptException(string.Format("Unable to convert type {0} with value {1} to type {2}", from.Name.ToDisplayString(), value, to.Name.ToDisplayString()));
+            throw new FryScriptException($"Unable to convert type {from.Name.ToDisplayString()} with value {value} to type {to.Name.ToDisplayString()}");
         }
 
         public static FryScriptException NonBinaryOperation(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            throw new FryScriptException(string.Format("Type {0} does not support binary operations", type.Name));
+            throw new FryScriptException($"Type {type.Name} does not support binary operations");
         }
 
         public static FryScriptException NonCreateInstance(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            throw new FryScriptException(string.Format("Type {0} does not support creating instances", type.Name));
+            throw new FryScriptException($"Type {type.Name} does not support creating instances");
         }
 
         public static FryScriptException NonConvertible(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            throw new FryScriptException(string.Format("Type {0} does not support convert operations", type.Name));
+            throw new FryScriptException($"Type {type.Name} does not support convert operations");
         }
 
-        public static FryScriptException NonInvokable(Type type)
+        public static FryScriptException NonInvokable(object obj)
         {
-            type = type ?? throw new ArgumentNullException(nameof(type));
-
-            throw new FryScriptException(string.Format("Type {0} is not an invokable type", type.Name.ToDisplayString()));
+            throw new FryScriptException($"Type {ScriptTypeHelper.GetScriptType(obj)} cannot be invoked");
         }
 
         public static FryScriptException NonBeginable(Type type)
@@ -104,21 +102,21 @@ namespace FryScript.Helpers
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            throw new FryScriptException(string.Format("Type {0} does not support setting indexes", type.Name.ToDisplayString()));
+            throw new FryScriptException($"Type {type.Name.ToDisplayString()} does not support setting indexes");
         }
 
         public static FryScriptException NonSetMember(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            throw new FryScriptException(string.Format("Type {0} does not support setting members", type.Name.ToDisplayString()));
+            throw new FryScriptException($"Type {type.Name.ToDisplayString()} does not support setting members");
         }
 
         public static FryScriptException NonUnaryOperation(Type type)
         {
             type = type ?? throw new ArgumentNullException(nameof(type));
 
-            throw new FryScriptException(string.Format("Type {0} does not support binary operations", type.Name.ToDisplayString()));
+            throw new FryScriptException($"Type {type.Name.ToDisplayString()} does not support unary operations");
         }
 
         public static FryScriptException NonDeleteIndex(Type type)

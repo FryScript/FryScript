@@ -8,7 +8,8 @@ namespace FryScript.Helpers
     {
         public static string GetScriptType(object target)
         {
-            target = target ?? throw new ArgumentNullException(nameof(target));
+            if (target == null)
+                return "null";
 
             if(!TypeProvider.Current.TryGetTypeOperator(target.GetType(), ScriptableTypeOperator.TypeOf, out MethodInfo opInfo))
                 return GetPesudoScriptType(target.GetType());
