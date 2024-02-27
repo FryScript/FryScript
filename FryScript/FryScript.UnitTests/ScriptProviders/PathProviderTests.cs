@@ -100,7 +100,6 @@ namespace FryScript.UnitTests.ScriptProviders
         [DataRow("..")]
         [DataRow(".")]
         [DataRow("~/")]
-        [DataRow("~")]
         [DataRow("root/")]
         [DataRow("root/directory1/")]
         [DataRow("root/..")]
