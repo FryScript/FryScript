@@ -20,7 +20,7 @@ namespace FryScript.Binders
                 !TypeProvider.Current.TryGetTypeOperator(target.LimitType, ScriptableTypeOperator.Invoke,
                 out MethodInfo invokeMethod)
                 )
-                throw ExceptionHelper.NonInvokable(target.LimitType);
+                throw ExceptionHelper.NonInvokable(target.Value);
 
             var parameterTypes = invokeMethod.GetParameters().Select( p => p.ParameterType).ToArray();
 
