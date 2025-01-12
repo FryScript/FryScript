@@ -10,8 +10,8 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
         {
             Eval("@import \"fibre-context\" as fc;");
 
-            var result = Eval("new fc();");
-            var fc = Eval("fc;");
+            var result = Eval("new fc();") as ScriptFibreContext;
+            var fc = Eval("fc;") as ScriptFibreContext;
 
             Assert.IsInstanceOfType(result, typeof(ScriptFibreContext));
             Assert.AreNotEqual(fc, result);

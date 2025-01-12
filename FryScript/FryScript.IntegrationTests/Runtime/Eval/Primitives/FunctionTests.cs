@@ -10,8 +10,8 @@ namespace FryScript.IntegrationTests.Runtime.Eval.Primitives
         {
             Eval("@import \"function\" as func;");
 
-            var result = Eval("new func();");
-            var func = Eval("func;");
+            var result = Eval("new func();") as ScriptFunction;
+            var func = Eval("func;") as ScriptFunction;
 
             Assert.IsInstanceOfType(result, typeof(ScriptFunction));
             Assert.AreNotEqual(func, result);
